@@ -1,0 +1,31 @@
+package com.guilhermesemog.unimove.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.time.LocalTime;
+
+@Data
+@Entity
+@Table(name = "trips")
+public class Trip {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "interest_list_id", nullable = false)
+    private InterestList interestList;
+
+    @Column(nullable = false)
+    private LocalTime departureTime;
+
+    @ManyToOne
+    @JoinColumn(name = "conductor_id", nullable = false)
+    private Conductor conductor;
+
+    @ManyToOne
+    @JoinColumn(name = "vehicle_id", nullable = false)
+    private Vehicle vehicle;
+}
