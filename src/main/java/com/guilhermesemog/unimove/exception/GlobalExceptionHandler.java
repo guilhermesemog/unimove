@@ -44,6 +44,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorDetails);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return ResponseEntity.notFound().build();
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception e) {
         ErrorDetails errorDetails = ErrorDetails.builder()
