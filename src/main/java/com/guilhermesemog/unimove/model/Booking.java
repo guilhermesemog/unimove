@@ -1,6 +1,7 @@
 package com.guilhermesemog.unimove.model;
 
 import com.guilhermesemog.unimove.model.enums.BookingStatus;
+import com.guilhermesemog.unimove.model.enums.TripType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,6 +24,10 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus bookingStatus = BookingStatus.PENDING;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TripType tripType;
 
     @ManyToOne
     @JoinColumn(name = "destination_id", nullable = false)
