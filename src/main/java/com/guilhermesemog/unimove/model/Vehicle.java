@@ -2,9 +2,11 @@ package com.guilhermesemog.unimove.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "vehicles")
 public class Vehicle {
 
@@ -17,4 +19,9 @@ public class Vehicle {
 
     @Column(nullable = false)
     private Integer capacity;
+
+    public Vehicle(String plate, Integer capacity) {
+        this.plate = plate;
+        this.capacity = capacity;
+    }
 }

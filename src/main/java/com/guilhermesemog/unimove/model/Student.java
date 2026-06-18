@@ -2,8 +2,10 @@ package com.guilhermesemog.unimove.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "students")
 public class Student {
@@ -32,4 +34,13 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "preferred_boarding_stop_id")
     private BoardingStop preferredBoardingStop;
+
+    public Student(User user, Long period, String course, String address, University university, BoardingStop preferredBoardingStop) {
+        this.user = user;
+        this.period = period;
+        this.course = course;
+        this.address = address;
+        this.university = university;
+        this.preferredBoardingStop = preferredBoardingStop;
+    }
 }
