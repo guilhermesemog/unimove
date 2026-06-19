@@ -2,6 +2,7 @@ package com.guilhermesemog.unimove.service;
 
 import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopPostRequestBody;
 import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponseBody;
+import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.BoardingStopMapper;
 import com.guilhermesemog.unimove.model.BoardingStop;
 import com.guilhermesemog.unimove.repository.BoardingStopRepository;
@@ -28,7 +29,7 @@ public class BoardingStopService {
     }
 
     public BoardingStopResponseBody getById(Long id) {
-        BoardingStop boardingStop = boardingStopRepository.findById(id).orElseThrow(() -> new RuntimeException("Boarding stop not found"));
+        BoardingStop boardingStop = boardingStopRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Boarding stop not found"));
         return boardingStopMapper.toResponseBody(boardingStop);
     }
 
@@ -43,7 +44,7 @@ public class BoardingStopService {
     }
 
     public void delete(Long id) {
-        BoardingStop boardingStop = boardingStopRepository.findById(id).orElseThrow(() -> new RuntimeException("Boarding stop not found"));
+        BoardingStop boardingStop = boardingStopRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Boarding stop not found"));
         boardingStopRepository.delete(boardingStop);
     }
 }
