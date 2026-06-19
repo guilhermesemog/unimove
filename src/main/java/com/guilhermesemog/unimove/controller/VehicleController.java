@@ -21,49 +21,49 @@ public class VehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<VehicleResponseBody> createVehicle(@Valid @RequestBody VehiclePostRequestBody vehiclePostRequestBody) {
-        VehicleResponseBody savedVehicle = vehicleService.createVehicle(vehiclePostRequestBody);
+    public ResponseEntity<VehicleResponseBody> create(@Valid @RequestBody VehiclePostRequestBody vehiclePostRequestBody) {
+        VehicleResponseBody savedVehicle = vehicleService.create(vehiclePostRequestBody);
         return ResponseEntity.status(201).body(savedVehicle);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VehicleResponseBody> getVehicleById(@PathVariable Long id) {
-        VehicleResponseBody vehicle = vehicleService.getVehicleById(id);
+    public ResponseEntity<VehicleResponseBody> getById(@PathVariable Long id) {
+        VehicleResponseBody vehicle = vehicleService.getById(id);
         return ResponseEntity.ok(vehicle);
     }
 
     @GetMapping("/plate/{plate}")
-    public ResponseEntity<VehicleResponseBody> getVehicleByPlate(@PathVariable String plate) {
-        VehicleResponseBody vehicle = vehicleService.getVehicleByPlate(plate);
+    public ResponseEntity<VehicleResponseBody> getByPlate(@PathVariable String plate) {
+        VehicleResponseBody vehicle = vehicleService.getByPlate(plate);
         return ResponseEntity.ok(vehicle);
     }
 
     @GetMapping
-    public ResponseEntity<Page<VehicleResponseBody>> getAllVehicles(
+    public ResponseEntity<Page<VehicleResponseBody>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
-        Page<VehicleResponseBody> vehicles = vehicleService.getAllVehicles(page, size, sortBy, sortDirection);
+        Page<VehicleResponseBody> vehicles = vehicleService.getAll(page, size, sortBy, sortDirection);
         return ResponseEntity.ok(vehicles);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteVehicleById(@PathVariable Long id) {
-        vehicleService.deleteVehicleById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        vehicleService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateVehicleById(@PathVariable Long id, @Valid @RequestBody VehiclePutRequestBody vehiclePutRequestBody) {
-        vehicleService.updateVehicleById(id, vehiclePutRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody VehiclePutRequestBody vehiclePutRequestBody) {
+        vehicleService.update(id, vehiclePutRequestBody);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateVehicleById(@PathVariable Long id, @Valid @RequestBody VehiclePatchRequestBody vehiclePatchRequestBody) {
-        vehicleService.updateVehicleById(id, vehiclePatchRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody VehiclePatchRequestBody vehiclePatchRequestBody) {
+        vehicleService.update(id, vehiclePatchRequestBody);
         return ResponseEntity.noContent().build();
     }
 }

@@ -21,49 +21,49 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseBody> addUser(@Valid @RequestBody UserPostRequestBody user) {
-        UserResponseBody savedUser = userService.createUser(user);
+    public ResponseEntity<UserResponseBody> create(@Valid @RequestBody UserPostRequestBody user) {
+        UserResponseBody savedUser = userService.create(user);
         return ResponseEntity.status(201).body(savedUser);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseBody> getUserById(@PathVariable Long id) {
-        UserResponseBody user = userService.getUserById(id);
+    public ResponseEntity<UserResponseBody> getById(@PathVariable Long id) {
+        UserResponseBody user = userService.getById(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserResponseBody>> getAllUsers(
+    public ResponseEntity<Page<UserResponseBody>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
-        Page<UserResponseBody> response = userService.getAllUsers(page, size, sortBy, sortDirection);
+        Page<UserResponseBody> response = userService.getAll(page, size, sortBy, sortDirection);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
-        userService.deleteUserById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateUser(@PathVariable Long id, @Valid @RequestBody UserPutRequestBody userPutRequestBody) {
-        userService.updateUserById(id, userPutRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UserPutRequestBody userPutRequestBody) {
+        userService.update(id, userPutRequestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateUser(@PathVariable Long id, @Valid @RequestBody UserPatchRequestBody userPatchRequestBody) {
-        userService.updateUserById(id, userPatchRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UserPatchRequestBody userPatchRequestBody) {
+        userService.update(id, userPatchRequestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<Void> toggleUserActiveStatus(@PathVariable Long id) {
-        userService.toggleUserStatus(id);
+    public ResponseEntity<Void> toggleStatus(@PathVariable Long id) {
+        userService.toggleStatus(id);
         return ResponseEntity.ok().build();
     }
 

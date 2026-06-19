@@ -24,22 +24,22 @@ public class VehicleService {
         this.vehicleMapper = vehicleMapper;
     }
 
-    public VehicleResponseBody createVehicle(VehiclePostRequestBody vehiclePostRequestBody) {
+    public VehicleResponseBody create(VehiclePostRequestBody vehiclePostRequestBody) {
         Vehicle vehicle = vehicleMapper.toEntity(vehiclePostRequestBody);
         return vehicleMapper.toResponseBody(vehicleRepository.save(vehicle));
     }
 
-    public VehicleResponseBody getVehicleById(Long id) {
+    public VehicleResponseBody getById(Long id) {
         Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
         return vehicleMapper.toResponseBody(vehicle);
     }
 
-    public VehicleResponseBody getVehicleByPlate(String plate) {
+    public VehicleResponseBody getByPlate(String plate) {
         Vehicle vehicle = vehicleRepository.findByPlate(plate).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
         return vehicleMapper.toResponseBody(vehicle);
     }
 
-    public Page<VehicleResponseBody> getAllVehicles(int page, int size, String sortBy, String sortDirection) {
+    public Page<VehicleResponseBody> getAll(int page, int size, String sortBy, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
@@ -49,18 +49,18 @@ public class VehicleService {
         return vehicleRepository.findAll(pageable).map(vehicleMapper::toResponseBody);
     }
 
-    public void deleteVehicleById(Long id) {
+    public void delete(Long id) {
         Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
         vehicleRepository.delete(vehicle);
     }
 
-    public void updateVehicleById(Long id, VehiclePatchRequestBody vehiclePatchRequestBody) {
+    public void update(Long id, VehiclePatchRequestBody vehiclePatchRequestBody) {
         Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
         vehicle = vehicleMapper.updateVehicle(vehiclePatchRequestBody, vehicle);
         vehicleRepository.save(vehicle);
     }
 
-    public void updateVehicleById(Long id, VehiclePutRequestBody vehiclePutRequestBody) {
+    public void update(Long id, VehiclePutRequestBody vehiclePutRequestBody) {
         Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
         vehicle = vehicleMapper.updateVehicle(vehiclePutRequestBody, vehicle);
         vehicleRepository.save(vehicle);

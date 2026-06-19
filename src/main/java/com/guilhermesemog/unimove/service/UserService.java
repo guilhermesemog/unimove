@@ -25,17 +25,17 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public UserResponseBody createUser(UserPostRequestBody userPostRequestBody) {
+    public UserResponseBody create(UserPostRequestBody userPostRequestBody) {
         User user = userMapper.toEntity(userPostRequestBody);
         return userMapper.toResponseBody(userRepository.save(user));
     }
 
-    public UserResponseBody getUserById(Long id) {
+    public UserResponseBody getById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return userMapper.toResponseBody(user);
     }
 
-    public Page<UserResponseBody> getAllUsers(int page, int size, String sortBy, String sortDirection) {
+    public Page<UserResponseBody> getAll(int page, int size, String sortBy, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
@@ -45,24 +45,24 @@ public class UserService {
         return userRepository.findAll(pageable).map(userMapper::toResponseBody);
     }
 
-    public void deleteUserById(Long id) {
+    public void delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         userRepository.delete(user);
     }
 
-    public void updateUserById(Long id, UserPutRequestBody userPutRequestBody) {
+    public void update(Long id, UserPutRequestBody userPutRequestBody) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user = userMapper.updateUser(userPutRequestBody, user);
         userRepository.save(user);
     }
 
-    public void updateUserById(Long id, UserPatchRequestBody userPatchRequestBody) {
+    public void update(Long id, UserPatchRequestBody userPatchRequestBody) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user = userMapper.updateUser(userPatchRequestBody, user);
         userRepository.save(user);
     }
 
-    public void toggleUserStatus(Long id) {
+    public void toggleStatus(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setActive(!user.getActive());
         userRepository.save(user);
