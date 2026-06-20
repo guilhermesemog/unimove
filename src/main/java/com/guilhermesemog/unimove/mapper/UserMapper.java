@@ -6,6 +6,7 @@ import com.guilhermesemog.unimove.dto.user.UserPostRequestBody;
 import com.guilhermesemog.unimove.dto.user.UserPutRequestBody;
 import com.guilhermesemog.unimove.dto.user.UserResponseBody;
 import com.guilhermesemog.unimove.model.User;
+import com.guilhermesemog.unimove.model.enums.Role;
 import org.springframework.stereotype.Component;
 
 
@@ -32,6 +33,25 @@ public class UserMapper {
         );
     }
 
+    public User toEntity(CreateUserBody userBody, Role role) {
+
+        Boolean isActive = userBody.active();
+
+        if (isActive == null) {
+            isActive = true;
+        }
+
+        return new User(
+                userBody.cpf(),
+                userBody.password(),
+                userBody.firstName(),
+                userBody.lastName(),
+                userBody.phone(),
+                isActive,
+                role
+        );
+    }
+
     public UserResponseBody toResponseBody(User user) {
         return new UserResponseBody(
                 user.getId(),
@@ -53,7 +73,6 @@ public class UserMapper {
     }
 
     public User updateUser(UserPatchRequestBody newUser, User user) {
-
 
         if (newUser.cpf() != null) {
             user.setCpf(newUser.cpf());
