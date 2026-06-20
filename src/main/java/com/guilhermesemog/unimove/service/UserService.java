@@ -27,12 +27,12 @@ public class UserService {
 
     public UserResponse create(UserCreate userCreate) {
         User user = userMapper.toEntity(userCreate);
-        return userMapper.toResponseBody(userRepository.save(user));
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     public UserResponse getById(Long id) {
         User user = getUser(id);
-        return userMapper.toResponseBody(user);
+        return userMapper.toResponse(user);
     }
 
     public Page<UserResponse> getAll(int page, int size, String sortBy, String sortDirection) {
@@ -42,7 +42,7 @@ public class UserService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return userRepository.findAll(pageable).map(userMapper::toResponseBody);
+        return userRepository.findAll(pageable).map(userMapper::toResponse);
     }
 
     public void delete(Long id) {

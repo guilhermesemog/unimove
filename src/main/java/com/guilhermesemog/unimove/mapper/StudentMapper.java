@@ -30,9 +30,9 @@ public class StudentMapper {
         );
     }
 
-    public StudentResponse toResponseBody(Student student) {
+    public StudentResponse toResponse(Student student) {
         return new StudentResponse(
-                userMapper.toResponseBody(student.getUser()),
+                userMapper.toResponse(student.getUser()),
                 student.getPeriod(),
                 student.getCourse(),
                 student.getAddress(),
@@ -57,7 +57,6 @@ public class StudentMapper {
         if (newStudent.user() != null) {
             student.setUser(userMapper.updateUser(newStudent.user(), student.getUser()));
         }
-
         if (newStudent.period() != null) {
             student.setPeriod(newStudent.period());
         }

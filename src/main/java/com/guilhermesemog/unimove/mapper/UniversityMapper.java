@@ -17,7 +17,7 @@ public class UniversityMapper {
         );
     }
 
-    public UniversityResponse toResponseBody(University university) {
+    public UniversityResponse toResponse(University university) {
         return new UniversityResponse(
                 university.getId(),
                 university.getName(),

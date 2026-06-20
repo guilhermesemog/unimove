@@ -14,7 +14,7 @@ public class BoardingStopMapper {
         );
     }
 
-    public BoardingStopResponse toResponseBody(BoardingStop bs) {
+    public BoardingStopResponse toResponse(BoardingStop bs) {
         return new BoardingStopResponse(
                 bs.getId(),
                 bs.getLocal()

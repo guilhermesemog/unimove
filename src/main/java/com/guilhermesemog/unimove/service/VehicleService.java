@@ -26,17 +26,17 @@ public class VehicleService {
 
     public VehicleResponse create(VehicleCreate vehicleCreate) {
         Vehicle vehicle = vehicleMapper.toEntity(vehicleCreate);
-        return vehicleMapper.toResponseBody(vehicleRepository.save(vehicle));
+        return vehicleMapper.toResponse(vehicleRepository.save(vehicle));
     }
 
     public VehicleResponse getById(Long id) {
         Vehicle vehicle = getVehicle(id);
-        return vehicleMapper.toResponseBody(vehicle);
+        return vehicleMapper.toResponse(vehicle);
     }
 
     public VehicleResponse getByPlate(String plate) {
         Vehicle vehicle = getVehicle(plate);
-        return vehicleMapper.toResponseBody(vehicle);
+        return vehicleMapper.toResponse(vehicle);
     }
 
     public Page<VehicleResponse> getAll(int page, int size, String sortBy, String sortDirection) {
@@ -46,7 +46,7 @@ public class VehicleService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return vehicleRepository.findAll(pageable).map(vehicleMapper::toResponseBody);
+        return vehicleRepository.findAll(pageable).map(vehicleMapper::toResponse);
     }
 
     public void delete(Long id) {

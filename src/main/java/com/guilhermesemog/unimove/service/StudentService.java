@@ -45,11 +45,11 @@ public class StudentService {
         User user = userMapper.toEntity(requestBody.user(), Role.STUDENT);
         Student student = studentMapper.toEntity(requestBody, user, university, boardingStop);
 
-        return studentMapper.toResponseBody(studentRepository.save(student));
+        return studentMapper.toResponse(studentRepository.save(student));
     }
 
     public StudentResponse getById(Long id) {
-        return studentMapper.toResponseBody(getStudent(id));
+        return studentMapper.toResponse(getStudent(id));
     }
 
     public Page<StudentResponse> getAll(int page, int size, String sortBy, String sortDirection) {
@@ -59,7 +59,7 @@ public class StudentService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return studentRepository.findAll(pageable).map(studentMapper::toResponseBody);
+        return studentRepository.findAll(pageable).map(studentMapper::toResponse);
     }
 
 

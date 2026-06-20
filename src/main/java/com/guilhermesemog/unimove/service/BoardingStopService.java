@@ -25,11 +25,11 @@ public class BoardingStopService {
 
     public BoardingStopResponse create(BoardingStopCreate createBody) {
         BoardingStop boardingStop = boardingStopMapper.toEntity(createBody);
-        return boardingStopMapper.toResponseBody(boardingStopRepository.save(boardingStop));
+        return boardingStopMapper.toResponse(boardingStopRepository.save(boardingStop));
     }
 
     public BoardingStopResponse getById(Long id) {
-        return boardingStopMapper.toResponseBody(getBoardingStop(id));
+        return boardingStopMapper.toResponse(getBoardingStop(id));
     }
 
     public Page<BoardingStopResponse> getAll(int page, int size, String sortBy, String sortDirection) {
@@ -39,7 +39,7 @@ public class BoardingStopService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return boardingStopRepository.findAll(pageable).map(boardingStopMapper::toResponseBody);
+        return boardingStopRepository.findAll(pageable).map(boardingStopMapper::toResponse);
     }
 
     public void delete(Long id) {

@@ -1,9 +1,9 @@
 package com.guilhermesemog.unimove.mapper;
 
-import com.guilhermesemog.unimove.dto.vehicle.VehiclePatch;
 import com.guilhermesemog.unimove.dto.vehicle.VehicleCreate;
-import com.guilhermesemog.unimove.dto.vehicle.VehicleUpdate;
+import com.guilhermesemog.unimove.dto.vehicle.VehiclePatch;
 import com.guilhermesemog.unimove.dto.vehicle.VehicleResponse;
+import com.guilhermesemog.unimove.dto.vehicle.VehicleUpdate;
 import com.guilhermesemog.unimove.model.Vehicle;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ public class VehicleMapper {
         );
     }
 
-    public VehicleResponse toResponseBody(Vehicle vehicle) {
+    public VehicleResponse toResponse(Vehicle vehicle) {
         return new VehicleResponse(
                 vehicle.getId(),
                 vehicle.getPlate(),

@@ -49,7 +49,7 @@ public class UserMapper {
         );
     }
 
-    public UserResponse toResponseBody(User user) {
+    public UserResponse toResponse(User user) {
         return new UserResponse(
                 user.getId(),
                 user.getCpf(),

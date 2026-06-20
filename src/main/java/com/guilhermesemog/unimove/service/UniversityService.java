@@ -27,17 +27,17 @@ public class UniversityService {
 
     public UniversityResponse create(UniversityCreate requestBody) {
         University university = universityMapper.toEntity(requestBody);
-        return universityMapper.toResponseBody(universityRepository.save(university));
+        return universityMapper.toResponse(universityRepository.save(university));
     }
 
     public UniversityResponse getById(Long id) {
         University university = getUniversity(id);
-        return universityMapper.toResponseBody(university);
+        return universityMapper.toResponse(university);
     }
 
     public UniversityResponse getByName(String name) {
         University university = getUniversityByName(name);
-        return universityMapper.toResponseBody(university);
+        return universityMapper.toResponse(university);
     }
 
     public Page<UniversityResponse> getAll(int page, int size, String sortBy, String sortDirection) {
@@ -47,7 +47,7 @@ public class UniversityService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return universityRepository.findAll(pageable).map(universityMapper::toResponseBody);
+        return universityRepository.findAll(pageable).map(universityMapper::toResponse);
     }
 
     public void delete(Long id) {
