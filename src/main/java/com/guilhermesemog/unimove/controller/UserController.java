@@ -1,9 +1,9 @@
 package com.guilhermesemog.unimove.controller;
 
-import com.guilhermesemog.unimove.dto.user.UserPatchRequestBody;
-import com.guilhermesemog.unimove.dto.user.UserPostRequestBody;
-import com.guilhermesemog.unimove.dto.user.UserPutRequestBody;
-import com.guilhermesemog.unimove.dto.user.UserResponseBody;
+import com.guilhermesemog.unimove.dto.user.UserCreate;
+import com.guilhermesemog.unimove.dto.user.UserPatch;
+import com.guilhermesemog.unimove.dto.user.UserResponse;
+import com.guilhermesemog.unimove.dto.user.UserUpdate;
 import com.guilhermesemog.unimove.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -21,26 +21,26 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseBody> create(@Valid @RequestBody UserPostRequestBody user) {
-        UserResponseBody savedUser = userService.create(user);
+    public ResponseEntity<UserResponse> create(@Valid @RequestBody UserCreate requestBody) {
+        UserResponse savedUser = userService.create(requestBody);
         return ResponseEntity.status(201).body(savedUser);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseBody> getById(@PathVariable Long id) {
-        UserResponseBody user = userService.getById(id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserResponse> getById(@PathVariable Long id) {
+        UserResponse responseBody = userService.getById(id);
+        return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserResponseBody>> getAll(
+    public ResponseEntity<Page<UserResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
-        Page<UserResponseBody> response = userService.getAll(page, size, sortBy, sortDirection);
-        return ResponseEntity.ok(response);
+        Page<UserResponse> responseBody = userService.getAll(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(responseBody);
     }
 
     @DeleteMapping("/{id}")
@@ -50,14 +50,14 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UserPutRequestBody userPutRequestBody) {
-        userService.update(id, userPutRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UserUpdate requestBody) {
+        userService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UserPatchRequestBody userPatchRequestBody) {
-        userService.update(id, userPatchRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UserPatch requestBody) {
+        userService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 

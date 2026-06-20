@@ -1,9 +1,9 @@
 package com.guilhermesemog.unimove.service;
 
-import com.guilhermesemog.unimove.dto.university.UniversityPatchRequestBody;
-import com.guilhermesemog.unimove.dto.university.UniversityPostRequestBody;
-import com.guilhermesemog.unimove.dto.university.UniversityPutRequestBody;
-import com.guilhermesemog.unimove.dto.university.UniversityResponseBody;
+import com.guilhermesemog.unimove.dto.university.UniversityCreate;
+import com.guilhermesemog.unimove.dto.university.UniversityPatch;
+import com.guilhermesemog.unimove.dto.university.UniversityResponse;
+import com.guilhermesemog.unimove.dto.university.UniversityUpdate;
 import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.UniversityMapper;
 import com.guilhermesemog.unimove.model.University;
@@ -25,22 +25,22 @@ public class UniversityService {
         this.universityMapper = universityMapper;
     }
 
-    public UniversityResponseBody create(UniversityPostRequestBody universityPostRequestBody) {
-        University university = universityMapper.toEntity(universityPostRequestBody);
+    public UniversityResponse create(UniversityCreate requestBody) {
+        University university = universityMapper.toEntity(requestBody);
         return universityMapper.toResponseBody(universityRepository.save(university));
     }
 
-    public UniversityResponseBody getById(Long id) {
-        University university = universityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("University not found"));
+    public UniversityResponse getById(Long id) {
+        University university = getUniversity(id);
         return universityMapper.toResponseBody(university);
     }
 
-    public UniversityResponseBody getByName(String name) {
-        University university = universityRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("University not found"));
+    public UniversityResponse getByName(String name) {
+        University university = getUniversityByName(name);
         return universityMapper.toResponseBody(university);
     }
 
-    public Page<UniversityResponseBody> getAll(int page, int size, String sortBy, String sortDirection) {
+    public Page<UniversityResponse> getAll(int page, int size, String sortBy, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
@@ -51,20 +51,28 @@ public class UniversityService {
     }
 
     public void delete(Long id) {
-        University university = universityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("University not found"));
+        University university = getUniversity(id);
         universityRepository.delete(university);
     }
 
-    public void update(Long id, UniversityPutRequestBody universityPutRequestBody) {
-        University university = universityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("University not found"));
-        university = universityMapper.updateUniversity(universityPutRequestBody, university);
+    public void update(Long id, UniversityUpdate requestBody) {
+        University university = getUniversity(id);
+        university = universityMapper.updateUniversity(requestBody, university);
         universityRepository.save(university);
     }
 
-    public void update(Long id, UniversityPatchRequestBody universityPatchRequestBody) {
-        University university = universityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("University not found"));
-        university = universityMapper.updateUniversity(universityPatchRequestBody, university);
+    public void update(Long id, UniversityPatch requestBody) {
+        University university = getUniversity(id);
+        university = universityMapper.updateUniversity(requestBody, university);
         universityRepository.save(university);
+    }
+
+    private University getUniversity(Long id) {
+        return universityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("University not found"));
+    }
+
+    private University getUniversityByName(String name) {
+        return universityRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("University not found"));
     }
 
 }

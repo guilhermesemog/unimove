@@ -2,7 +2,7 @@ package com.guilhermesemog.unimove.dto.university;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record UniversityPostRequestBody(
+public record UniversityCreate(
         @NotBlank String name,
         @NotBlank String address
 ) {

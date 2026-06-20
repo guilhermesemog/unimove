@@ -1,10 +1,10 @@
 package com.guilhermesemog.unimove.dto.student;
 
-import com.guilhermesemog.unimove.dto.user.UserPatchRequestBody;
+import com.guilhermesemog.unimove.dto.user.UserPatch;
 import jakarta.validation.Valid;
 
-public record StudentPatchRequestBody(
-        @Valid UserPatchRequestBody user,
+public record StudentPatch(
+        @Valid UserPatch user,
         Long period,
         String course,
         String address,

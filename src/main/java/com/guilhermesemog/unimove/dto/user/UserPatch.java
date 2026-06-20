@@ -2,7 +2,7 @@ package com.guilhermesemog.unimove.dto.user;
 
 import jakarta.validation.constraints.Size;
 
-public record UserPatchRequestBody(
+public record UserPatch(
 
         @Size(min = 11, max = 11, message = "CPF must be exactly 11 characters") String cpf,
         String firstName,

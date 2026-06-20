@@ -1,9 +1,9 @@
 package com.guilhermesemog.unimove.service;
 
-import com.guilhermesemog.unimove.dto.student.StudentPatchRequestBody;
-import com.guilhermesemog.unimove.dto.student.StudentPostRequestBody;
-import com.guilhermesemog.unimove.dto.student.StudentPutRequestBody;
-import com.guilhermesemog.unimove.dto.student.StudentResponseBody;
+import com.guilhermesemog.unimove.dto.student.StudentCreate;
+import com.guilhermesemog.unimove.dto.student.StudentPatch;
+import com.guilhermesemog.unimove.dto.student.StudentResponse;
+import com.guilhermesemog.unimove.dto.student.StudentUpdate;
 import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.StudentMapper;
 import com.guilhermesemog.unimove.mapper.UserMapper;
@@ -38,27 +38,21 @@ public class StudentService {
         this.boardingStopRepository = boardingStopRepository;
     }
 
-    public StudentResponseBody create(StudentPostRequestBody studentPostRequestBody) {
-        University university = universityRepository.findById(studentPostRequestBody.universityId())
-                .orElseThrow(() -> new ResourceNotFoundException("University not found"));
+    public StudentResponse create(StudentCreate requestBody) {
+        University university = getUniversity(requestBody.universityId());
+        BoardingStop boardingStop = getBoardingStop(requestBody.preferredBoardingStopId());
 
-        BoardingStop boardingStop = boardingStopRepository.findById(studentPostRequestBody.preferredBoardingStopId())
-                .orElseThrow(() -> new ResourceNotFoundException("Boarding stop not found"));
+        User user = userMapper.toEntity(requestBody.user(), Role.STUDENT);
+        Student student = studentMapper.toEntity(requestBody, user, university, boardingStop);
 
-        User user = userMapper.toEntity(studentPostRequestBody.user(), Role.STUDENT);
-
-        Student student = studentMapper.toEntity(studentPostRequestBody, user, university, boardingStop);
         return studentMapper.toResponseBody(studentRepository.save(student));
     }
 
-    public StudentResponseBody getById(Long id) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-
-        return studentMapper.toResponseBody(student);
+    public StudentResponse getById(Long id) {
+        return studentMapper.toResponseBody(getStudent(id));
     }
 
-    public Page<StudentResponseBody> getAll(int page, int size, String sortBy, String sortDirection) {
+    public Page<StudentResponse> getAll(int page, int size, String sortBy, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
@@ -70,50 +64,42 @@ public class StudentService {
 
 
     public void delete(Long id) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-
-        studentRepository.delete(student);
+        studentRepository.delete(getStudent(id));
     }
 
-    public void update(Long id, StudentPutRequestBody studentPutRequestBody) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+    public void update(Long id, StudentUpdate requestBody) {
+        Student student = getStudent(id);
+        University university = getUniversity(requestBody.universityId());
 
-        University university = universityRepository.findById(studentPutRequestBody.universityId())
-                .orElseThrow(() -> new ResourceNotFoundException("University not found"));
+        student = studentMapper.update(requestBody, student, university, getBoardingStop(requestBody.preferredBoardingStopId()));
 
-        if (studentPutRequestBody.preferredBoardingStopId() == null) {
-            student = studentMapper.update(studentPutRequestBody, student, university, null);
-            studentRepository.save(student);
-            return;
-        }
-
-        BoardingStop boardingStop = boardingStopRepository.findById(studentPutRequestBody.preferredBoardingStopId())
-                .orElseThrow(() -> new ResourceNotFoundException("Boarding stop not found"));
-
-        student = studentMapper.update(studentPutRequestBody, student, university, boardingStop);
         studentRepository.save(student);
     }
 
-    public void update(Long id, StudentPatchRequestBody studentPatchRequestBody) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+    public void update(Long id, StudentPatch requestBody) {
+        Student student = getStudent(id);
+        University university = getUniversity(requestBody.universityId());
 
-        University university = universityRepository.findById(studentPatchRequestBody.universityId())
-                .orElseThrow(() -> new ResourceNotFoundException("University not found"));
+        student = studentMapper.update(requestBody, student, university, getBoardingStop(requestBody.preferredBoardingStopId()));
 
-        if (studentPatchRequestBody.preferredBoardingStopId() == null) {
-            student = studentMapper.update(studentPatchRequestBody, student, university, null);
-            studentRepository.save(student);
-            return;
-        }
-
-        BoardingStop boardingStop = boardingStopRepository.findById(studentPatchRequestBody.preferredBoardingStopId())
-                .orElseThrow(() -> new ResourceNotFoundException("Boarding stop not found"));
-
-        student = studentMapper.update(studentPatchRequestBody, student, university, boardingStop);
         studentRepository.save(student);
     }
+
+    private Student getStudent(Long id) {
+        return studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+    }
+
+    private University getUniversity(Long id) {
+        return universityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("University not found"));
+    }
+
+    private BoardingStop getBoardingStop(Long id) {
+        if (id == null) {
+            return null;
+        }
+
+        return boardingStopRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Boarding stop not found"));
+    }
+
 
 }

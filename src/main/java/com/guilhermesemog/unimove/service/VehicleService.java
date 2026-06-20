@@ -1,9 +1,9 @@
 package com.guilhermesemog.unimove.service;
 
-import com.guilhermesemog.unimove.dto.vehicle.VehiclePatchRequestBody;
-import com.guilhermesemog.unimove.dto.vehicle.VehiclePostRequestBody;
-import com.guilhermesemog.unimove.dto.vehicle.VehiclePutRequestBody;
-import com.guilhermesemog.unimove.dto.vehicle.VehicleResponseBody;
+import com.guilhermesemog.unimove.dto.vehicle.VehicleCreate;
+import com.guilhermesemog.unimove.dto.vehicle.VehiclePatch;
+import com.guilhermesemog.unimove.dto.vehicle.VehicleResponse;
+import com.guilhermesemog.unimove.dto.vehicle.VehicleUpdate;
 import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.VehicleMapper;
 import com.guilhermesemog.unimove.model.Vehicle;
@@ -24,22 +24,22 @@ public class VehicleService {
         this.vehicleMapper = vehicleMapper;
     }
 
-    public VehicleResponseBody create(VehiclePostRequestBody vehiclePostRequestBody) {
-        Vehicle vehicle = vehicleMapper.toEntity(vehiclePostRequestBody);
+    public VehicleResponse create(VehicleCreate vehicleCreate) {
+        Vehicle vehicle = vehicleMapper.toEntity(vehicleCreate);
         return vehicleMapper.toResponseBody(vehicleRepository.save(vehicle));
     }
 
-    public VehicleResponseBody getById(Long id) {
-        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
+    public VehicleResponse getById(Long id) {
+        Vehicle vehicle = getVehicle(id);
         return vehicleMapper.toResponseBody(vehicle);
     }
 
-    public VehicleResponseBody getByPlate(String plate) {
-        Vehicle vehicle = vehicleRepository.findByPlate(plate).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
+    public VehicleResponse getByPlate(String plate) {
+        Vehicle vehicle = getVehicle(plate);
         return vehicleMapper.toResponseBody(vehicle);
     }
 
-    public Page<VehicleResponseBody> getAll(int page, int size, String sortBy, String sortDirection) {
+    public Page<VehicleResponse> getAll(int page, int size, String sortBy, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
@@ -50,20 +50,28 @@ public class VehicleService {
     }
 
     public void delete(Long id) {
-        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
+        Vehicle vehicle = getVehicle(id);
         vehicleRepository.delete(vehicle);
     }
 
-    public void update(Long id, VehiclePatchRequestBody vehiclePatchRequestBody) {
-        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
-        vehicle = vehicleMapper.updateVehicle(vehiclePatchRequestBody, vehicle);
+    public void update(Long id, VehiclePatch vehiclePatch) {
+        Vehicle vehicle = getVehicle(id);
+        vehicle = vehicleMapper.updateVehicle(vehiclePatch, vehicle);
         vehicleRepository.save(vehicle);
     }
 
-    public void update(Long id, VehiclePutRequestBody vehiclePutRequestBody) {
-        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
-        vehicle = vehicleMapper.updateVehicle(vehiclePutRequestBody, vehicle);
+    public void update(Long id, VehicleUpdate vehicleUpdate) {
+        Vehicle vehicle = getVehicle(id);
+        vehicle = vehicleMapper.updateVehicle(vehicleUpdate, vehicle);
         vehicleRepository.save(vehicle);
+    }
+
+    private Vehicle getVehicle(Long id) {
+        return vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
+    }
+
+    private Vehicle getVehicle(String plate) {
+        return vehicleRepository.findByPlate(plate).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
     }
 
 }

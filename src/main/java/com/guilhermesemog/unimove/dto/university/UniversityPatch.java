@@ -1,6 +1,6 @@
 package com.guilhermesemog.unimove.dto.university;
 
-public record UniversityPatchRequestBody(
+public record UniversityPatch(
         String name,
         String address
 ) {

@@ -1,7 +1,7 @@
 package com.guilhermesemog.unimove.controller;
 
-import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopPostRequestBody;
-import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponseBody;
+import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopCreate;
+import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponse;
 import com.guilhermesemog.unimove.service.BoardingStopService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -18,26 +18,26 @@ public class BoardingStopController {
     }
 
     @PostMapping
-    public ResponseEntity<BoardingStopResponseBody> create(@RequestBody BoardingStopPostRequestBody requestBody) {
-        BoardingStopResponseBody response = boardingStopService.create(requestBody);
-        return ResponseEntity.status(201).body(response);
+    public ResponseEntity<BoardingStopResponse> create(@RequestBody BoardingStopCreate requestBody) {
+        BoardingStopResponse responseBody = boardingStopService.create(requestBody);
+        return ResponseEntity.status(201).body(responseBody);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardingStopResponseBody> getById(@PathVariable Long id) {
-        BoardingStopResponseBody response = boardingStopService.getById(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<BoardingStopResponse> getById(@PathVariable Long id) {
+        BoardingStopResponse responseBody = boardingStopService.getById(id);
+        return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping
-    public ResponseEntity<Page<BoardingStopResponseBody>> getAll(
+    public ResponseEntity<Page<BoardingStopResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
-        Page<BoardingStopResponseBody> response = boardingStopService.getAll(page, size, sortBy, sortDirection);
-        return ResponseEntity.ok(response);
+        Page<BoardingStopResponse> responseBody = boardingStopService.getAll(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(responseBody);
     }
 
     @DeleteMapping("/{id}")

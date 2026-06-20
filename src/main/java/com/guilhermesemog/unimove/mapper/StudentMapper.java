@@ -1,10 +1,9 @@
 package com.guilhermesemog.unimove.mapper;
 
-import com.guilhermesemog.unimove.dto.student.StudentPatchRequestBody;
-import com.guilhermesemog.unimove.dto.student.StudentPostRequestBody;
-import com.guilhermesemog.unimove.dto.student.StudentPutRequestBody;
-import com.guilhermesemog.unimove.dto.student.StudentResponseBody;
-import com.guilhermesemog.unimove.dto.user.UserResponseBody;
+import com.guilhermesemog.unimove.dto.student.StudentCreate;
+import com.guilhermesemog.unimove.dto.student.StudentPatch;
+import com.guilhermesemog.unimove.dto.student.StudentResponse;
+import com.guilhermesemog.unimove.dto.student.StudentUpdate;
 import com.guilhermesemog.unimove.model.BoardingStop;
 import com.guilhermesemog.unimove.model.Student;
 import com.guilhermesemog.unimove.model.University;
@@ -20,7 +19,7 @@ public class StudentMapper {
         this.userMapper = userMapper;
     }
 
-    public Student toEntity(StudentPostRequestBody studentBody, User user, University university, BoardingStop boardingStop) {
+    public Student toEntity(StudentCreate studentBody, User user, University university, BoardingStop boardingStop) {
         return new Student(
                 user,
                 studentBody.period(),
@@ -31,10 +30,9 @@ public class StudentMapper {
         );
     }
 
-    public StudentResponseBody toResponseBody(Student student) {
-        UserResponseBody userResponseBody = userMapper.toResponseBody(student.getUser());
-        return new StudentResponseBody(
-                userResponseBody,
+    public StudentResponse toResponseBody(Student student) {
+        return new StudentResponse(
+                userMapper.toResponseBody(student.getUser()),
                 student.getPeriod(),
                 student.getCourse(),
                 student.getAddress(),
@@ -43,7 +41,7 @@ public class StudentMapper {
         );
     }
 
-    public Student update(StudentPutRequestBody newStudent, Student student, University university, BoardingStop boardingStop) {
+    public Student update(StudentUpdate newStudent, Student student, University university, BoardingStop boardingStop) {
         student.setUser(userMapper.updateUser(newStudent.user(), student.getUser()));
         student.setPeriod(newStudent.period());
         student.setCourse(newStudent.course());
@@ -54,7 +52,7 @@ public class StudentMapper {
         return student;
     }
 
-    public Student update(StudentPatchRequestBody newStudent, Student student, University university, BoardingStop boardingStop) {
+    public Student update(StudentPatch newStudent, Student student, University university, BoardingStop boardingStop) {
 
         if (newStudent.user() != null) {
             student.setUser(userMapper.updateUser(newStudent.user(), student.getUser()));
@@ -73,10 +71,10 @@ public class StudentMapper {
             student.setUniversity(university);
         }
 
-        Long newBoardingStopId = newStudent.preferredBoardingStopId();
+        Long bsId = newStudent.preferredBoardingStopId();
 
-        if (newBoardingStopId != null) {
-            if (newBoardingStopId == -1) {
+        if (bsId != null) {
+            if (bsId == -1) {
                 student.setPreferredBoardingStop(null);
             } else {
                 student.setPreferredBoardingStop(boardingStop);

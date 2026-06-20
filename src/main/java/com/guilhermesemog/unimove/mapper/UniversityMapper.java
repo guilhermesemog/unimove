@@ -1,38 +1,38 @@
 package com.guilhermesemog.unimove.mapper;
 
-import com.guilhermesemog.unimove.dto.university.UniversityPatchRequestBody;
-import com.guilhermesemog.unimove.dto.university.UniversityPostRequestBody;
-import com.guilhermesemog.unimove.dto.university.UniversityPutRequestBody;
-import com.guilhermesemog.unimove.dto.university.UniversityResponseBody;
+import com.guilhermesemog.unimove.dto.university.UniversityPatch;
+import com.guilhermesemog.unimove.dto.university.UniversityCreate;
+import com.guilhermesemog.unimove.dto.university.UniversityUpdate;
+import com.guilhermesemog.unimove.dto.university.UniversityResponse;
 import com.guilhermesemog.unimove.model.University;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UniversityMapper {
 
-    public University toEntity(UniversityPostRequestBody universityPostRequestBody) {
+    public University toEntity(UniversityCreate body) {
         return new University(
-                universityPostRequestBody.name(),
-                universityPostRequestBody.address()
+                body.name(),
+                body.address()
         );
     }
 
-    public UniversityResponseBody toResponseBody(University university) {
-        return new UniversityResponseBody(
+    public UniversityResponse toResponseBody(University university) {
+        return new UniversityResponse(
                 university.getId(),
                 university.getName(),
                 university.getAddress()
         );
     }
 
-    public University updateUniversity(UniversityPutRequestBody newUniversity, University university) {
+    public University updateUniversity(UniversityUpdate newUniversity, University university) {
         university.setName(newUniversity.name());
         university.setAddress(newUniversity.address());
 
         return university;
     }
 
-    public University updateUniversity(UniversityPatchRequestBody newUniversity, University university) {
+    public University updateUniversity(UniversityPatch newUniversity, University university) {
 
         if (newUniversity.name() != null) {
             university.setName(newUniversity.name());

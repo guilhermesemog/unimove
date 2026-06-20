@@ -1,23 +1,23 @@
 package com.guilhermesemog.unimove.mapper;
 
-import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopPostRequestBody;
-import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponseBody;
+import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopCreate;
+import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponse;
 import com.guilhermesemog.unimove.model.BoardingStop;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BoardingStopMapper {
 
-    public BoardingStop toEntity(BoardingStopPostRequestBody boardingStopPostRequestBody) {
+    public BoardingStop toEntity(BoardingStopCreate body) {
         return new BoardingStop(
-                boardingStopPostRequestBody.local()
+                body.local()
         );
     }
 
-    public BoardingStopResponseBody toResponseBody(BoardingStop boardingStop) {
-        return new BoardingStopResponseBody(
-                boardingStop.getId(),
-                boardingStop.getLocal()
+    public BoardingStopResponse toResponseBody(BoardingStop bs) {
+        return new BoardingStopResponse(
+                bs.getId(),
+                bs.getLocal()
         );
     }
 }

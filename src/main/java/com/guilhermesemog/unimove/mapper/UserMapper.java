@@ -1,10 +1,10 @@
 package com.guilhermesemog.unimove.mapper;
 
-import com.guilhermesemog.unimove.dto.common.CreateUserBody;
-import com.guilhermesemog.unimove.dto.user.UserPatchRequestBody;
-import com.guilhermesemog.unimove.dto.user.UserPostRequestBody;
-import com.guilhermesemog.unimove.dto.user.UserPutRequestBody;
-import com.guilhermesemog.unimove.dto.user.UserResponseBody;
+import com.guilhermesemog.unimove.dto.common.CommonUserCreate;
+import com.guilhermesemog.unimove.dto.user.UserPatch;
+import com.guilhermesemog.unimove.dto.user.UserCreate;
+import com.guilhermesemog.unimove.dto.user.UserUpdate;
+import com.guilhermesemog.unimove.dto.user.UserResponse;
 import com.guilhermesemog.unimove.model.User;
 import com.guilhermesemog.unimove.model.enums.Role;
 import org.springframework.stereotype.Component;
@@ -13,14 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    public User toEntity(UserPostRequestBody userPostRequestBody) {
-        CreateUserBody userBody = userPostRequestBody.user();
-
+    public User toEntity(UserCreate body) {
+        CommonUserCreate userBody = body.user();
         Boolean isActive = userBody.active();
 
-        if (isActive == null) {
-            isActive = true;
-        }
+        isActive = isActive == null || isActive;
 
         return new User(
                 userBody.cpf(),
@@ -29,11 +26,11 @@ public class UserMapper {
                 userBody.lastName(),
                 userBody.phone(),
                 isActive,
-                userPostRequestBody.role()
+                body.role()
         );
     }
 
-    public User toEntity(CreateUserBody userBody, Role role) {
+    public User toEntity(CommonUserCreate userBody, Role role) {
 
         Boolean isActive = userBody.active();
 
@@ -52,8 +49,8 @@ public class UserMapper {
         );
     }
 
-    public UserResponseBody toResponseBody(User user) {
-        return new UserResponseBody(
+    public UserResponse toResponseBody(User user) {
+        return new UserResponse(
                 user.getId(),
                 user.getCpf(),
                 user.getFirstName(),
@@ -64,7 +61,7 @@ public class UserMapper {
         );
     }
 
-    public User updateUser(UserPutRequestBody newUser, User user) {
+    public User updateUser(UserUpdate newUser, User user) {
         user.setCpf(newUser.cpf());
         user.setFirstName(newUser.firstName());
         user.setLastName(newUser.lastName());
@@ -72,7 +69,7 @@ public class UserMapper {
         return user;
     }
 
-    public User updateUser(UserPatchRequestBody newUser, User user) {
+    public User updateUser(UserPatch newUser, User user) {
 
         if (newUser.cpf() != null) {
             user.setCpf(newUser.cpf());

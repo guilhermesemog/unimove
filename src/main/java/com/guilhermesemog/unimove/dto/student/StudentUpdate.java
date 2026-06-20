@@ -1,12 +1,12 @@
 package com.guilhermesemog.unimove.dto.student;
 
-import com.guilhermesemog.unimove.dto.user.UserPutRequestBody;
+import com.guilhermesemog.unimove.dto.user.UserUpdate;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record StudentPutRequestBody(
-        @Valid UserPutRequestBody user,
+public record StudentUpdate(
+        @Valid UserUpdate user,
         @NotNull(message = "Period is required") Long period,
         @NotBlank(message = "Course is required") String course,
         @NotBlank(message = "Address is required") String address,

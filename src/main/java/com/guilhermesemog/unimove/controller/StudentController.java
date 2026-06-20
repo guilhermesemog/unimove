@@ -1,9 +1,9 @@
 package com.guilhermesemog.unimove.controller;
 
-import com.guilhermesemog.unimove.dto.student.StudentPatchRequestBody;
-import com.guilhermesemog.unimove.dto.student.StudentPostRequestBody;
-import com.guilhermesemog.unimove.dto.student.StudentPutRequestBody;
-import com.guilhermesemog.unimove.dto.student.StudentResponseBody;
+import com.guilhermesemog.unimove.dto.student.StudentPatch;
+import com.guilhermesemog.unimove.dto.student.StudentCreate;
+import com.guilhermesemog.unimove.dto.student.StudentUpdate;
+import com.guilhermesemog.unimove.dto.student.StudentResponse;
 import com.guilhermesemog.unimove.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -21,25 +21,25 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentResponseBody> create(@RequestBody StudentPostRequestBody requestBody) {
-        StudentResponseBody responseBody = studentService.create(requestBody);
+    public ResponseEntity<StudentResponse> create(@RequestBody StudentCreate requestBody) {
+        StudentResponse responseBody = studentService.create(requestBody);
         return ResponseEntity.status(201).body(responseBody);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentResponseBody> getById(@PathVariable Long id) {
-        StudentResponseBody responseBody = studentService.getById(id);
+    public ResponseEntity<StudentResponse> getById(@PathVariable Long id) {
+        StudentResponse responseBody = studentService.getById(id);
         return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping
-    public ResponseEntity<Page<StudentResponseBody>> getAll(
+    public ResponseEntity<Page<StudentResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
-        Page<StudentResponseBody> responseBody = studentService.getAll(page, size, sortBy, sortDirection);
+        Page<StudentResponse> responseBody = studentService.getAll(page, size, sortBy, sortDirection);
         return ResponseEntity.ok(responseBody);
     }
 
@@ -50,14 +50,14 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody StudentPutRequestBody studentPutRequestBody) {
-        studentService.update(id, studentPutRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody StudentUpdate requestBody) {
+        studentService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody StudentPatchRequestBody studentPatchRequestBody) {
-        studentService.update(id, studentPatchRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody StudentPatch requestBody) {
+        studentService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 }

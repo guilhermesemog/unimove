@@ -1,9 +1,9 @@
 package com.guilhermesemog.unimove.controller;
 
-import com.guilhermesemog.unimove.dto.university.UniversityPatchRequestBody;
-import com.guilhermesemog.unimove.dto.university.UniversityPostRequestBody;
-import com.guilhermesemog.unimove.dto.university.UniversityPutRequestBody;
-import com.guilhermesemog.unimove.dto.university.UniversityResponseBody;
+import com.guilhermesemog.unimove.dto.university.UniversityCreate;
+import com.guilhermesemog.unimove.dto.university.UniversityPatch;
+import com.guilhermesemog.unimove.dto.university.UniversityResponse;
+import com.guilhermesemog.unimove.dto.university.UniversityUpdate;
 import com.guilhermesemog.unimove.service.UniversityService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -22,32 +22,32 @@ public class UniversityController {
     }
 
     @PostMapping
-    public ResponseEntity<UniversityResponseBody> create(@Valid @RequestBody UniversityPostRequestBody universityPostRequestBody) {
-        UniversityResponseBody savedUniversity = universityService.create(universityPostRequestBody);
-        return ResponseEntity.status(201).body(savedUniversity);
+    public ResponseEntity<UniversityResponse> create(@Valid @RequestBody UniversityCreate requestBody) {
+        UniversityResponse responseBody = universityService.create(requestBody);
+        return ResponseEntity.status(201).body(responseBody);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UniversityResponseBody> getById(@PathVariable Long id) {
-        UniversityResponseBody university = universityService.getById(id);
-        return ResponseEntity.ok(university);
+    public ResponseEntity<UniversityResponse> getById(@PathVariable Long id) {
+        UniversityResponse responseBody = universityService.getById(id);
+        return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("/query")
-    public ResponseEntity<UniversityResponseBody> getByName(@NotBlank @RequestParam String name) {
-        UniversityResponseBody university = universityService.getByName(name);
-        return ResponseEntity.ok(university);
+    public ResponseEntity<UniversityResponse> getByName(@NotBlank @RequestParam String name) {
+        UniversityResponse responseBody = universityService.getByName(name);
+        return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping
-    public ResponseEntity<Page<UniversityResponseBody>> getAll(
+    public ResponseEntity<Page<UniversityResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
-        Page<UniversityResponseBody> response = universityService.getAll(page, size, sortBy, sortDirection);
-        return ResponseEntity.ok(response);
+        Page<UniversityResponse> responseBody = universityService.getAll(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(responseBody);
     }
 
     @DeleteMapping("/{id}")
@@ -57,14 +57,14 @@ public class UniversityController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UniversityPutRequestBody universityPutRequestBody) {
-        universityService.update(id, universityPutRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UniversityUpdate requestBody) {
+        universityService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UniversityPatchRequestBody universityPatchRequestBody) {
-        universityService.update(id, universityPatchRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UniversityPatch requestBody) {
+        universityService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 }

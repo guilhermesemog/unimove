@@ -1,7 +1,7 @@
 package com.guilhermesemog.unimove.service;
 
-import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopPostRequestBody;
-import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponseBody;
+import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopCreate;
+import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponse;
 import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.BoardingStopMapper;
 import com.guilhermesemog.unimove.model.BoardingStop;
@@ -23,17 +23,16 @@ public class BoardingStopService {
         this.boardingStopMapper = boardingStopMapper;
     }
 
-    public BoardingStopResponseBody create(BoardingStopPostRequestBody boardingStopPostRequestBody) {
-        BoardingStop boardingStop = boardingStopMapper.toEntity(boardingStopPostRequestBody);
+    public BoardingStopResponse create(BoardingStopCreate createBody) {
+        BoardingStop boardingStop = boardingStopMapper.toEntity(createBody);
         return boardingStopMapper.toResponseBody(boardingStopRepository.save(boardingStop));
     }
 
-    public BoardingStopResponseBody getById(Long id) {
-        BoardingStop boardingStop = boardingStopRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Boarding stop not found"));
-        return boardingStopMapper.toResponseBody(boardingStop);
+    public BoardingStopResponse getById(Long id) {
+        return boardingStopMapper.toResponseBody(getBoardingStop(id));
     }
 
-    public Page<BoardingStopResponseBody> getAll(int page, int size, String sortBy, String sortDirection) {
+    public Page<BoardingStopResponse> getAll(int page, int size, String sortBy, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
@@ -44,7 +43,10 @@ public class BoardingStopService {
     }
 
     public void delete(Long id) {
-        BoardingStop boardingStop = boardingStopRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Boarding stop not found"));
-        boardingStopRepository.delete(boardingStop);
+        boardingStopRepository.delete(getBoardingStop(id));
+    }
+
+    private BoardingStop getBoardingStop(Long id) {
+        return boardingStopRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Boarding stop not found"));
     }
 }

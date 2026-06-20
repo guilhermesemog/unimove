@@ -1,30 +1,30 @@
 package com.guilhermesemog.unimove.mapper;
 
-import com.guilhermesemog.unimove.dto.vehicle.VehiclePatchRequestBody;
-import com.guilhermesemog.unimove.dto.vehicle.VehiclePostRequestBody;
-import com.guilhermesemog.unimove.dto.vehicle.VehiclePutRequestBody;
-import com.guilhermesemog.unimove.dto.vehicle.VehicleResponseBody;
+import com.guilhermesemog.unimove.dto.vehicle.VehiclePatch;
+import com.guilhermesemog.unimove.dto.vehicle.VehicleCreate;
+import com.guilhermesemog.unimove.dto.vehicle.VehicleUpdate;
+import com.guilhermesemog.unimove.dto.vehicle.VehicleResponse;
 import com.guilhermesemog.unimove.model.Vehicle;
 import org.springframework.stereotype.Component;
 
 @Component
 public class VehicleMapper {
-    public Vehicle toEntity(VehiclePostRequestBody vehiclePostRequestBody) {
+    public Vehicle toEntity(VehicleCreate body) {
         return new Vehicle(
-                vehiclePostRequestBody.plate(),
-                vehiclePostRequestBody.capacity()
+                body.plate(),
+                body.capacity()
         );
     }
 
-    public VehicleResponseBody toResponseBody(Vehicle vehicle) {
-        return new VehicleResponseBody(
+    public VehicleResponse toResponseBody(Vehicle vehicle) {
+        return new VehicleResponse(
                 vehicle.getId(),
                 vehicle.getPlate(),
                 vehicle.getCapacity()
         );
     }
 
-    public Vehicle updateVehicle(VehiclePatchRequestBody newVehicle, Vehicle vehicle) {
+    public Vehicle updateVehicle(VehiclePatch newVehicle, Vehicle vehicle) {
         if (newVehicle.plate() != null) {
             vehicle.setPlate(newVehicle.plate());
         }
@@ -34,7 +34,7 @@ public class VehicleMapper {
         return vehicle;
     }
 
-    public Vehicle updateVehicle(VehiclePutRequestBody newVehicle, Vehicle vehicle) {
+    public Vehicle updateVehicle(VehicleUpdate newVehicle, Vehicle vehicle) {
         vehicle.setPlate(newVehicle.plate());
         vehicle.setCapacity(newVehicle.capacity());
 

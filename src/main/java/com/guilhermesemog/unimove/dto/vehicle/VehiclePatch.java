@@ -2,7 +2,7 @@ package com.guilhermesemog.unimove.dto.vehicle;
 
 import jakarta.validation.constraints.Size;
 
-public record VehiclePatchRequestBody(
+public record VehiclePatch(
         @Size(min = 7, max = 7) String plate,
         Integer capacity
 ) {

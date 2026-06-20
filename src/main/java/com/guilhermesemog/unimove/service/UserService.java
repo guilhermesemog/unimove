@@ -1,9 +1,9 @@
 package com.guilhermesemog.unimove.service;
 
-import com.guilhermesemog.unimove.dto.user.UserPatchRequestBody;
-import com.guilhermesemog.unimove.dto.user.UserPostRequestBody;
-import com.guilhermesemog.unimove.dto.user.UserPutRequestBody;
-import com.guilhermesemog.unimove.dto.user.UserResponseBody;
+import com.guilhermesemog.unimove.dto.user.UserCreate;
+import com.guilhermesemog.unimove.dto.user.UserPatch;
+import com.guilhermesemog.unimove.dto.user.UserResponse;
+import com.guilhermesemog.unimove.dto.user.UserUpdate;
 import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.UserMapper;
 import com.guilhermesemog.unimove.model.User;
@@ -25,17 +25,17 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public UserResponseBody create(UserPostRequestBody userPostRequestBody) {
-        User user = userMapper.toEntity(userPostRequestBody);
+    public UserResponse create(UserCreate userCreate) {
+        User user = userMapper.toEntity(userCreate);
         return userMapper.toResponseBody(userRepository.save(user));
     }
 
-    public UserResponseBody getById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    public UserResponse getById(Long id) {
+        User user = getUser(id);
         return userMapper.toResponseBody(user);
     }
 
-    public Page<UserResponseBody> getAll(int page, int size, String sortBy, String sortDirection) {
+    public Page<UserResponse> getAll(int page, int size, String sortBy, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
@@ -46,25 +46,29 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = getUser(id);
         userRepository.delete(user);
     }
 
-    public void update(Long id, UserPutRequestBody userPutRequestBody) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        user = userMapper.updateUser(userPutRequestBody, user);
+    public void update(Long id, UserUpdate userUpdate) {
+        User user = getUser(id);
+        user = userMapper.updateUser(userUpdate, user);
         userRepository.save(user);
     }
 
-    public void update(Long id, UserPatchRequestBody userPatchRequestBody) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        user = userMapper.updateUser(userPatchRequestBody, user);
+    public void update(Long id, UserPatch userPatch) {
+        User user = getUser(id);
+        user = userMapper.updateUser(userPatch, user);
         userRepository.save(user);
     }
 
     public void toggleStatus(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = getUser(id);
         user.setActive(!user.getActive());
         userRepository.save(user);
+    }
+
+    private User getUser(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }

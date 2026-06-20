@@ -1,9 +1,9 @@
 package com.guilhermesemog.unimove.controller;
 
-import com.guilhermesemog.unimove.dto.vehicle.VehiclePatchRequestBody;
-import com.guilhermesemog.unimove.dto.vehicle.VehiclePostRequestBody;
-import com.guilhermesemog.unimove.dto.vehicle.VehiclePutRequestBody;
-import com.guilhermesemog.unimove.dto.vehicle.VehicleResponseBody;
+import com.guilhermesemog.unimove.dto.vehicle.VehicleCreate;
+import com.guilhermesemog.unimove.dto.vehicle.VehiclePatch;
+import com.guilhermesemog.unimove.dto.vehicle.VehicleResponse;
+import com.guilhermesemog.unimove.dto.vehicle.VehicleUpdate;
 import com.guilhermesemog.unimove.service.VehicleService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -21,32 +21,32 @@ public class VehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<VehicleResponseBody> create(@Valid @RequestBody VehiclePostRequestBody vehiclePostRequestBody) {
-        VehicleResponseBody savedVehicle = vehicleService.create(vehiclePostRequestBody);
-        return ResponseEntity.status(201).body(savedVehicle);
+    public ResponseEntity<VehicleResponse> create(@Valid @RequestBody VehicleCreate requestBody) {
+        VehicleResponse responseBody = vehicleService.create(requestBody);
+        return ResponseEntity.status(201).body(responseBody);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VehicleResponseBody> getById(@PathVariable Long id) {
-        VehicleResponseBody vehicle = vehicleService.getById(id);
-        return ResponseEntity.ok(vehicle);
+    public ResponseEntity<VehicleResponse> getById(@PathVariable Long id) {
+        VehicleResponse responseBody = vehicleService.getById(id);
+        return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("/plate/{plate}")
-    public ResponseEntity<VehicleResponseBody> getByPlate(@PathVariable String plate) {
-        VehicleResponseBody vehicle = vehicleService.getByPlate(plate);
-        return ResponseEntity.ok(vehicle);
+    public ResponseEntity<VehicleResponse> getByPlate(@PathVariable String plate) {
+        VehicleResponse responseBody = vehicleService.getByPlate(plate);
+        return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping
-    public ResponseEntity<Page<VehicleResponseBody>> getAll(
+    public ResponseEntity<Page<VehicleResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
-        Page<VehicleResponseBody> vehicles = vehicleService.getAll(page, size, sortBy, sortDirection);
-        return ResponseEntity.ok(vehicles);
+        Page<VehicleResponse> responseBody = vehicleService.getAll(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(responseBody);
     }
 
     @DeleteMapping("/{id}")
@@ -56,14 +56,14 @@ public class VehicleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody VehiclePutRequestBody vehiclePutRequestBody) {
-        vehicleService.update(id, vehiclePutRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody VehicleUpdate requestBody) {
+        vehicleService.update(id, requestBody);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody VehiclePatchRequestBody vehiclePatchRequestBody) {
-        vehicleService.update(id, vehiclePatchRequestBody);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody VehiclePatch requestBody) {
+        vehicleService.update(id, requestBody);
         return ResponseEntity.noContent().build();
     }
 }
