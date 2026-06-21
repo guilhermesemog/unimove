@@ -1,9 +1,9 @@
 package com.guilhermesemog.unimove.controller;
 
-import com.guilhermesemog.unimove.dto.student.StudentPatch;
 import com.guilhermesemog.unimove.dto.student.StudentCreate;
-import com.guilhermesemog.unimove.dto.student.StudentUpdate;
+import com.guilhermesemog.unimove.dto.student.StudentPatch;
 import com.guilhermesemog.unimove.dto.student.StudentResponse;
+import com.guilhermesemog.unimove.dto.student.StudentUpdate;
 import com.guilhermesemog.unimove.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
