@@ -32,6 +32,7 @@ public class User {
     @Column(nullable = false)
     private Boolean active;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
