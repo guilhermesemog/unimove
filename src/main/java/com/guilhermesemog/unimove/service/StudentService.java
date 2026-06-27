@@ -1,12 +1,12 @@
 package com.guilhermesemog.unimove.service;
 
+import com.guilhermesemog.unimove.auth.AuthService;
 import com.guilhermesemog.unimove.dto.student.StudentCreate;
 import com.guilhermesemog.unimove.dto.student.StudentPatch;
 import com.guilhermesemog.unimove.dto.student.StudentResponse;
 import com.guilhermesemog.unimove.dto.student.StudentUpdate;
 import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.StudentMapper;
-import com.guilhermesemog.unimove.mapper.UserMapper;
 import com.guilhermesemog.unimove.model.BoardingStop;
 import com.guilhermesemog.unimove.model.Student;
 import com.guilhermesemog.unimove.model.University;
@@ -26,23 +26,27 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
-    private final UserMapper userMapper;
     private final UniversityRepository universityRepository;
     private final BoardingStopRepository boardingStopRepository;
+    private final AuthService authService;
 
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, UserMapper userMapper, UniversityRepository universityRepository, BoardingStopRepository boardingStopRepository) {
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, UniversityRepository universityRepository, BoardingStopRepository boardingStopRepository, AuthService authService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
-        this.userMapper = userMapper;
         this.universityRepository = universityRepository;
         this.boardingStopRepository = boardingStopRepository;
+        this.authService = authService;
     }
 
     public StudentResponse create(StudentCreate requestBody) {
         University university = getUniversity(requestBody.universityId());
         BoardingStop boardingStop = getBoardingStop(requestBody.preferredBoardingStopId());
 
-        User user = userMapper.toEntity(requestBody.user(), Role.STUDENT);
+        User user = authService.createAuthenticatableUser(requestBody.user().cpf(), requestBody.user().password(), Role.STUDENT);
+        user.setFirstName(requestBody.user().firstName());
+        user.setLastName(requestBody.user().lastName());
+        user.setPhone(requestBody.user().phone());
+
         Student student = studentMapper.toEntity(requestBody, user, university, boardingStop);
 
         return studentMapper.toResponse(studentRepository.save(student));

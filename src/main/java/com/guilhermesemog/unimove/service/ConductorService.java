@@ -1,12 +1,12 @@
 package com.guilhermesemog.unimove.service;
 
+import com.guilhermesemog.unimove.auth.AuthService;
 import com.guilhermesemog.unimove.dto.conductor.ConductorCreate;
 import com.guilhermesemog.unimove.dto.conductor.ConductorPatch;
 import com.guilhermesemog.unimove.dto.conductor.ConductorResponse;
 import com.guilhermesemog.unimove.dto.conductor.ConductorUpdate;
 import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.ConductorMapper;
-import com.guilhermesemog.unimove.mapper.UserMapper;
 import com.guilhermesemog.unimove.model.Conductor;
 import com.guilhermesemog.unimove.model.User;
 import com.guilhermesemog.unimove.model.enums.Role;
@@ -22,16 +22,20 @@ public class ConductorService {
 
     private final ConductorRepository conductorRepository;
     private final ConductorMapper conductorMapper;
-    private final UserMapper userMapper;
+    private final AuthService authService;
 
-    public ConductorService(ConductorRepository conductorRepository, ConductorMapper conductorMapper, UserMapper userMapper) {
+    public ConductorService(ConductorRepository conductorRepository, ConductorMapper conductorMapper, AuthService authService) {
         this.conductorRepository = conductorRepository;
         this.conductorMapper = conductorMapper;
-        this.userMapper = userMapper;
+        this.authService = authService;
     }
 
     public ConductorResponse create(ConductorCreate requestBody) {
-        User user = userMapper.toEntity(requestBody.user(), Role.CONDUCTOR);
+        User user = authService.createAuthenticatableUser(requestBody.user().cpf(), requestBody.user().password(), Role.CONDUCTOR);
+        user.setFirstName(requestBody.user().firstName());
+        user.setLastName(requestBody.user().lastName());
+        user.setPhone(requestBody.user().phone());
+
         Conductor conductor = conductorMapper.toEntity(requestBody, user);
 
         return conductorMapper.toResponse(conductorRepository.save(conductor));

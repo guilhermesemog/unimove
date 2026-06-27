@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.service;
 
+import com.guilhermesemog.unimove.auth.AuthService;
 import com.guilhermesemog.unimove.dto.user.UserCreate;
 import com.guilhermesemog.unimove.dto.user.UserPatch;
 import com.guilhermesemog.unimove.dto.user.UserResponse;
@@ -19,14 +20,21 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AuthService authService;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, AuthService authService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.authService = authService;
     }
 
     public UserResponse create(UserCreate userCreate) {
-        User user = userMapper.toEntity(userCreate);
+        User user = authService.createAuthenticatableUser(userCreate.user().cpf(), userCreate.user().password(), userCreate.role());
+
+        user.setFirstName(userCreate.user().firstName());
+        user.setLastName(userCreate.user().lastName());
+        user.setPhone(userCreate.user().phone());
+
         return userMapper.toResponse(userRepository.save(user));
     }
 

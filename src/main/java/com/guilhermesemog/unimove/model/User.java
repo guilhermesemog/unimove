@@ -45,4 +45,11 @@ public class User {
         this.active = active;
         this.role = role;
     }
+
+    public User(String cpf, String password, Role role) {
+        this.cpf = cpf;
+        this.password = password;
+        this.role = role;
+        this.active = true;
+    }
 }
