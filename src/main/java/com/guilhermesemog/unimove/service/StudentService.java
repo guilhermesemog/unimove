@@ -1,6 +1,5 @@
 package com.guilhermesemog.unimove.service;
 
-import com.guilhermesemog.unimove.auth.AuthService;
 import com.guilhermesemog.unimove.dto.student.StudentCreate;
 import com.guilhermesemog.unimove.dto.student.StudentPatch;
 import com.guilhermesemog.unimove.dto.student.StudentResponse;

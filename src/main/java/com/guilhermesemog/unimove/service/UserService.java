@@ -1,6 +1,5 @@
 package com.guilhermesemog.unimove.service;
 
-import com.guilhermesemog.unimove.auth.AuthService;
 import com.guilhermesemog.unimove.dto.user.UserCreate;
 import com.guilhermesemog.unimove.dto.user.UserPatch;
 import com.guilhermesemog.unimove.dto.user.UserResponse;

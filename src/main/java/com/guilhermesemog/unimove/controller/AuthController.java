@@ -1,8 +1,10 @@
-package com.guilhermesemog.unimove.auth;
+package com.guilhermesemog.unimove.controller;
 
-import com.guilhermesemog.unimove.auth.dto.LoginRequest;
-import com.guilhermesemog.unimove.auth.dto.LoginResponse;
-import com.guilhermesemog.unimove.auth.dto.RefreshRequest;
+import com.guilhermesemog.unimove.dto.auth.LoginRequest;
+import com.guilhermesemog.unimove.dto.auth.LoginResponse;
+import com.guilhermesemog.unimove.dto.auth.RefreshRequest;
+import com.guilhermesemog.unimove.service.AuthService;
+
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

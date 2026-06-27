@@ -1,6 +1,5 @@
 package com.guilhermesemog.unimove.service;
 
-import com.guilhermesemog.unimove.auth.AuthService;
 import com.guilhermesemog.unimove.dto.conductor.ConductorCreate;
 import com.guilhermesemog.unimove.dto.conductor.ConductorPatch;
 import com.guilhermesemog.unimove.dto.conductor.ConductorResponse;

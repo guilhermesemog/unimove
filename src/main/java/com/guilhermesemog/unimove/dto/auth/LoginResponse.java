@@ -1,4 +1,4 @@
-package com.guilhermesemog.unimove.auth.dto;
+package com.guilhermesemog.unimove.dto.auth;
 
 public record LoginResponse(
         String accessToken,
