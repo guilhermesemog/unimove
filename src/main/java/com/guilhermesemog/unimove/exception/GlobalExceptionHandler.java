@@ -3,6 +3,7 @@ package com.guilhermesemog.unimove.exception;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -82,6 +83,17 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(409).body(errorDetails);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorDetails> handleAccessDeniedException(AccessDeniedException ex) {
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .message("Access denied")
+                .details("You do not have permission to access this resource")
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(403).body(errorDetails);
     }
 
     @ExceptionHandler(Exception.class)
