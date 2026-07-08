@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,24 +23,28 @@ public class UniversityController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UniversityResponse> create(@Valid @RequestBody UniversityCreate requestBody) {
         UniversityResponse responseBody = universityService.create(requestBody);
         return ResponseEntity.status(201).body(responseBody);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UniversityResponse> getById(@PathVariable Long id) {
         UniversityResponse responseBody = universityService.getById(id);
         return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("/query")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UniversityResponse> getByName(@NotBlank @RequestParam String name) {
         UniversityResponse responseBody = universityService.getByName(name);
         return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<UniversityResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -51,18 +56,21 @@ public class UniversityController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         universityService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UniversityUpdate requestBody) {
         universityService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UniversityPatch requestBody) {
         universityService.update(id, requestBody);
         return ResponseEntity.ok().build();

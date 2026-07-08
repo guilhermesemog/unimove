@@ -5,6 +5,7 @@ import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponse;
 import com.guilhermesemog.unimove.service.BoardingStopService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ public class BoardingStopController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BoardingStopResponse> create(@RequestBody BoardingStopCreate requestBody) {
         BoardingStopResponse responseBody = boardingStopService.create(requestBody);
         return ResponseEntity.status(201).body(responseBody);
@@ -41,6 +43,7 @@ public class BoardingStopController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         boardingStopService.delete(id);
         return ResponseEntity.noContent().build();
