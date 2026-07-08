@@ -17,6 +17,9 @@ public class InterestList {
     @Column(nullable = false)
     private LocalDateTime referenceDate;
 
+    @Column
+    private LocalDateTime closingDate;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ListStatus listStatus = ListStatus.OPEN;
