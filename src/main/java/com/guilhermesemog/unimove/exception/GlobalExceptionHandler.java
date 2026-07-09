@@ -53,9 +53,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorDetails> handleInvalidEnum(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ErrorDetails> handleMessageNotReadableException(HttpMessageNotReadableException ex) {
         ErrorDetails errorDetails = ErrorDetails.builder()
-                .message("Invalid enum value")
+                .message("Message not readable")
                 .details(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
