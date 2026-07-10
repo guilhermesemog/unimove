@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.model;
 
+import com.guilhermesemog.unimove.model.enums.TripStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,13 @@ public class Trip {
 
     @Column(nullable = false)
     private LocalTime departureTime;
+
+    @Column(nullable = false)
+    private LocalTime arrivalTime;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TripStatus tripStatus = TripStatus.SCHEDULED;
 
     @ManyToOne
     @JoinColumn(name = "conductor_id", nullable = false)
