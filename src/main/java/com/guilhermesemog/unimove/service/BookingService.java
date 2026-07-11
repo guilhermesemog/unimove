@@ -2,8 +2,9 @@ package com.guilhermesemog.unimove.service;
 
 import com.guilhermesemog.unimove.dto.booking.BookingCreate;
 import com.guilhermesemog.unimove.dto.booking.BookingResponse;
-import com.guilhermesemog.unimove.exception.BookingAlreadyExists;
-import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
+import com.guilhermesemog.unimove.exception.type.IllegalUpdateException;
+import com.guilhermesemog.unimove.exception.type.ResourceAlreadyExists;
+import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.BookingMapper;
 import com.guilhermesemog.unimove.model.*;
 import com.guilhermesemog.unimove.model.enums.BookingStatus;
@@ -41,7 +42,7 @@ public class BookingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Interest list not found"));
 
         if (bookingRepository.existsByStudent_IdAndInterestList_Id(student.getId(), requestBody.interestListId())) {
-            throw new BookingAlreadyExists("Student already has a booking");
+            throw new ResourceAlreadyExists("Student already has a booking");
         }
 
         BoardingStop boardingStop = requestBody.boardingStopId() == null ? student.getPreferredBoardingStop() : boardingStopRepository.findById(requestBody.boardingStopId())
@@ -79,7 +80,7 @@ public class BookingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
         if (booking.getInterestList().getListStatus() != ListStatus.OPEN) {
-            throw new IllegalStateException("Cannot delete booking for a closed interest list");
+            throw new IllegalUpdateException("Cannot delete booking for a closed interest list");
         }
 
         bookingRepository.delete(booking);

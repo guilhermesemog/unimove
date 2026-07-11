@@ -4,7 +4,7 @@ import com.guilhermesemog.unimove.dto.conductor.ConductorCreate;
 import com.guilhermesemog.unimove.dto.conductor.ConductorPatch;
 import com.guilhermesemog.unimove.dto.conductor.ConductorResponse;
 import com.guilhermesemog.unimove.dto.conductor.ConductorUpdate;
-import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
+import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.ConductorMapper;
 import com.guilhermesemog.unimove.model.Conductor;
 import com.guilhermesemog.unimove.model.User;

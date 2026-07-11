@@ -1,5 +1,9 @@
 package com.guilhermesemog.unimove.exception;
 
+import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
+import com.guilhermesemog.unimove.exception.type.IllegalUpdateException;
+import com.guilhermesemog.unimove.exception.type.ResourceAlreadyExists;
+import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -74,17 +78,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(401).body(errorDetails);
     }
 
-    @ExceptionHandler(CpfAlreadyExistsException.class)
-    public ResponseEntity<ErrorDetails> handleCpfAlreadyExistsException(CpfAlreadyExistsException ex) {
-        ErrorDetails errorDetails = ErrorDetails.builder()
-                .message("CPF already exists")
-                .details(ex.getMessage())
-                .timestamp(LocalDateTime.now())
-                .build();
-
-        return ResponseEntity.status(409).body(errorDetails);
-    }
-
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorDetails> handleAccessDeniedException(AccessDeniedException ex) {
         ErrorDetails errorDetails = ErrorDetails.builder()
@@ -96,10 +89,32 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(403).body(errorDetails);
     }
 
-    @ExceptionHandler(BookingAlreadyExists.class)
-    public ResponseEntity<ErrorDetails> handleBookingAlreadyExists(BookingAlreadyExists ex) {
+    @ExceptionHandler(CpfAlreadyExistsException.class)
+    public ResponseEntity<ErrorDetails> handleCpfAlreadyExistsException(CpfAlreadyExistsException ex) {
         ErrorDetails errorDetails = ErrorDetails.builder()
-                .message("Booking already exists for this student in this interest list")
+                .message("CPF already exists")
+                .details(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(409).body(errorDetails);
+    }
+
+    @ExceptionHandler(ResourceAlreadyExists.class)
+    public ResponseEntity<ErrorDetails> handleResourceAlreadyExists(ResourceAlreadyExists ex) {
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .message("Resource already exists")
+                .details(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(409).body(errorDetails);
+    }
+
+    @ExceptionHandler(IllegalUpdateException.class)
+    public ResponseEntity<ErrorDetails> handleIllegalUpdateException(IllegalUpdateException ex) {
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .message("Illegal update operation")
                 .details(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();

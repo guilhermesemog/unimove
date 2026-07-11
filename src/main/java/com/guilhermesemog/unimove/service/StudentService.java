@@ -4,7 +4,7 @@ import com.guilhermesemog.unimove.dto.student.StudentCreate;
 import com.guilhermesemog.unimove.dto.student.StudentPatch;
 import com.guilhermesemog.unimove.dto.student.StudentResponse;
 import com.guilhermesemog.unimove.dto.student.StudentUpdate;
-import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
+import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.StudentMapper;
 import com.guilhermesemog.unimove.model.BoardingStop;
 import com.guilhermesemog.unimove.model.Student;

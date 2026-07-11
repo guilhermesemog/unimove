@@ -4,7 +4,7 @@ import com.guilhermesemog.unimove.dto.vehicle.VehicleCreate;
 import com.guilhermesemog.unimove.dto.vehicle.VehiclePatch;
 import com.guilhermesemog.unimove.dto.vehicle.VehicleResponse;
 import com.guilhermesemog.unimove.dto.vehicle.VehicleUpdate;
-import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
+import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.VehicleMapper;
 import com.guilhermesemog.unimove.model.Vehicle;
 import com.guilhermesemog.unimove.repository.VehicleRepository;

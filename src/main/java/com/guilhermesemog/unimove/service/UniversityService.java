@@ -4,7 +4,7 @@ import com.guilhermesemog.unimove.dto.university.UniversityCreate;
 import com.guilhermesemog.unimove.dto.university.UniversityPatch;
 import com.guilhermesemog.unimove.dto.university.UniversityResponse;
 import com.guilhermesemog.unimove.dto.university.UniversityUpdate;
-import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
+import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.UniversityMapper;
 import com.guilhermesemog.unimove.model.University;
 import com.guilhermesemog.unimove.repository.UniversityRepository;

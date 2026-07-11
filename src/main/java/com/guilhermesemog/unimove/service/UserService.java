@@ -4,7 +4,7 @@ import com.guilhermesemog.unimove.dto.user.UserCreate;
 import com.guilhermesemog.unimove.dto.user.UserPatch;
 import com.guilhermesemog.unimove.dto.user.UserResponse;
 import com.guilhermesemog.unimove.dto.user.UserUpdate;
-import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
+import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.UserMapper;
 import com.guilhermesemog.unimove.model.User;
 import com.guilhermesemog.unimove.repository.UserRepository;

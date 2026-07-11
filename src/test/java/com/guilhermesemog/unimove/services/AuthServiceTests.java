@@ -1,6 +1,6 @@
 package com.guilhermesemog.unimove.services;
 
-import com.guilhermesemog.unimove.exception.CpfAlreadyExistsException;
+import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
 import com.guilhermesemog.unimove.model.User;
 import com.guilhermesemog.unimove.model.enums.Role;
 import com.guilhermesemog.unimove.repository.UserRepository;

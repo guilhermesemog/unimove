@@ -1,4 +1,4 @@
-package com.guilhermesemog.unimove.exception;
+package com.guilhermesemog.unimove.exception.type;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

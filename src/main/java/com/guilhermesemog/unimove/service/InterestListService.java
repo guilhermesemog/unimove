@@ -1,7 +1,8 @@
 package com.guilhermesemog.unimove.service;
 
 import com.guilhermesemog.unimove.dto.interestlist.*;
-import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
+import com.guilhermesemog.unimove.exception.type.IllegalUpdateException;
+import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.InterestListMapper;
 import com.guilhermesemog.unimove.model.InterestList;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
@@ -12,8 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 public class InterestListService {
@@ -53,7 +52,7 @@ public class InterestListService {
         InterestList interestList = getInterestList(id);
 
         if (bookingRepository.existsByInterestList_Id(id)) {
-            throw new IllegalStateException("Cannot delete interest list with existing bookings");
+            throw new IllegalUpdateException("Cannot delete interest list with existing bookings");
         }
 
         interestListRepository.delete(interestList);

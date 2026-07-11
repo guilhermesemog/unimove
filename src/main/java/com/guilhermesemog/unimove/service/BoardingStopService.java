@@ -2,7 +2,7 @@ package com.guilhermesemog.unimove.service;
 
 import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopCreate;
 import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponse;
-import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
+import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.BoardingStopMapper;
 import com.guilhermesemog.unimove.model.BoardingStop;
 import com.guilhermesemog.unimove.repository.BoardingStopRepository;
