@@ -88,7 +88,6 @@ public class InterestListService {
             }
         }
 
-        interestList.setListStatus(requestBody.listStatus());
         interestListRepository.save(interestList);
     }
 
