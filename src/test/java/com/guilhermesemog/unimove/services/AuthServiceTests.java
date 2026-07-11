@@ -1,5 +1,8 @@
 package com.guilhermesemog.unimove.services;
 
+import com.guilhermesemog.unimove.dto.auth.LoginRequest;
+import com.guilhermesemog.unimove.dto.auth.LoginResponse;
+import com.guilhermesemog.unimove.dto.auth.RefreshRequest;
 import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
 import com.guilhermesemog.unimove.model.User;
 import com.guilhermesemog.unimove.model.enums.Role;
@@ -14,9 +17,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -70,7 +75,7 @@ public class AuthServiceTests {
     }
 
     @Nested
-    @DisplayName("createAuthenticatableUser Tests")
+    @DisplayName("createAuthenticatableUser")
     class CreateAuthenticatableUserTests {
 
         @Test
@@ -111,8 +116,8 @@ public class AuthServiceTests {
         }
 
         @Test
-        @DisplayName("should create user with the specified role")
-        void shouldCreateUserWithTheSpecifiedRole() {
+        @DisplayName("should create user with the conductor role")
+        void shouldCreateUserWithConductorRole() {
             given(userRepository.existsByCpf(CPF)).willReturn(false);
             given(passwordEncoder.encode(RAW_PASSWORD)).willReturn(ENCODED_PASSWORD);
 
@@ -121,6 +126,143 @@ public class AuthServiceTests {
             assertThat(user.getRole()).isEqualTo(Role.CONDUCTOR);
         }
 
+        @Test
+        @DisplayName("should create user with the student role")
+        void shouldCreateUserWithStudentRole() {
+            given(userRepository.existsByCpf(CPF)).willReturn(false);
+            given(passwordEncoder.encode(RAW_PASSWORD)).willReturn(ENCODED_PASSWORD);
+
+            User user = authService.createAuthenticatableUser(CPF, RAW_PASSWORD, Role.STUDENT);
+
+            assertThat(user.getRole()).isEqualTo(Role.STUDENT);
+        }
     }
 
+    @Nested
+    @DisplayName("login")
+    class LoginTests {
+
+        @Test
+        @DisplayName("should return LoginRespose with token when credentials are valid")
+        void shouldLoginUser() {
+            LoginRequest request = new LoginRequest(CPF, RAW_PASSWORD);
+
+            given(authenticationManager.authenticate(any())).willReturn(authentication);
+            given(authentication.getPrincipal()).willReturn(userDetails);
+            given(jwtService.generateAccessToken(userDetails)).willReturn(ACCESS_TOKEN);
+            given(jwtService.generateRefreshToken(userDetails)).willReturn(REFRESH_TOKEN);
+
+            LoginResponse response = authService.login(request);
+
+            verify(jwtService, times(1)).generateAccessToken(userDetails);
+            verify(jwtService, times(1)).generateRefreshToken(userDetails);
+
+            assertThat(response.accessToken()).isEqualTo(ACCESS_TOKEN);
+            assertThat(response.refreshToken()).isEqualTo(REFRESH_TOKEN);
+        }
+
+
+        @Test
+        @DisplayName("should throw BadCredentialsException when AuthenticationManager rejects credentials")
+        void shouldThrowBadCredentialsExceptionWhenAuthenticationFails() {
+            LoginRequest request = new LoginRequest(CPF, RAW_PASSWORD);
+
+            given(authenticationManager.authenticate(any())).willThrow(new BadCredentialsException("Invalid username or password"));
+
+            assertThatThrownBy(() -> authService.login(request))
+                    .isInstanceOf(BadCredentialsException.class)
+                    .hasMessage("Invalid username or password");
+
+            verify(jwtService, never()).generateAccessToken(any());
+            verify(jwtService, never()).generateRefreshToken(any());
+        }
+
+        @Test
+        @DisplayName("should throw BadCredentialsException when user details is null")
+        void shouldThrowBadCredentialsExceptionWhenCredentialsAreInvalid() {
+            LoginRequest request = new LoginRequest(CPF, RAW_PASSWORD);
+
+            given(authenticationManager.authenticate(any())).willReturn(authentication);
+            given(authentication.getPrincipal()).willReturn(null);
+
+            assertThatThrownBy(() -> authService.login(request))
+                    .isInstanceOf(BadCredentialsException.class)
+                    .hasMessage("Invalid username or password");
+
+            verify(jwtService, never()).generateAccessToken(any());
+            verify(jwtService, never()).generateRefreshToken(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("refresh")
+    class RefreshTests {
+
+        @Test
+        @DisplayName("should return new loginResponse when refresh token is valid")
+        void shouldRefreshUserWhenRefreshTokenIsValid() {
+            RefreshRequest request = new RefreshRequest(REFRESH_TOKEN);
+
+            given(jwtService.extractUsername(REFRESH_TOKEN)).willReturn(CPF);
+            given(userDetailsService.loadUserByUsername(CPF)).willReturn(userDetails);
+            given(jwtService.isValidToken(REFRESH_TOKEN, userDetails, "refresh")).willReturn(true);
+            given(jwtService.generateAccessToken(userDetails)).willReturn(ACCESS_TOKEN);
+            given(jwtService.generateRefreshToken(userDetails)).willReturn(REFRESH_TOKEN);
+
+            LoginResponse response = authService.refresh(request);
+
+            assertThat(response).isNotNull();
+            assertThat(response.accessToken()).isEqualTo(ACCESS_TOKEN);
+            assertThat(response.refreshToken()).isEqualTo(REFRESH_TOKEN);
+        }
+
+        @Test
+        @DisplayName("should throw BadCredentials when token is invalid")
+        void shouldThrowBadCredentialsExceptionWhenTokenIsInvalid() {
+            RefreshRequest request = new RefreshRequest(REFRESH_TOKEN);
+
+            given(jwtService.extractUsername(REFRESH_TOKEN)).willReturn(CPF);
+            given(userDetailsService.loadUserByUsername(CPF)).willReturn(userDetails);
+            given(jwtService.isValidToken(REFRESH_TOKEN, userDetails, "refresh")).willReturn(false);
+
+            assertThatThrownBy(() -> authService.refresh(request))
+                    .isInstanceOf(BadCredentialsException.class)
+                    .hasMessageContaining("Invalid refresh token");
+
+            verify(jwtService, never()).generateAccessToken(any());
+            verify(jwtService, never()).generateRefreshToken(any());
+        }
+
+        @Test
+        @DisplayName("should extract CPF from token and load corresponding UserDetails")
+        void shouldExtractCpfAndLoadUserDetails() {
+            RefreshRequest request = new RefreshRequest(REFRESH_TOKEN);
+
+            given(jwtService.extractUsername(REFRESH_TOKEN)).willReturn(CPF);
+            given(userDetailsService.loadUserByUsername(CPF)).willReturn(userDetails);
+            given(jwtService.isValidToken(REFRESH_TOKEN, userDetails, "refresh")).willReturn(true);
+            given(jwtService.generateAccessToken(userDetails)).willReturn(ACCESS_TOKEN);
+            given(jwtService.generateRefreshToken(userDetails)).willReturn(REFRESH_TOKEN);
+
+            authService.refresh(request);
+
+            verify(jwtService, times(1)).extractUsername(REFRESH_TOKEN);
+            verify(userDetailsService, times(1)).loadUserByUsername(CPF);
+        }
+
+        @Test
+        @DisplayName("should throw UsernameNotFound when user is not found")
+        void shouldPropagateExceptionWhenUserNotFound() {
+            RefreshRequest request = new RefreshRequest(REFRESH_TOKEN);
+
+            given(jwtService.extractUsername(REFRESH_TOKEN)).willReturn(CPF);
+            given(userDetailsService.loadUserByUsername(CPF))
+                    .willThrow(new UsernameNotFoundException("User not found: " + CPF));
+
+            assertThatThrownBy(() -> authService.refresh(request))
+                    .isInstanceOf(UsernameNotFoundException.class);
+
+            verify(jwtService, never()).isValidToken(anyString(), any(), anyString());
+        }
+    }
 }
