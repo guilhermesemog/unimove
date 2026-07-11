@@ -5,6 +5,7 @@ import com.guilhermesemog.unimove.exception.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.InterestListMapper;
 import com.guilhermesemog.unimove.model.InterestList;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
+import com.guilhermesemog.unimove.repository.BookingRepository;
 import com.guilhermesemog.unimove.repository.InterestListRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,10 +20,12 @@ public class InterestListService {
 
     private final InterestListRepository interestListRepository;
     private final InterestListMapper interestListMapper;
+    private final BookingRepository bookingRepository;
 
-    public InterestListService(InterestListRepository interestListRepository, InterestListMapper interestListMapper) {
-        this.interestListRepository = interestListRepository;
+    public InterestListService(InterestListMapper interestListMapper, InterestListRepository interestListRepository, BookingRepository bookingRepository) {
         this.interestListMapper = interestListMapper;
+        this.interestListRepository = interestListRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     public InterestListResponse create(InterestListCreate requestBody) {
@@ -48,6 +51,11 @@ public class InterestListService {
 
     public void delete(Long id) {
         InterestList interestList = getInterestList(id);
+
+        if (bookingRepository.existsByInterestList_Id(id)) {
+            throw new IllegalStateException("Cannot delete interest list with existing bookings");
+        }
+
         interestListRepository.delete(interestList);
     }
 
