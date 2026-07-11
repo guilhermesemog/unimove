@@ -22,10 +22,10 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorDetails> handleMethodNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorDetails> handleMethodNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
 
-        e.getBindingResult().getAllErrors().forEach((error) -> {
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
@@ -41,10 +41,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorDetails> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+    public ResponseEntity<ErrorDetails> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .message("Data integrity validation failed")
-                .details(e.getMessage())
+                .details(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
 
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException e) {
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return ResponseEntity.notFound().build();
     }
 
@@ -123,10 +123,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetails> handleGlobalException(Exception e) {
+    public ResponseEntity<ErrorDetails> handleGlobalException(Exception ex) {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .message("An unexpected error occurred")
-                .details(e.getMessage())
+                .details(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
 

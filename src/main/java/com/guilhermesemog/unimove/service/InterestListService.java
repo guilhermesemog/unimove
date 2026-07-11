@@ -70,18 +70,6 @@ public class InterestListService {
         interestListRepository.save(interestList);
     }
 
-    public void toggleStatus(Long id) {
-        InterestList interestList = getInterestList(id);
-
-        if (interestList.getListStatus() == ListStatus.OPEN) {
-            interestList.setListStatus(ListStatus.PROCESSING);
-        } else if (interestList.getListStatus() == ListStatus.PROCESSING) {
-            interestList.setListStatus(ListStatus.CLOSED);
-        }
-
-        interestListRepository.save(interestList);
-    }
-
     public void toggleStatus(Long id, InterestListToggleStatus requestBody) {
         InterestList interestList = getInterestList(id);
 
