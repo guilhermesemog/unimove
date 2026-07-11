@@ -96,6 +96,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(403).body(errorDetails);
     }
 
+    @ExceptionHandler(BookingAlreadyExists.class)
+    public ResponseEntity<ErrorDetails> handleBookingAlreadyExists(BookingAlreadyExists ex) {
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .message("Booking already exists for this student in this interest list")
+                .details(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(409).body(errorDetails);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception e) {
         ErrorDetails errorDetails = ErrorDetails.builder()

@@ -4,10 +4,18 @@ import com.guilhermesemog.unimove.model.enums.BookingStatus;
 import com.guilhermesemog.unimove.model.enums.TripType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "bookings")
+@NoArgsConstructor
+@Table(name = "bookings",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_booking_student_interestlist",
+                        columnNames = {"student_id", "interest_list_id"}
+                )
+        })
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,4 +44,13 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "boarding_location_id")
     private BoardingStop boardingLocation;
+
+    public Booking(Student student, InterestList interestList, BookingStatus bookingStatus, TripType tripType, University destination, BoardingStop boardingLocation) {
+        this.student = student;
+        this.interestList = interestList;
+        this.bookingStatus = bookingStatus;
+        this.tripType = tripType;
+        this.destination = destination;
+        this.boardingLocation = boardingLocation;
+    }
 }
