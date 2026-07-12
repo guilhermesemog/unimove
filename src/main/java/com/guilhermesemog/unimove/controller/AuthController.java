@@ -3,6 +3,7 @@ package com.guilhermesemog.unimove.controller;
 import com.guilhermesemog.unimove.dto.auth.LoginRequest;
 import com.guilhermesemog.unimove.dto.auth.LoginResponse;
 import com.guilhermesemog.unimove.dto.auth.RefreshRequest;
+import com.guilhermesemog.unimove.dto.auth.RegisterRequest;
 import com.guilhermesemog.unimove.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -20,6 +21,12 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+        LoginResponse response = authService.register(registerRequest);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")

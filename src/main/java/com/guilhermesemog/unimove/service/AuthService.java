@@ -3,6 +3,7 @@ package com.guilhermesemog.unimove.service;
 import com.guilhermesemog.unimove.dto.auth.LoginRequest;
 import com.guilhermesemog.unimove.dto.auth.LoginResponse;
 import com.guilhermesemog.unimove.dto.auth.RefreshRequest;
+import com.guilhermesemog.unimove.dto.auth.RegisterRequest;
 import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
 import com.guilhermesemog.unimove.model.User;
 import com.guilhermesemog.unimove.model.enums.Role;
@@ -41,6 +42,22 @@ public class AuthService {
         }
 
         return new User(cpf, passwordEncoder.encode(password), role);
+    }
+
+    public LoginResponse register(RegisterRequest registerRequest) {
+        User user = createAuthenticatableUser(registerRequest.cpf(), registerRequest.password(), Role.ADMIN);
+
+        user.setFirstName(registerRequest.firstName());
+        user.setLastName(registerRequest.lastName());
+
+        userRepository.save(user);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(registerRequest.cpf());
+
+        String accessToken = jwtService.generateAccessToken(userDetails);
+        String refreshToken = jwtService.generateRefreshToken(userDetails);
+
+        return new LoginResponse(accessToken, refreshToken);
     }
 
     public LoginResponse login(LoginRequest request) {
