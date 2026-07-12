@@ -5,6 +5,7 @@ import com.guilhermesemog.unimove.exception.type.IllegalUpdateException;
 import com.guilhermesemog.unimove.exception.type.ResourceAlreadyExists;
 import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -53,7 +54,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return ResponseEntity.notFound().build();
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .message("Resource not found")
+                .details(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(404).body(errorDetails);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
