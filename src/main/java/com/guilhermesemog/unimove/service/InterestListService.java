@@ -5,9 +5,11 @@ import com.guilhermesemog.unimove.exception.type.IllegalUpdateException;
 import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.InterestListMapper;
 import com.guilhermesemog.unimove.model.InterestList;
+import com.guilhermesemog.unimove.model.University;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
 import com.guilhermesemog.unimove.repository.BookingRepository;
 import com.guilhermesemog.unimove.repository.InterestListRepository;
+import com.guilhermesemog.unimove.repository.UniversityRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,17 +22,20 @@ public class InterestListService {
     private final InterestListRepository interestListRepository;
     private final InterestListMapper interestListMapper;
     private final BookingRepository bookingRepository;
+    private final UniversityRepository universityRepository;
 
-    public InterestListService(InterestListMapper interestListMapper, InterestListRepository interestListRepository, BookingRepository bookingRepository) {
+    public InterestListService(InterestListMapper interestListMapper, InterestListRepository interestListRepository, BookingRepository bookingRepository, UniversityRepository universityRepository) {
         this.interestListMapper = interestListMapper;
         this.interestListRepository = interestListRepository;
         this.bookingRepository = bookingRepository;
+        this.universityRepository = universityRepository;
     }
 
     public InterestListResponse create(InterestListCreate requestBody) {
-        InterestList interestList = interestListMapper.toEntity(requestBody);
-        interestList = interestListRepository.save(interestList);
-        return interestListMapper.toResponse(interestList);
+        University destination = getDestination(requestBody.destinationId());
+        InterestList interestList = interestListMapper.toEntity(requestBody, destination);
+
+        return interestListMapper.toResponse(interestListRepository.save(interestList));
     }
 
     public InterestListResponse getById(Long id) {
@@ -59,14 +64,18 @@ public class InterestListService {
     }
 
     public void update(Long id, InterestListUpdate requestBody) {
+        University destination = getDestination(requestBody.destinationId());
         InterestList interestList = getInterestList(id);
-        interestListMapper.update(requestBody, interestList);
+
+        interestListMapper.update(requestBody, destination, interestList);
         interestListRepository.save(interestList);
     }
 
     public void update(Long id, InterestListPatch requestBody) {
+        University destination = getDestination(requestBody.destinationId());
         InterestList interestList = getInterestList(id);
-        interestListMapper.update(requestBody, interestList);
+
+        interestListMapper.update(requestBody, destination, interestList);
         interestListRepository.save(interestList);
     }
 
@@ -88,5 +97,9 @@ public class InterestListService {
 
     private InterestList getInterestList(Long id) {
         return interestListRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("InterestList not found"));
+    }
+
+    private University getDestination(Long id) {
+        return universityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("University not found"));
     }
 }

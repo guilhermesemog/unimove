@@ -20,7 +20,7 @@ public class InterestListController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<InterestListResponse> create(@Valid @RequestBody(required = false) InterestListCreate requestBody) {
+    public ResponseEntity<InterestListResponse> create(@Valid @RequestBody InterestListCreate requestBody) {
         InterestListResponse responseBody = interestListService.create(requestBody);
         return ResponseEntity.status(201).body(responseBody);
     }

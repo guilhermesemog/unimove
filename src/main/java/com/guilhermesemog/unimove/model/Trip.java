@@ -4,8 +4,6 @@ import com.guilhermesemog.unimove.model.enums.TripStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalTime;
-
 @Data
 @Entity
 @Table(name = "trips")
@@ -18,12 +16,6 @@ public class Trip {
     @ManyToOne
     @JoinColumn(name = "interest_list_id", nullable = false)
     private InterestList interestList;
-
-    @Column(nullable = false)
-    private LocalTime departureTime;
-
-    @Column(nullable = false)
-    private LocalTime arrivalTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
