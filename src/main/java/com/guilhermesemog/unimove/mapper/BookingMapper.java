@@ -26,7 +26,15 @@ public class BookingMapper {
         );
     }
 
-    public BookingResponse toResponse(Booking booking) {
-        return new BookingResponse(booking.getStudent().getId());
+    public BookingResponse toResponse(Booking booking, Long studentId, Long interestListId, Long destinationId, Long boardingLocationId) {
+        return new BookingResponse(
+                booking.getId(),
+                booking.getTripType(),
+                booking.getBookingStatus(),
+                studentId,
+                interestListId,
+                destinationId,
+                boardingLocationId
+        );
     }
 }

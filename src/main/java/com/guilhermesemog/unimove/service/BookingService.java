@@ -20,13 +20,18 @@ import java.util.List;
 public class BookingService {
 
     private final BookingMapper bookingMapper;
+
     private final BookingRepository bookingRepository;
     private final StudentRepository studentRepository;
     private final BoardingStopRepository boardingStopRepository;
     private final InterestListRepository interestListRepository;
     private final UniversityRepository universityRepository;
 
-    public BookingService(BookingMapper bookingMapper, BookingRepository bookingRepository, StudentRepository studentRepository, BoardingStopRepository boardingStopRepository, InterestListRepository interestListRepository, UniversityRepository universityRepository) {
+    public BookingService(
+            BookingMapper bookingMapper, BookingRepository bookingRepository,
+            StudentRepository studentRepository, BoardingStopRepository boardingStopRepository,
+            InterestListRepository interestListRepository, UniversityRepository universityRepository
+    ) {
         this.bookingMapper = bookingMapper;
         this.bookingRepository = bookingRepository;
         this.studentRepository = studentRepository;
@@ -60,19 +65,23 @@ public class BookingService {
     }
 
     public BookingResponse getById(Long id) {
-        return bookingRepository.findById(id).map(bookingMapper::toResponse).orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+        return bookingRepository.findById(id)
+                .map(booking -> bookingMapper.toResponse(booking, booking.getStudent().getId(), booking.getInterestList().getId(), booking.getDestination().getId(), booking.getBoardingLocation().getId()))
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
     }
 
     public List<BookingResponse> getAllBookingsByInterestList(Long interestListId) {
         return bookingRepository.findByInterestList_Id(interestListId)
-                .stream().map(bookingMapper::toResponse).toList();
+                .stream()
+                .map(booking -> bookingMapper.toResponse(booking, booking.getStudent().getId(), booking.getInterestList().getId(), booking.getDestination().getId(), booking.getBoardingLocation().getId()))
+                .toList();
     }
 
     public List<BookingResponse> getAllBookingsByStudent(Authentication authentication) {
         Student student = getStudentByAuthentication(authentication);
 
         return bookingRepository.findByStudentId(student.getId())
-                .stream().map(bookingMapper::toResponse).toList();
+                .stream().map(booking -> bookingMapper.toResponse(booking, booking.getStudent().getId(), booking.getInterestList().getId(), booking.getDestination().getId(), booking.getBoardingLocation().getId())).toList();
     }
 
     public void deleteById(Long id) {
@@ -89,5 +98,10 @@ public class BookingService {
     private Student getStudentByAuthentication(Authentication authentication) {
         return studentRepository.findByUser_Cpf(authentication.getName())
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+    }
+
+    private InterestList getInterestList(Long id) {
+        return interestListRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Interest list not found"));
     }
 }
