@@ -3,9 +3,11 @@ package com.guilhermesemog.unimove.model;
 import com.guilhermesemog.unimove.model.embeddable.TripStudentId;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "trip_students")
 public class TripStudent {
 
@@ -21,4 +23,10 @@ public class TripStudent {
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
+
+    public TripStudent(Trip trip, Student student) {
+        this.id = new TripStudentId(trip.getId(), student.getId());
+        this.trip = trip;
+        this.student = student;
+    }
 }
