@@ -1,0 +1,859 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8de90d68-efc1-468e-acf7-f503c2a73c58" name="Changes" comment="refactor: move project structure to backend new directory" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/home/dionae/Projects/unimove" value="3EpVRX6ABSUCzwtMQxG8wg5xbE6" />
+    </persistenceIdMap>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="132" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="package-info" />
+        <option value="Enum" />
+        <option value="Class" />
+        <option value="Interface" />
+        <option value="Record" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;guilhermesemog&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/guilhermesemog/unimove.git&quot;,
+    &quot;accountId&quot;: &quot;8382e1b2-ca6b-478f-b2cb-13055619a38d&quot;
+  }
+}</component>
+  <component name="HttpClientEndpointsTabState">
+    <option name="cachedRequestData" value="&lt;CachedHttpClientTabRequests /&gt;" />
+  </component>
+  <component name="HttpClientOnboardingState">{
+  &quot;isOnboardingCommentShown&quot;: true
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.8873475522420233" />
+      <entry key="MS500" value="4.638540161773613" />
+      <entry key="S2" value="7.817108159640055" />
+      <entry key="S5" value="9.049536935563033" />
+      <entry key="S10" value="9.861515943847412" />
+      <entry key="S30" value="13.17390561482491" />
+      <entry key="S60" value="17.17779936188608" />
+      <entry key="M2" value="22.819965410492326" />
+      <entry key="M5" value="37.37809068483825" />
+      <entry key="M10" value="59.1007167918612" />
+      <entry key="M15" value="77.69479178521667" />
+      <entry key="M30" value="124.85044486474318" />
+      <entry key="H1" value="204.8554572923674" />
+      <entry key="H2" value="349.7153280999738" />
+      <entry key="H4" value="635.3151455495812" />
+      <entry key="D1" value="2152.6049339318047" />
+      <entry key="W1" value="3093.0585281289173" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.424596888067228E-187" />
+      <entry key="MS500" value="4.273054168144627E-38" />
+      <entry key="S2" value="4.546577512434367E-10" />
+      <entry key="S5" value="1.832627756481805E-4" />
+      <entry key="S10" value="0.013562335311819145" />
+      <entry key="S30" value="0.3274128987832234" />
+      <entry key="S60" value="1.2925523403083248" />
+      <entry key="M2" value="3.826854667914262" />
+      <entry key="M5" value="11.15936297866033" />
+      <entry key="M10" value="20.88945275454243" />
+      <entry key="M15" value="29.09210800283442" />
+      <entry key="M30" value="51.02089685572892" />
+      <entry key="H1" value="91.34038573219564" />
+      <entry key="H2" value="167.66618988230348" />
+      <entry key="H4" value="304.5106820094839" />
+      <entry key="D1" value="923.9466162492074" />
+      <entry key="W1" value="1288.560199456475" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.8334995019975866" />
+      <entry key="MS500" value="4.6099969852195715" />
+      <entry key="S2" value="7.804751252170592" />
+      <entry key="S5" value="9.043930886502878" />
+      <entry key="S10" value="9.87047054455315" />
+      <entry key="S30" value="13.487021659102359" />
+      <entry key="S60" value="18.442213725828825" />
+      <entry key="M2" value="26.60367237656603" />
+      <entry key="M5" value="48.4752607922339" />
+      <entry key="M10" value="79.92379413902376" />
+      <entry key="M15" value="106.7223186985437" />
+      <entry key="M30" value="175.8111850322633" />
+      <entry key="H1" value="296.1391929258799" />
+      <entry key="H2" value="517.3283941895511" />
+      <entry key="H4" value="939.7766906308248" />
+      <entry key="D1" value="3076.525664052579" />
+      <entry key="W1" value="4381.613542824796" />
+    </decayedShown>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="Security Analysis" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3EpVRX6ABSUCzwtMQxG8wg5xbE6" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectSessionTemplates">
+    <option name="inlineTemplate">
+      <template>
+        <option name="modeId" value="InlineAgent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="LOCAL" />
+      </template>
+    </option>
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Ask" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="BACKGROUND" />
+      </template>
+    </option>
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="openDirectoriesWithSingleClick" value="true" />
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Spring App.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthServiceTests$CreateAuthenticatableUserTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthServiceTests$LoginTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthServiceTests$LoginTests.shouldLoginUser.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthServiceTests$LoginTests.shouldThrowBadCredentialsExceptionWhenAuthenticationFails.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthServiceTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthServiceTests.shouldCreateUserWhenCPFNotExists.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTests$CreateTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTests$CreateTests.shouldCreateUserAndReturnUserResponse.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTests$CreateTests.shouldSetFirstNameLastNameAndPhoneWhenCreatingUser.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.VehicleServiceTest.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.Unimove.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.UnimoveApplication.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/dionae/Projects/unimove&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/guilhermesemog/unimove/dto/" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.guilhermesemog.unimove.dto.interestlist" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.Unimove">
+    <configuration name="AuthServiceTests$LoginTests.shouldLoginUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="unimove" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.guilhermesemog.unimove.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.guilhermesemog.unimove.services.AuthServiceTests" />
+      <option name="MAIN_CLASS_NAME" value="com.guilhermesemog.unimove.services.AuthServiceTests$LoginTests" />
+      <option name="METHOD_NAME" value="shouldLoginUser" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthServiceTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="unimove" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.guilhermesemog.unimove.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.guilhermesemog.unimove.services" />
+      <option name="MAIN_CLASS_NAME" value="com.guilhermesemog.unimove.services.AuthServiceTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTests$CreateTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="unimove" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.guilhermesemog.unimove.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.guilhermesemog.unimove.services.UserServiceTests" />
+      <option name="MAIN_CLASS_NAME" value="com.guilhermesemog.unimove.services.UserServiceTests$CreateTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTests$CreateTests.shouldCreateUserAndReturnUserResponse" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="unimove" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.guilhermesemog.unimove.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.guilhermesemog.unimove.services.UserServiceTests" />
+      <option name="MAIN_CLASS_NAME" value="com.guilhermesemog.unimove.services.UserServiceTests$CreateTests" />
+      <option name="METHOD_NAME" value="shouldCreateUserAndReturnUserResponse" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTests$CreateTests.shouldSetFirstNameLastNameAndPhoneWhenCreatingUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="unimove" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.guilhermesemog.unimove.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.guilhermesemog.unimove.services.UserServiceTests" />
+      <option name="MAIN_CLASS_NAME" value="com.guilhermesemog.unimove.services.UserServiceTests$CreateTests" />
+      <option name="METHOD_NAME" value="shouldSetFirstNameLastNameAndPhoneWhenCreatingUser" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Unimove" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="unimove" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.guilhermesemog.unimove.UnimoveApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.UserServiceTests$CreateTests" />
+        <item itemvalue="JUnit.UserServiceTests$CreateTests.shouldSetFirstNameLastNameAndPhoneWhenCreatingUser" />
+        <item itemvalue="JUnit.UserServiceTests$CreateTests.shouldCreateUserAndReturnUserResponse" />
+        <item itemvalue="JUnit.AuthServiceTests" />
+        <item itemvalue="JUnit.AuthServiceTests$LoginTests.shouldLoginUser" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.25134.95" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.25134.95" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="StructureViewState">
+    <option name="selectedTab" value="Logical" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8de90d68-efc1-468e-acf7-f503c2a73c58" name="Changes" comment="" />
+      <created>1780875489773</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1780875489773</updated>
+      <workItem from="1780875553221" duration="229000" />
+      <workItem from="1780875858865" duration="257000" />
+      <workItem from="1780876127569" duration="646000" />
+      <workItem from="1780876797566" duration="834000" />
+      <workItem from="1780887292695" duration="33000" />
+      <workItem from="1780971984945" duration="747000" />
+      <workItem from="1780972746672" duration="1656000" />
+      <workItem from="1781042491288" duration="7039000" />
+      <workItem from="1781055319104" duration="3728000" />
+      <workItem from="1781294612974" duration="675000" />
+      <workItem from="1781298263312" duration="1296000" />
+      <workItem from="1781300810372" duration="4033000" />
+      <workItem from="1781307014650" duration="1533000" />
+      <workItem from="1781719851936" duration="1017000" />
+      <workItem from="1781731726327" duration="8655000" />
+      <workItem from="1781742982078" duration="1524000" />
+      <workItem from="1781748025695" duration="419000" />
+      <workItem from="1781748529016" duration="942000" />
+      <workItem from="1781830976659" duration="2757000" />
+      <workItem from="1781835126858" duration="225000" />
+      <workItem from="1781835760974" duration="1943000" />
+      <workItem from="1781890582196" duration="12092000" />
+      <workItem from="1781977609177" duration="5008000" />
+      <workItem from="1781984873101" duration="4173000" />
+      <workItem from="1782010725913" duration="771000" />
+      <workItem from="1782083791620" duration="6752000" />
+      <workItem from="1782092241599" duration="703000" />
+      <workItem from="1782518679661" duration="767000" />
+      <workItem from="1782519487439" duration="2240000" />
+      <workItem from="1782524030764" duration="4173000" />
+      <workItem from="1782528478768" duration="1048000" />
+      <workItem from="1782593448343" duration="2361000" />
+      <workItem from="1783201651341" duration="2312000" />
+      <workItem from="1783205512409" duration="1751000" />
+      <workItem from="1783260588622" duration="501000" />
+      <workItem from="1783271190622" duration="489000" />
+      <workItem from="1783274750389" duration="615000" />
+      <workItem from="1783368136581" duration="67000" />
+      <workItem from="1783368252490" duration="414000" />
+      <workItem from="1783368765906" duration="698000" />
+      <workItem from="1783462230046" duration="914000" />
+      <workItem from="1783463907477" duration="414000" />
+      <workItem from="1783545001708" duration="584000" />
+      <workItem from="1783545935843" duration="5568000" />
+      <workItem from="1783630434648" duration="4674000" />
+      <workItem from="1783636904744" duration="343000" />
+      <workItem from="1783725055243" duration="1870000" />
+      <workItem from="1783774880707" duration="2600000" />
+      <workItem from="1783790871730" duration="3526000" />
+      <workItem from="1783796468151" duration="77000" />
+      <workItem from="1783802377964" duration="1143000" />
+      <workItem from="1783859789610" duration="3600000" />
+      <workItem from="1783889638158" duration="1481000" />
+      <workItem from="1783964545746" duration="1145000" />
+      <workItem from="1783974738022" duration="682000" />
+      <workItem from="1784049564999" duration="4740000" />
+      <workItem from="1784060273383" duration="4069000" />
+      <workItem from="1784065314076" duration="100000" />
+      <workItem from="1784065609104" duration="1543000" />
+      <workItem from="1784146730689" duration="2905000" />
+      <workItem from="1784150695500" duration="1629000" />
+      <workItem from="1784395152965" duration="650000" />
+      <workItem from="1784395920520" duration="672000" />
+      <workItem from="1784396629745" duration="370000" />
+    </task>
+    <task id="LOCAL-00005" summary="feat: create custom exception handling">
+      <option name="closed" value="true" />
+      <created>1781299485488</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1781299485488</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: create custom exception handling">
+      <option name="closed" value="true" />
+      <created>1781299511912</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1781299511912</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fix: remove unused imports, alter database ddl option to update">
+      <option name="closed" value="true" />
+      <created>1781299554662</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1781299554662</updated>
+    </task>
+    <task id="LOCAL-00008" summary="feat: enable pages to be wrapped via dto">
+      <option name="closed" value="true" />
+      <created>1781302332642</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1781302332642</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feat: create resource not found exception and handler">
+      <option name="closed" value="true" />
+      <created>1781303540116</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1781303540116</updated>
+    </task>
+    <task id="LOCAL-00010" summary="feat: add HttpMessageNotReadableException handler to deal with enum validation errors">
+      <option name="closed" value="true" />
+      <created>1781748603107</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1781748603107</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat: add specific constructors to make mapping easier">
+      <option name="closed" value="true" />
+      <created>1781748645610</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1781748645610</updated>
+    </task>
+    <task id="LOCAL-00012" summary="feat: add user repository interface">
+      <option name="closed" value="true" />
+      <created>1781748722473</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1781748722473</updated>
+    </task>
+    <task id="LOCAL-00013" summary="feat: add user dtos records">
+      <option name="closed" value="true" />
+      <created>1781748739090</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1781748739090</updated>
+    </task>
+    <task id="LOCAL-00014" summary="feat: add user controller, service and mapper initial concepts">
+      <option name="closed" value="true" />
+      <created>1781748773781</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1781748773781</updated>
+    </task>
+    <task id="LOCAL-00015" summary="feat: add vehicle interface, dtos, controller, service and mapper initial concepts">
+      <option name="closed" value="true" />
+      <created>1781748807887</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1781748807887</updated>
+    </task>
+    <task id="LOCAL-00016" summary="feat: implement university management with controller, service, repository, and DTOs">
+      <option name="closed" value="true" />
+      <created>1781835175385</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1781835175385</updated>
+    </task>
+    <task id="LOCAL-00017" summary="refactor: standardize method names in services and controllers">
+      <option name="closed" value="true" />
+      <created>1781894276268</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1781894276269</updated>
+    </task>
+    <task id="LOCAL-00018" summary="feat: add BoardingStop entity, controller, service, mapper, and DTOs">
+      <option name="closed" value="true" />
+      <created>1781901360152</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1781901360152</updated>
+    </task>
+    <task id="LOCAL-00019" summary="fix: replace RuntimeException with ResourceNotFoundException in BoardingStopService">
+      <option name="closed" value="true" />
+      <created>1781901430696</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1781901430696</updated>
+    </task>
+    <task id="LOCAL-00020" summary="fix: add cascade option to OneToOne relationships in Conductor and Student entities">
+      <option name="closed" value="true" />
+      <created>1781911664697</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1781911664697</updated>
+    </task>
+    <task id="LOCAL-00021" summary="feat: add method to convert CreateUserBody to User entity with role assignment">
+      <option name="closed" value="true" />
+      <created>1781977691019</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1781977691019</updated>
+    </task>
+    <task id="LOCAL-00022" summary="feat: implement Student entity with controller, service, mapper, and DTOs for CRUD operations">
+      <option name="closed" value="true" />
+      <created>1781977748356</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1781977748356</updated>
+    </task>
+    <task id="LOCAL-00023" summary="feat: implement Student entity with controller, service, mapper, and DTOs for CRUD operations">
+      <option name="closed" value="true" />
+      <created>1781977762647</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1781977762647</updated>
+    </task>
+    <task id="LOCAL-00024" summary="refactor: rename request and response DTOs for BoardingStop and Student entities">
+      <option name="closed" value="true" />
+      <created>1781982566258</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1781982566258</updated>
+    </task>
+    <task id="LOCAL-00025" summary="refactor: rename response body methods in mappers and services for consistency">
+      <option name="closed" value="true" />
+      <created>1781987418825</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1781987418825</updated>
+    </task>
+    <task id="LOCAL-00026" summary="feat: add role field with enumerated type to User entity">
+      <option name="closed" value="true" />
+      <created>1782011226433</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1782011226433</updated>
+    </task>
+    <task id="LOCAL-00027" summary="feat: implement Conductor entity with controller, service, mapper, and DTOs for CRUD operations">
+      <option name="closed" value="true" />
+      <created>1782083841769</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1782083841769</updated>
+    </task>
+    <task id="LOCAL-00028" summary="feat: implement authentication system with JWT, including login and refresh endpoints">
+      <option name="closed" value="true" />
+      <created>1782528116512</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1782528116512</updated>
+    </task>
+    <task id="LOCAL-00029" summary="feat: implement authentication system with JWT, including login and refresh endpoints">
+      <option name="closed" value="true" />
+      <created>1782528231453</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1782528231453</updated>
+    </task>
+    <task id="LOCAL-00030" summary="feat: add UserSecurity component to verify resource ownership">
+      <option name="closed" value="true" />
+      <created>1783201857215</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1783201857215</updated>
+    </task>
+    <task id="LOCAL-00031" summary="feat: add handler for AccessDeniedException to return custom error response">
+      <option name="closed" value="true" />
+      <created>1783201886880</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1783201886880</updated>
+    </task>
+    <task id="LOCAL-00032" summary="feat: add closingDate field to InterestList entity">
+      <option name="closed" value="true" />
+      <created>1783546040518</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1783546040518</updated>
+    </task>
+    <task id="LOCAL-00033" summary="feat: add admin role authorization to create, read, update, and delete operations in multiple controllers">
+      <option name="closed" value="true" />
+      <created>1783546082130</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1783546082130</updated>
+    </task>
+    <task id="LOCAL-00034" summary="feat: update error message for HttpMessageNotReadableException handler">
+      <option name="closed" value="true" />
+      <created>1783630739779</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1783630739779</updated>
+    </task>
+    <task id="LOCAL-00035" summary="feat: implement InterestList management with CRUD operations and DTOs">
+      <option name="closed" value="true" />
+      <created>1783630746733</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1783630746733</updated>
+    </task>
+    <task id="LOCAL-00036" summary="feat: add arrivalTime field and TripStatus enum to Trip entity">
+      <option name="closed" value="true" />
+      <created>1783725510610</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1783725510610</updated>
+    </task>
+    <task id="LOCAL-00037" summary="feat: add arrivalTime field and TripStatus enum to Trip entity">
+      <option name="closed" value="true" />
+      <created>1783725529609</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1783725529609</updated>
+    </task>
+    <task id="LOCAL-00038" summary="feat: implement Booking management with create, read, and delete operations, including exception handling">
+      <option name="closed" value="true" />
+      <created>1783776169333</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1783776169334</updated>
+    </task>
+    <task id="LOCAL-00039" summary="fix: remove setting of listStatus using the DTO which would cause unexpected behavior">
+      <option name="closed" value="true" />
+      <created>1783776333150</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1783776333150</updated>
+    </task>
+    <task id="LOCAL-00040" summary="feat: add check for existing bookings before deleting interest list">
+      <option name="closed" value="true" />
+      <created>1783776474219</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1783776474219</updated>
+    </task>
+    <task id="LOCAL-00041" summary="refactor: reorganize exception handling by introducing specific exception types">
+      <option name="closed" value="true" />
+      <created>1783777246487</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1783777246487</updated>
+    </task>
+    <task id="LOCAL-00042" summary="fix: minor fixes, unused imports and unused methods removed">
+      <option name="closed" value="true" />
+      <created>1783777372611</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1783777372611</updated>
+    </task>
+    <task id="LOCAL-00043" summary="feat: add authentication and refresh token tests">
+      <option name="closed" value="true" />
+      <created>1783792394731</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1783792394731</updated>
+    </task>
+    <task id="LOCAL-00044" summary="test: add unit tests for UserService create method">
+      <option name="closed" value="true" />
+      <created>1783859842948</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1783859842948</updated>
+    </task>
+    <task id="LOCAL-00045" summary="feat: add logging configuration to application.yaml">
+      <option name="closed" value="true" />
+      <created>1783859859616</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1783859859616</updated>
+    </task>
+    <task id="LOCAL-00046" summary="feat: add user registration endpoint and service method">
+      <option name="closed" value="true" />
+      <created>1783863344253</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1783863344253</updated>
+    </task>
+    <task id="LOCAL-00047" summary="feat: add user registration endpoint and service method">
+      <option name="closed" value="true" />
+      <created>1783890452131</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1783890452131</updated>
+    </task>
+    <task id="LOCAL-00048" summary="feat: update InterestList model and related classes to use LocalDate and LocalTime">
+      <option name="closed" value="true" />
+      <created>1783890467009</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1783890467009</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fix: update GlobalExceptionHandler to return detailed error responses for ResourceNotFoundException">
+      <option name="closed" value="true" />
+      <created>1783890479596</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1783890479596</updated>
+    </task>
+    <task id="LOCAL-00050" summary="feat: refactor Trip model and introduce TripInterestList for managing relationships with InterestList">
+      <option name="closed" value="true" />
+      <created>1784050939710</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1784050939710</updated>
+    </task>
+    <task id="LOCAL-00051" summary="feat: enhance BookingResponse and BookingMapper to include additional booking details">
+      <option name="closed" value="true" />
+      <created>1784150185276</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1784150185276</updated>
+    </task>
+    <task id="LOCAL-00052" summary="feat: implement Trip management with create, update, and retrieval functionalities">
+      <option name="closed" value="true" />
+      <created>1784395177835</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1784395177836</updated>
+    </task>
+    <task id="LOCAL-00053" summary="refactor: move project structure to backend new directory">
+      <option name="closed" value="true" />
+      <created>1784396384970</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1784396384970</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: implement Conductor entity with controller, service, mapper, and DTOs for CRUD operations" />
+    <MESSAGE value="feat: implement authentication system with JWT, including login and refresh endpoints" />
+    <MESSAGE value="feat: add UserSecurity component to verify resource ownership" />
+    <MESSAGE value="feat: add handler for AccessDeniedException to return custom error response" />
+    <MESSAGE value="feat: add closingDate field to InterestList entity" />
+    <MESSAGE value="feat: add admin role authorization to create, read, update, and delete operations in multiple controllers" />
+    <MESSAGE value="feat: update error message for HttpMessageNotReadableException handler" />
+    <MESSAGE value="feat: implement InterestList management with CRUD operations and DTOs" />
+    <MESSAGE value="feat: add arrivalTime field and TripStatus enum to Trip entity" />
+    <MESSAGE value="feat: implement Booking management with create, read, and delete operations, including exception handling" />
+    <MESSAGE value="fix: remove setting of listStatus using the DTO which would cause unexpected behavior" />
+    <MESSAGE value="feat: add check for existing bookings before deleting interest list" />
+    <MESSAGE value="refactor: reorganize exception handling by introducing specific exception types" />
+    <MESSAGE value="fix: minor fixes, unused imports and unused methods removed" />
+    <MESSAGE value="feat: add authentication and refresh token tests" />
+    <MESSAGE value="test: add unit tests for UserService create method" />
+    <MESSAGE value="feat: add logging configuration to application.yaml" />
+    <MESSAGE value="feat: add user registration endpoint and service method" />
+    <MESSAGE value="feat: update InterestList model and related classes to use LocalDate and LocalTime" />
+    <MESSAGE value="fix: update GlobalExceptionHandler to return detailed error responses for ResourceNotFoundException" />
+    <MESSAGE value="feat: refactor Trip model and introduce TripInterestList for managing relationships with InterestList" />
+    <MESSAGE value="feat: enhance BookingResponse and BookingMapper to include additional booking details" />
+    <MESSAGE value="feat: implement Trip management with create, update, and retrieval functionalities" />
+    <MESSAGE value="feat: add XML configuration files for data sources and version control settings" />
+    <MESSAGE value="refactor: move project structure to backend new directory" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: move project structure to backend new directory" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
