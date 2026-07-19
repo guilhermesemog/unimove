@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,6 +36,11 @@ public class UserService {
         user.setPhone(userCreate.user().phone());
 
         return userMapper.toResponse(userRepository.save(user));
+    }
+
+    public UserResponse getByAuthentication(Authentication authentication) {
+        return userMapper.toResponse(userRepository.findByCpf(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found")));
     }
 
     public UserResponse getById(Long id) {
