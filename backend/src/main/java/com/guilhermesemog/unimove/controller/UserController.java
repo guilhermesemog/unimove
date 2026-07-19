@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +27,12 @@ public class UserController {
     public ResponseEntity<UserResponse> create(@Valid @RequestBody UserCreate requestBody) {
         UserResponse savedUser = userService.create(requestBody);
         return ResponseEntity.status(201).body(savedUser);
+    }
+
+    @GetMapping
+    public ResponseEntity<UserResponse> getByAuthentication(Authentication authentication) {
+        UserResponse responseBody = userService.getByAuthentication(authentication);
+        return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("/{id}")
