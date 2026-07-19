@@ -2,7 +2,6 @@ package com.guilhermesemog.unimove.service;
 
 import com.guilhermesemog.unimove.dto.auth.LoginRequest;
 import com.guilhermesemog.unimove.dto.auth.LoginResponse;
-import com.guilhermesemog.unimove.dto.auth.RefreshRequest;
 import com.guilhermesemog.unimove.dto.auth.RegisterRequest;
 import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
 import com.guilhermesemog.unimove.model.User;
@@ -77,8 +76,7 @@ public class AuthService {
         return new LoginResponse(accessToken, refreshToken);
     }
 
-    public LoginResponse refresh(RefreshRequest request) {
-        String token = request.refreshToken();
+    public LoginResponse refresh(String token) {
 
         String cpf = jwtService.extractUsername(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(cpf);
