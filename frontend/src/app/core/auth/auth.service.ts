@@ -54,7 +54,6 @@ export class AuthService {
 
     getRole(): UserRole | null {
         const profileString = localStorage.getItem('userProfile');
-        console.log('profileString', profileString);
         if (!profileString) {
             return null;
         }
