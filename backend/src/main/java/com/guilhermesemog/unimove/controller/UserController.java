@@ -54,6 +54,19 @@ public class UserController {
         return ResponseEntity.ok(responseBody);
     }
 
+    @GetMapping("/search")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UserResponse>> getAllByFullName(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(required = false) String fullName
+    ) {
+        Page<UserResponse> responseBody = userService.getAllByFullName(page, size, sortBy, sortDirection, fullName);
+        return ResponseEntity.ok(responseBody);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

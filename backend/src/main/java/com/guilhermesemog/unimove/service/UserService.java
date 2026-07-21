@@ -29,7 +29,8 @@ public class UserService {
     }
 
     public UserResponse create(UserCreate userCreate) {
-        User user = authService.createAuthenticatableUser(userCreate.user().cpf(), userCreate.user().password(), userCreate.role());
+        User user = authService.createAuthenticatableUser(userCreate.user().cpf(), userCreate.user().password(),
+                userCreate.role());
 
         user.setFirstName(userCreate.user().firstName());
         user.setLastName(userCreate.user().lastName());
@@ -56,6 +57,19 @@ public class UserService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return userRepository.findAll(pageable).map(userMapper::toResponse);
+    }
+
+    public Page<UserResponse> getAllByFullName(int page, int size, String sortBy, String sortDirection,
+            String fullName) {
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        String safeFullName = fullName != null ? fullName : "";
+
+        return userRepository.findAllByFullName(safeFullName, pageable).map(userMapper::toResponse);
     }
 
     public void delete(Long id) {
