@@ -4,8 +4,8 @@ import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
 import com.guilhermesemog.unimove.exception.type.IllegalUpdateException;
 import com.guilhermesemog.unimove.exception.type.ResourceAlreadyExists;
 import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,6 +21,17 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorDetails> handleExpiredJwtException(ExpiredJwtException e) {
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .message("JWT token has expired")
+                .details(e.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(401).body(errorDetails);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorDetails> handleMethodNotValidException(MethodArgumentNotValidException ex) {

@@ -209,7 +209,7 @@ public class AuthServiceTests {
             given(jwtService.generateAccessToken(userDetails)).willReturn(ACCESS_TOKEN);
             given(jwtService.generateRefreshToken(userDetails)).willReturn(REFRESH_TOKEN);
 
-            LoginResponse response = authService.refresh(request);
+            LoginResponse response = authService.refresh(request.refreshToken());
 
             assertThat(response).isNotNull();
             assertThat(response.accessToken()).isEqualTo(ACCESS_TOKEN);
@@ -225,7 +225,7 @@ public class AuthServiceTests {
             given(userDetailsService.loadUserByUsername(CPF)).willReturn(userDetails);
             given(jwtService.isValidToken(REFRESH_TOKEN, userDetails, "refresh")).willReturn(false);
 
-            assertThatThrownBy(() -> authService.refresh(request))
+            assertThatThrownBy(() -> authService.refresh(request.refreshToken()))
                     .isInstanceOf(BadCredentialsException.class)
                     .hasMessageContaining("Invalid refresh token");
 
@@ -244,7 +244,7 @@ public class AuthServiceTests {
             given(jwtService.generateAccessToken(userDetails)).willReturn(ACCESS_TOKEN);
             given(jwtService.generateRefreshToken(userDetails)).willReturn(REFRESH_TOKEN);
 
-            authService.refresh(request);
+            authService.refresh(request.refreshToken());
 
             verify(jwtService, times(1)).extractUsername(REFRESH_TOKEN);
             verify(userDetailsService, times(1)).loadUserByUsername(CPF);
@@ -259,7 +259,7 @@ public class AuthServiceTests {
             given(userDetailsService.loadUserByUsername(CPF))
                     .willThrow(new UsernameNotFoundException("User not found: " + CPF));
 
-            assertThatThrownBy(() -> authService.refresh(request))
+            assertThatThrownBy(() -> authService.refresh(request.refreshToken()))
                     .isInstanceOf(UsernameNotFoundException.class);
 
             verify(jwtService, never()).isValidToken(anyString(), any(), anyString());
