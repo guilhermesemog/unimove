@@ -8,6 +8,8 @@ import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.UserMapper;
 import com.guilhermesemog.unimove.model.User;
 import com.guilhermesemog.unimove.repository.UserRepository;
+import com.guilhermesemog.unimove.repository.StudentRepository;
+import com.guilhermesemog.unimove.repository.ConductorRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +21,19 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
+    private final ConductorRepository conductorRepository;
+
     private final UserMapper userMapper;
     private final AuthService authService;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, AuthService authService) {
+    public UserService(UserRepository userRepository, StudentRepository studentRepository,
+            ConductorRepository conductorRepository, UserMapper userMapper, AuthService authService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.authService = authService;
+        this.studentRepository = studentRepository;
+        this.conductorRepository = conductorRepository;
     }
 
     public UserResponse create(UserCreate userCreate) {
@@ -74,6 +82,8 @@ public class UserService {
 
     public void delete(Long id) {
         User user = getUser(id);
+        studentRepository.findById(id).ifPresent(student -> studentRepository.delete(student));
+        conductorRepository.findById(id).ifPresent(conductor -> conductorRepository.delete(conductor));
         userRepository.delete(user);
     }
 
