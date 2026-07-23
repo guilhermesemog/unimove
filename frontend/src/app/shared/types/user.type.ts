@@ -20,3 +20,10 @@ export interface UserProfile {
     lastName: string;
     role: UserRole;
 }
+
+export interface UserUpdateRequest {
+    cpf: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+}
