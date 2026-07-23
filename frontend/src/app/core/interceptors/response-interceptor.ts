@@ -12,11 +12,13 @@ export const responseInterceptor: HttpInterceptorFn = (req, next) => {
     tap((response) => {
     }),
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      if (error.status === 401 || error.status === 403) {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userProfile');
         router.navigate(['/login']);
       }
+
+      // TODO Create pages for other status codes
 
       return throwError(() => error);
     })
