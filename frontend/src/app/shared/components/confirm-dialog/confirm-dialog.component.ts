@@ -1,7 +1,7 @@
 import { Component, HostListener, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export type ConfirmDialogVariant = 'default' | 'danger';
+import { ConfirmDialogVariant } from './confirm-dialog.type';
 
 @Component({
   selector: 'app-confirm-dialog',
