@@ -12,6 +12,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -101,6 +102,17 @@ public class GlobalExceptionHandler {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .message("Access denied")
                 .details("You do not have permission to access this resource")
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(403).body(errorDetails);
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<ErrorDetails> handleAccessDeniedException(DisabledException ex) {
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .message("Access denied")
+                .details("This account is disabled. Please contact the administrator.")
                 .timestamp(LocalDateTime.now())
                 .build();
 

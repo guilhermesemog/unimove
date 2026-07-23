@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.security.authentication.DisabledException;
 
 import java.io.IOException;
 
@@ -54,7 +55,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-        } catch (ExpiredJwtException ex) {
+        } catch (ExpiredJwtException | DisabledException ex) {
             resolver.resolveException(request, response, null, ex);
             return;
         }
