@@ -11,15 +11,37 @@ export class PhonePipe implements PipeTransform {
 
     const cleanedValue = value.replace(/\D/g, '');
 
-    if (cleanedValue.length !== 12) {
-      return value;
+    if (cleanedValue.length == 12) {
+      return cleanedValue.replace(
+        /(\d{3})(\d{1})(\d{4})(\d{4})/,
+        '($1) $2 $3-$4'
+      );
     }
 
-    const formattedValue = cleanedValue.replace(
-      /(\d{2})(\d{1})(\d{4})(\d{4})/,
-      '($1) $2 $3-$4'
-    );
+    if (cleanedValue.length == 11) {
+      return cleanedValue.replace(
+        /(\d{2})(\d{1})(\d{4})(\d{4})/,
+        '($1) $2 $3-$4'
+      );
+    }
 
-    return formattedValue;
+    if (cleanedValue.length == 10) {
+      return cleanedValue.replace(
+        /(\d{2})(\d{4})(\d{4})/,
+        '($1) $2-$3'
+      );
+    }
+
+    if (cleanedValue.length == 9) {
+      return cleanedValue.replace(
+        /(\d{1})(\d{4})(\d{4})/,
+        '$1 $2-$3'
+      );
+    }
+
+    return cleanedValue.replace(
+      /(\d{4})(\d{4})/,
+      '$1-$2'
+    );
   }
 }
