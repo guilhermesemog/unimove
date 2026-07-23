@@ -1,13 +1,6 @@
 @if (totalPages() > 0) {
 <div class="flex justify-between items-center mt-4 gap-4 flex-wrap">
     <div class="flex items-center gap-4">
-        <p class="text-sm text-gray-700">
-            Page
-            <span class="font-medium">{{ page() + 1 }}</span>
-            of
-            <span class="font-medium">{{ totalPages() }}</span>
-        </p>
-
         <div class="flex items-center gap-2 text-sm text-gray-500">
             <label for="pageSize" class="whitespace-nowrap">Items per page:</label>
             <select id="pageSize" class="rounded-md border-0 px-2 py-1 text-sm text-gray-900 ring-1 cursor-pointer"
