@@ -1,0 +1,18 @@
+<div class="flex flex-col gap-1 mb-4">
+  <label [for]="id() ?? label()">
+    {{ label() }}
+    @if (required()) {
+    <span class="text-red-500">*</span>
+    }
+  </label>
+
+  <input class="border rounded p-2" [id]="id() ?? label()" [type]="type()" [placeholder]="placeholder()"
+    [disabled]="disabled()" [value]="value()" (input)="value.set($any($event.target).value)"
+    (blur)="touched.set(true)" />
+
+  @if (touched() && errors().length > 0) {
+  @for (error of errors(); track $index) {
+  <small class="text-red-500">{{ error.message }}</small>
+  }
+  }
+</div>
