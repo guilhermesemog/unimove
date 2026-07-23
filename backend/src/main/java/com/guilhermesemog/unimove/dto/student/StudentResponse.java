@@ -7,7 +7,7 @@ public record StudentResponse(
         Long period,
         String course,
         String address,
-        String university,
-        String preferredBoardingStop
+        Long universityId,
+        Long preferredBoardingStopId
 ) {
 }

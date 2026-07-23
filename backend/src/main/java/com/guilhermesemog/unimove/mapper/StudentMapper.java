@@ -36,8 +36,8 @@ public class StudentMapper {
                 student.getPeriod(),
                 student.getCourse(),
                 student.getAddress(),
-                student.getUniversity().getName(),
-                student.getPreferredBoardingStop() != null ? student.getPreferredBoardingStop().getLocal() : null
+                student.getUniversity().getId(),
+                student.getPreferredBoardingStop() != null ? student.getPreferredBoardingStop().getId() : null
         );
     }
 
