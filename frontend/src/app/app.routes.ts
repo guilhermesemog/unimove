@@ -7,8 +7,14 @@ import { AuthLayout } from './layout/auth-layout/auth-layout.component';
 
 import { LoginPage } from './features/auth/login/login.page';
 import { HomePage } from './features/home/home.page';
-import { AdminHomePage } from './features/admin/home/home.page';
 import { UnauthorizedPage } from './features/error/unauthorized/unauthorized.page';
+
+import { AdminHomePage } from './features/admin/home/home.page';
+import { ListUserPage } from './features/admin/user/list-user/list-user.page';
+import { CreateUserPage } from './features/admin/user/create-user/create-user.page';
+import { EditUser } from './features/admin/user/edit-user/edit-user.page';
+import { EditStudent } from './features/admin/student/edit-student/edit-student.page';
+import { EditConductor } from './features/admin/conductor/edit-conductor/edit-conductor.page';
 
 export const routes: Routes = [
     {
@@ -31,6 +37,36 @@ export const routes: Routes = [
                 component: AdminHomePage,
                 canActivate: [roleGuard([UserRole.Admin])],
             },
+            {
+                path: 'admin/users',
+                pathMatch: 'full',
+                component: ListUserPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/users/create',
+                pathMatch: 'full',
+                component: CreateUserPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/users/:id/edit',
+                pathMatch: 'full',
+                component: EditUser,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/students/:id/edit',
+                pathMatch: 'full',
+                component: EditStudent,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/conductors/:id/edit',
+                pathMatch: 'full',
+                component: EditConductor,
+                canActivate: [roleGuard([UserRole.Admin])],
+            }
         ]
     },
     {
