@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UniversityService {
 
@@ -48,6 +50,10 @@ public class UniversityService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return universityRepository.findAll(pageable).map(universityMapper::toResponse);
+    }
+
+    public List<UniversityResponse> getAll() {
+        return universityRepository.findAll().stream().map(universityMapper::toResponse).toList();
     }
 
     public void delete(Long id) {

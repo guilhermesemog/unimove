@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/universities")
 public class UniversityController {
@@ -52,6 +54,13 @@ public class UniversityController {
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
         Page<UniversityResponse> responseBody = universityService.getAll(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UniversityResponse>> getAll() {
+        List<UniversityResponse> responseBody = universityService.getAll();
         return ResponseEntity.ok(responseBody);
     }
 
