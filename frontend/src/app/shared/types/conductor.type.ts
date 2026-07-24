@@ -1,7 +1,13 @@
-import { User } from "./user.type";
+import { User, UserUpdateRequest } from "./user.type";
 
 export interface Conductor {
     user: User;
     license: string;
-    licenseExpirationDate: Date;
+    licenseExpirationDate: string;
+}
+
+export interface ConductorUpdateRequest {
+    user: UserUpdateRequest;
+    license: string;
+    licenseExpirationDate: string;
 }
