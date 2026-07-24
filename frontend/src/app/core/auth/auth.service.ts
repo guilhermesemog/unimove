@@ -81,4 +81,14 @@ export class AuthService {
         const profile: UserProfile = JSON.parse(profileString);
         return profile.lastName;
     }
+
+    getId(): number | null {
+        const profileString = localStorage.getItem('userProfile');
+        if (!profileString) {
+            return null;
+        }
+
+        const profile: UserProfile = JSON.parse(profileString);
+        return profile.id;
+    }
 }
