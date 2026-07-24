@@ -15,7 +15,7 @@ import { CpfPipe } from '../../../../shared/pipes/cpf-pipe';
 
 @Component({
   selector: 'app-edit-user',
-  imports: [CommonModule, FormField, TextFieldComponent, ConfirmDialogComponent, BackButtonComponent , PhonePipe, CpfPipe],
+  imports: [CommonModule, FormField, TextFieldComponent, ConfirmDialogComponent, BackButtonComponent, PhonePipe, CpfPipe],
   templateUrl: './edit-user.page.html',
 })
 export class EditUser {
@@ -36,6 +36,18 @@ export class EditUser {
     phone: this.user()?.phone || '',
   });
 
+  userForm = form(this.userFormModel, (schema) => {
+    required(schema.cpf, { message: 'CPF is required' });
+    minLength(schema.cpf, 11, { message: 'CPF must be exactly 11 characters long' });
+    maxLength(schema.cpf, 11, { message: 'CPF must be exactly 11 characters long' });
+    required(schema.firstName, { message: 'First name is required' });
+    required(schema.lastName, { message: 'Last name is required' });
+    required(schema.phone, { message: 'Phone is required' });
+    minLength(schema.phone, 8, { message: 'Phone must be at least 8 characters long' });
+    maxLength(schema.phone, 12, { message: 'Phone must be at most 12 characters long' });
+  });
+
+
   fetchUser() {
     this.userService.getUserById(this.id).subscribe((user) => {
       this.userFormModel.set({
@@ -51,18 +63,6 @@ export class EditUser {
   ngOnInit() {
     this.fetchUser();
   }
-
-  userForm = form(this.userFormModel, (schema) => {
-    required(schema.cpf, { message: 'CPF is required' });
-    minLength(schema.cpf, 11, { message: 'CPF must be exactly 11 characters long' });
-    maxLength(schema.cpf, 11, { message: 'CPF must be exactly 11 characters long' });
-    required(schema.firstName, { message: 'First name is required' });
-    required(schema.lastName, { message: 'Last name is required' });
-    required(schema.phone, { message: 'Phone is required' });
-    minLength(schema.phone, 8, { message: 'Phone must be at least 8 characters long' });
-    maxLength(schema.phone, 12, { message: 'Phone must be at most 12 characters long' });
-  });
-
 
   onSubmit() {
     if (!this.userForm().valid()) {

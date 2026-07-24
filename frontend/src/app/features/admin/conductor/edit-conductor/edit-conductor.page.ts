@@ -41,6 +41,19 @@ export class EditConductor {
         licenseExpirationDate: this.conductor()?.licenseExpirationDate || '',
     });
 
+    conductorForm = form(this.conductorFormModel, (schema) => {
+        required(schema.cpf, { message: 'CPF is required' });
+        minLength(schema.cpf, 11, { message: 'CPF must be exactly 11 characters long' });
+        maxLength(schema.cpf, 11, { message: 'CPF must be exactly 11 characters long' });
+        required(schema.firstName, { message: 'First name is required' });
+        required(schema.lastName, { message: 'Last name is required' });
+        required(schema.phone, { message: 'Phone is required' });
+        minLength(schema.phone, 8, { message: 'Phone must be at least 8 characters long' });
+        maxLength(schema.phone, 12, { message: 'Phone must be at most 12 characters long' });
+        required(schema.license, { message: 'License is required' });
+        required(schema.licenseExpirationDate, { message: 'License expiration date is required' });
+    });
+
     fetchConductor() {
         this.conductorService.getConductorById(this.id).subscribe((conductor) => {
             this.conductorFormModel.set({
@@ -58,19 +71,6 @@ export class EditConductor {
     ngOnInit() {
         this.fetchConductor();
     }
-
-    conductorForm = form(this.conductorFormModel, (schema) => {
-        required(schema.cpf, { message: 'CPF is required' });
-        minLength(schema.cpf, 11, { message: 'CPF must be exactly 11 characters long' });
-        maxLength(schema.cpf, 11, { message: 'CPF must be exactly 11 characters long' });
-        required(schema.firstName, { message: 'First name is required' });
-        required(schema.lastName, { message: 'Last name is required' });
-        required(schema.phone, { message: 'Phone is required' });
-        minLength(schema.phone, 8, { message: 'Phone must be at least 8 characters long' });
-        maxLength(schema.phone, 12, { message: 'Phone must be at most 12 characters long' });
-        required(schema.license, { message: 'License is required' });
-        required(schema.licenseExpirationDate, { message: 'License expiration date is required' });
-    });
 
     onSubmit() {
         if (!this.conductorForm().valid()) {
