@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BoardingStopService {
 
@@ -40,6 +42,10 @@ public class BoardingStopService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return boardingStopRepository.findAll(pageable).map(boardingStopMapper::toResponse);
+    }
+
+    public List<BoardingStopResponse> getAll() {
+        return boardingStopRepository.findAll().stream().map(boardingStopMapper::toResponse).toList();
     }
 
     public void delete(Long id) {

@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/boarding-stops")
 public class BoardingStopController {
@@ -39,6 +41,12 @@ public class BoardingStopController {
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
         Page<BoardingStopResponse> responseBody = boardingStopService.getAll(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<BoardingStopResponse>> getAll() {
+        List<BoardingStopResponse> responseBody = boardingStopService.getAll();
         return ResponseEntity.ok(responseBody);
     }
 
