@@ -2,7 +2,7 @@ import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 
-import { Student, StudentUpdateRequest } from '../../../shared/types/student.type';
+import { Student, StudentCreateRequest, StudentUpdateRequest } from '../../../shared/types/student.type';
 import { PageResponse, PageParameters } from '../../../shared/types/page.type';
 
 import { environment } from '../../../../environments/environment.development';
@@ -27,10 +27,14 @@ export class StudentService {
             period: student.period,
             course: student.course,
             address: student.address,
-            universityId: student.universityId
+            universityId: student.universityId,
+            preferredBoardingStopId: student.preferredBoardingStopId
         };
 
         return this.http.put<void>(`${API_BASE_URL}/students/${userId}`, updatableStudent);
     }
 
+    createStudent(student: StudentCreateRequest): Observable<Student> {
+        return this.http.post<Student>(`${API_BASE_URL}/students`, student);
+    }
 }

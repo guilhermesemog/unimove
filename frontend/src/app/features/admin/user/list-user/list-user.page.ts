@@ -141,6 +141,10 @@ export class ListUserPage {
     });
   }
 
+  onCreate() {
+    this.router.navigate(['/admin/users/create']);
+  }
+
   onConfirmDialogConfirm() {
     this.confirmDialog().action?.();
     this.closeConfirmDialog();

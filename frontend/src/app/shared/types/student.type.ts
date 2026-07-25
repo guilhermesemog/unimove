@@ -1,4 +1,4 @@
-import { User, UserUpdateRequest } from "./user.type";
+import { User, UserCommomCreate, UserCreateRequest, UserUpdateRequest } from "./user.type";
 
 export interface Student {
     user: User;
@@ -15,4 +15,14 @@ export interface StudentUpdateRequest {
     course: string;
     address: string;
     universityId: number;
+    preferredBoardingStopId: number | null;
+}
+
+export interface StudentCreateRequest {
+    user: UserCommomCreate;
+    period: number;
+    course: string;
+    address: string;
+    universityId: number;
+    preferredBoardingStopId: number | null;
 }

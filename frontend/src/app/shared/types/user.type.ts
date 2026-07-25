@@ -27,3 +27,16 @@ export interface UserUpdateRequest {
     lastName: string;
     phone: string;
 }
+
+export interface UserCommomCreate {
+    cpf: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    password: string;
+}
+
+export interface UserCreateRequest {
+    user: UserCommomCreate;
+    role: UserRole
+}

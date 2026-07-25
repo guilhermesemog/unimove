@@ -2,7 +2,7 @@ import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 
-import { User, UserUpdateRequest } from '../../../shared/types/user.type';
+import { User, UserCreateRequest, UserUpdateRequest } from '../../../shared/types/user.type';
 import { PageResponse, PageParameters } from '../../../shared/types/page.type';
 
 import { environment } from '../../../../environments/environment.development';
@@ -48,6 +48,10 @@ export class UserService {
         };
 
         return this.http.put<void>(`${API_BASE_URL}/users/${userId}`, updatableUser);
+    }
+
+    createUser(user: UserCreateRequest): Observable<User> {
+        return this.http.post<User>(`${API_BASE_URL}/users`, user);
     }
 
     deleteUser(userId: number): Observable<void> {

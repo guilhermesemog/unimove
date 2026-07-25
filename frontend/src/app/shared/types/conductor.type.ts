@@ -1,4 +1,4 @@
-import { User, UserUpdateRequest } from "./user.type";
+import { User, UserCommomCreate, UserCreateRequest, UserUpdateRequest } from "./user.type";
 
 export interface Conductor {
     user: User;
@@ -8,6 +8,12 @@ export interface Conductor {
 
 export interface ConductorUpdateRequest {
     user: UserUpdateRequest;
+    license: string;
+    licenseExpirationDate: string;
+}
+
+export interface ConductorCreateRequest {
+    user: UserCommomCreate;
     license: string;
     licenseExpirationDate: string;
 }

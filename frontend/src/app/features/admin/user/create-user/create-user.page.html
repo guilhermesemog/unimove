@@ -1,0 +1,62 @@
+<div class="mb-6 gap-4 flex flex-col items-start">
+    <app-back-button />
+    <div>
+        <h1 class="text-2xl font-semibold text-gray-900">Users</h1>
+        <p class="mt-1 text-sm text-gray-500">
+            Create a new user to access the system.
+        </p>
+    </div>
+</div>
+
+<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm p-8">
+    <form>
+        <app-text-field [formField]="userForm.firstName" label="First Name" placeholder="Enter your first name" />
+        <app-text-field [formField]="userForm.lastName" label="Last Name" placeholder="Enter your last name" />
+        <app-text-field [formField]="userForm.cpf" label="CPF" placeholder="Enter your CPF" />
+
+        @if (userFormModel().cpf) {
+        <p class="text-xs text-gray-500 -mt-3 mb-4">
+            Formatted: {{ userFormModel().cpf | cpf }}
+        </p>
+        }
+
+        <app-text-field [formField]="userForm.phone" label="Phone" placeholder="Enter your phone number" />
+
+        @if (userFormModel().phone) {
+        <p class="text-xs text-gray-500 -mt-3 mb-4">
+            Formatted: {{ userFormModel().phone | phone }}
+        </p>
+        }
+
+        <app-text-field [formField]="userForm.password" label="Password" placeholder="Enter your password"
+            type="password" />
+
+        <app-select-field [formField]="roleForm" label="Role" [options]="roleOptions" />
+
+        <!-- Conductor Form -->
+        @if (roleForm().value() === 'CONDUCTOR') {
+        <app-text-field [formField]="conductorForm.license" label="License Number"
+            placeholder="Enter your license number" />
+        <app-date-field [formField]="conductorForm.licenseExpirationDate" label="License Expiration Date"
+            placeholder="Enter your license expiration date" />
+        }
+
+        @if (roleForm().value() === 'STUDENT') {
+        <app-select-field [formField]="studentForm.universityId" label="University" [options]="universityOptions()" />
+        <app-select-field [formField]="studentForm.preferredBoardingStopId" label="Boarding Stop"
+            [options]="boardingStopOptions()" />
+        <app-text-field [formField]="studentForm.address" label="Address" placeholder="Enter your address" />
+        <app-text-field [formField]="studentForm.course" label="Course" placeholder="Enter your course" />
+        <app-number-field [formField]="studentForm.period" label="Period" placeholder="Enter your period" />
+        }
+
+        <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="(userForm().invalid() || !userForm().dirty() && roleForm().value() === 'ADMIN') || 
+            (roleForm().value() === 'CONDUCTOR' && (conductorForm().invalid() || !conductorForm().dirty())) || 
+            (roleForm().value() === 'STUDENT' && (studentForm().invalid() || !studentForm().dirty()))"
+            (click)="onSubmit()">
+            Save Changes
+        </button>
+    </form>
+</div>

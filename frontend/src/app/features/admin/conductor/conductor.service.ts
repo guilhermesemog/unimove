@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 
 import { environment } from '../../../../environments/environment.development';
-import { Conductor, ConductorUpdateRequest } from '../../../shared/types/conductor.type';
+import { Conductor, ConductorCreateRequest, ConductorUpdateRequest } from '../../../shared/types/conductor.type';
 
 const API_BASE_URL = environment.apiUrl;
 
@@ -30,4 +30,7 @@ export class ConductorService {
         return this.http.put<void>(`${API_BASE_URL}/conductors/${userId}`, updatableConductor);
     }
 
+    createConductor(conductor: ConductorCreateRequest): Observable<Conductor> {
+        return this.http.post<Conductor>(`${API_BASE_URL}/conductors`, conductor);
+    }
 }
