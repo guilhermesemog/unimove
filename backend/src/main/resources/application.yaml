@@ -22,4 +22,4 @@ jwt:
 
 logging:
   level:
-    web: info
+    web: debug
