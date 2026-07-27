@@ -42,6 +42,16 @@ public class UniversityService {
         return universityMapper.toResponse(university);
     }
 
+    public Page<UniversityResponse> getAllByName(int page, int size, String sortBy, String sortDirection, String search) {
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return universityRepository.findAllByNameContainsIgnoreCase(search, pageable).map(universityMapper::toResponse);
+    }
+
     public Page<UniversityResponse> getAll(int page, int size, String sortBy, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()

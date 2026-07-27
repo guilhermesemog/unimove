@@ -64,6 +64,20 @@ public class UniversityController {
         return ResponseEntity.ok(responseBody);
     }
 
+    @GetMapping("/search")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UniversityResponse>> getAllByName(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(required = false) String name
+    ) {
+        Page<UniversityResponse> responseBody = universityService.getAllByName(page, size, sortBy, sortDirection, name);
+        return ResponseEntity.ok(responseBody);
+    }
+
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
