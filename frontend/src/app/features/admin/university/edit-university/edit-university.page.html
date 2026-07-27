@@ -1,0 +1,33 @@
+<div class="mb-6 gap-4 flex flex-row items-baseline justify-between">
+    <div>
+        <h1 class="text-2xl font-semibold text-gray-900">Universities</h1>
+        <p class="mt-1 text-sm text-gray-500">
+            Edit the university {{ university()?.name }} information below.
+        </p>
+    </div>
+    <app-back-button />
+</div>
+
+<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm p-8">
+    <form>
+        <app-text-field [formField]="universityForm.name" label="Name" placeholder="Enter the university name" />
+        <app-text-field [formField]="universityForm.address" label="Address"
+            placeholder="Enter the university address" />
+
+        <div class="flex flex-row justify-between mb-4">
+            <button type="button"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                [disabled]="universityForm().invalid() || !universityForm().dirty()" (click)="onSubmit()">
+                Save Changes
+            </button>
+            <button type="button" class="bg-gray-500 none hover:bg-gray-700 text-white font-bold py-2 px-4 rounded cursor-pointer
+        disabled:hidden" (click)="onDeleteClick()">
+                Delete
+            </button>
+        </div>
+    </form>
+</div>
+
+<app-confirm-dialog [open]="confirmDialog().open" [title]="confirmDialog().title" [message]="confirmDialog().message"
+    [confirmLabel]="confirmDialog().confirmLabel" [variant]="confirmDialog().variant"
+    (confirm)="onConfirmDialogConfirm()" (cancel)="onConfirmDialogCancel()" />

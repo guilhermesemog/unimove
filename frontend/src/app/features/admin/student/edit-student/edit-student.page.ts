@@ -23,7 +23,7 @@ import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
     imports: [CommonModule, FormField, TextFieldComponent, NumberFieldComponent, SelectFieldComponent, ConfirmDialogComponent, BackButtonComponent, CpfPipe, PhonePipe],
     templateUrl: './edit-student.page.html',
 })
-export class EditStudent {
+export class EditStudentPage {
     confirmDialog = signal<ConfirmDialogState>(CLOSED_DIALOG);
 
     studentService = inject(StudentService);

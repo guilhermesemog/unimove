@@ -20,7 +20,7 @@ import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
     imports: [CommonModule, FormField, TextFieldComponent, DateFieldComponent, ConfirmDialogComponent, BackButtonComponent, CpfPipe, PhonePipe],
     templateUrl: './edit-conductor.page.html',
 })
-export class EditConductor {
+export class EditConductorPage {
     confirmDialog = signal<ConfirmDialogState>(CLOSED_DIALOG);
 
     conductorService = inject(ConductorService);

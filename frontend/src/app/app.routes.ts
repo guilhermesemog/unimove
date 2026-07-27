@@ -12,9 +12,12 @@ import { UnauthorizedPage } from './features/error/unauthorized/unauthorized.pag
 import { AdminHomePage } from './features/admin/home/home.page';
 import { ListUserPage } from './features/admin/user/list-user/list-user.page';
 import { CreateUserPage } from './features/admin/user/create-user/create-user.page';
-import { EditUser } from './features/admin/user/edit-user/edit-user.page';
-import { EditStudent } from './features/admin/student/edit-student/edit-student.page';
-import { EditConductor } from './features/admin/conductor/edit-conductor/edit-conductor.page';
+import { EditUserPage } from './features/admin/user/edit-user/edit-user.page';
+import { EditStudentPage } from './features/admin/student/edit-student/edit-student.page';
+import { EditConductorPage } from './features/admin/conductor/edit-conductor/edit-conductor.page';
+import { ListUniversityPage } from './features/admin/university/list-university/list-university.page';
+import { CreateUniversityPage } from './features/admin/university/create-university/create-university.page';
+import { EditUniversityPage } from './features/admin/university/edit-university/edit-university.page';
 
 export const routes: Routes = [
     {
@@ -52,19 +55,37 @@ export const routes: Routes = [
             {
                 path: 'admin/users/:id/edit',
                 pathMatch: 'full',
-                component: EditUser,
+                component: EditUserPage,
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/students/:id/edit',
                 pathMatch: 'full',
-                component: EditStudent,
+                component: EditStudentPage,
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/conductors/:id/edit',
                 pathMatch: 'full',
-                component: EditConductor,
+                component: EditConductorPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/universities',
+                pathMatch: 'full',
+                component: ListUniversityPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/universities/create',
+                pathMatch: 'full',
+                component: CreateUniversityPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/universities/:id/edit',
+                pathMatch: 'full',
+                component: EditUniversityPage,
                 canActivate: [roleGuard([UserRole.Admin])],
             }
         ]

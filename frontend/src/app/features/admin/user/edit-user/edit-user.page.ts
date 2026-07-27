@@ -18,7 +18,7 @@ import { CpfPipe } from '../../../../shared/pipes/cpf-pipe';
   imports: [CommonModule, FormField, TextFieldComponent, ConfirmDialogComponent, BackButtonComponent, PhonePipe, CpfPipe],
   templateUrl: './edit-user.page.html',
 })
-export class EditUser {
+export class EditUserPage {
   confirmDialog = signal<ConfirmDialogState>(CLOSED_DIALOG);
 
   userService = inject(UserService);
