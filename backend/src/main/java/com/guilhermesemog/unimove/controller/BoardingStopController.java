@@ -50,6 +50,18 @@ public class BoardingStopController {
         return ResponseEntity.ok(responseBody);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Page<BoardingStopResponse>> getAllByLocal(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam String local
+    ) {
+        Page<BoardingStopResponse> responseBody = boardingStopService.getAllByLocal(page, size, sortBy, sortDirection, local);
+        return ResponseEntity.ok(responseBody);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

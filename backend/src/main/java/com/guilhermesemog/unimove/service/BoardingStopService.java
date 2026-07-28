@@ -44,6 +44,16 @@ public class BoardingStopService {
         return boardingStopRepository.findAll(pageable).map(boardingStopMapper::toResponse);
     }
 
+    public Page<BoardingStopResponse> getAllByLocal(int page, int size, String sortBy, String sortDirection, String local) {
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return boardingStopRepository.findAllByLocalContainsIgnoreCase(local, pageable).map(boardingStopMapper::toResponse);
+    }
+
     public List<BoardingStopResponse> getAll() {
         return boardingStopRepository.findAll().stream().map(boardingStopMapper::toResponse).toList();
     }
