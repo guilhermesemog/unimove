@@ -1,0 +1,18 @@
+<div class="flex flex-row gap-2 items-center w-full max-w-xl">
+    <button type="button"
+        class="rounded-md p-2 text-sm font-semibold border border-gray-300 text-gray-700 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors"
+        (click)="search.emit()">
+        Search
+    </button>
+
+    <input type="text" [placeholder]="placeholder()"
+        class="w-full rounded-md border-0 p-2 text-sm text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+        [ngModel]="value()" (ngModelChange)="onInput($event)" (keyup.enter)="search.emit()" />
+
+    @if (value()) {
+    <button type="button" class="relative right-8 text-gray-400 hover:text-gray-600 cursor-pointer"
+        (click)="clear.emit()">
+        x
+    </button>
+    }
+</div>
