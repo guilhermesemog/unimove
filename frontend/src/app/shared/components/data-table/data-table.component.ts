@@ -1,0 +1,30 @@
+import { Component, input, output, contentChild, TemplateRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TableColumn } from './table-column.type';
+
+@Component({
+  selector: 'app-data-table',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './data-table.component.html',
+})
+export class DataTableComponent<T extends { id: string | number }> {
+  columns = input.required<TableColumn<T>[]>();
+  data = input.required<T[]>();
+  sortBy = input<string | null>(null);
+  sortDirection = input<'asc' | 'desc'>('asc');
+  emptyMessage = input('No data available.');
+
+  sortChange = output<string>();
+
+  rowActions = contentChild<TemplateRef<{ $implicit: T }>>('rowActions');
+
+  onSort(column: TableColumn<T>) {
+    if (column.sortable) this.sortChange.emit(column.key);
+  }
+
+  getValue(row: T, column: TableColumn<T>): string {
+    if (column.format) return column.format(row);
+    return String(row[column.key] ?? '');
+  }
+}

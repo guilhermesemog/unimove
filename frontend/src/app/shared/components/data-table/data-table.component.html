@@ -1,0 +1,63 @@
+<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+      <tr>
+        @for (column of columns(); track column.key) {
+          <th scope="col"
+              class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+              [class]="{
+                'text-left': column.align !== 'right' && column.align !== 'center',
+                'text-right': column.align === 'right',
+                'text-center': column.align === 'center'
+              }"
+              [style.width]="column.width">
+            @if (column.sortable) {
+              <button type="button" class="flex items-center gap-1 hover:text-gray-700"
+                      (click)="onSort(column)">
+                {{ column.label }}
+                <span class="w-3 inline-block">
+                  @if (sortBy() === column.key) {
+                    {{ sortDirection() === 'asc' ? '↑' : '↓' }}
+                  }
+                </span>
+              </button>
+            } @else {
+              {{ column.label }}
+            }
+          </th>
+        }
+        @if (rowActions()) {
+          <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Ações
+          </th>
+        }
+      </tr>
+    </thead>
+
+    <tbody class="bg-white divide-y divide-gray-200">
+      @for (row of data(); track row.id) {
+        <tr class="odd:bg-gray-100 even:bg-white hover:bg-gray-200">
+          @for (column of columns(); track column.key) {
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ getValue(row, column) }}
+            </td>
+          }
+          @if (rowActions(); as actions) {
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+              <ng-container [ngTemplateOutlet]="actions" [ngTemplateOutletContext]="{ $implicit: row }" />
+            </td>
+          }
+        </tr>
+      }
+
+      @if (data().length === 0) {
+        <tr>
+          <td [attr.colspan]="columns().length + (rowActions() ? 1 : 0)"
+              class="px-6 py-8 text-center text-sm text-gray-500">
+            {{ emptyMessage() }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
