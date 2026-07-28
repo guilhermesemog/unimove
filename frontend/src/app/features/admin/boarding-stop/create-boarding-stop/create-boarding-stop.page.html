@@ -1,0 +1,15 @@
+<div class="flex flex-row items-baseline justify-between">
+    <app-header title="Create Boarding Stop" description="Create a new boarding stop to add to the system." />
+    <app-back-button />
+</div>
+
+<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm p-8">
+    <form>
+        <app-text-field [formField]="boardingStopForm.local" label="Local" placeholder="Enter the university name" />
+        <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="(boardingStopForm().invalid() || !boardingStopForm().dirty())" (click)="onSubmit()">
+            Save Changes
+        </button>
+    </form>
+</div>

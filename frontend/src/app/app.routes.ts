@@ -18,6 +18,8 @@ import { EditConductorPage } from './features/admin/conductor/edit-conductor/edi
 import { ListUniversityPage } from './features/admin/university/list-university/list-university.page';
 import { CreateUniversityPage } from './features/admin/university/create-university/create-university.page';
 import { EditUniversityPage } from './features/admin/university/edit-university/edit-university.page';
+import { ListBoardingStopPage } from './features/admin/boarding-stop/list-boarding-stop/list-boarding-stop.page';
+import { CreateBoardingStop } from './features/admin/boarding-stop/create-boarding-stop/create-boarding-stop.page';
 
 export const routes: Routes = [
     {
@@ -86,6 +88,18 @@ export const routes: Routes = [
                 path: 'admin/universities/:id/edit',
                 pathMatch: 'full',
                 component: EditUniversityPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/boarding-stops',
+                pathMatch: 'full',
+                component: ListBoardingStopPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/boarding-stops/create',
+                pathMatch: 'full',
+                component: CreateBoardingStop,
                 canActivate: [roleGuard([UserRole.Admin])],
             }
         ]

@@ -1,0 +1,32 @@
+<!-- Header -->
+<app-header title="Boarding Stops" description="Manage UNIMOVE system boarding stops..."></app-header>
+
+<!-- Search -->
+<div class="w-full flex flex-row mb-6 gap-2 justify-between items-center">
+    <app-search-bar [value]="list.searchTerm()" placeholder="Search by name..."
+        (valueChange)="list.searchTerm.set($event)" (search)="list.onSearch()" (clear)="list.onClearSearch()" />
+
+    <button type="button"
+        class="rounded-md  p-2 text-sm font-semibold border border-gray-300 text-gray-700 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors"
+        (click)="onCreate()">
+        Create Boarding Stop
+    </button>
+</div>
+
+<!-- List -->
+<app-data-table [columns]="columns" [data]="list.items()" [sortBy]="list.sortBy()"
+    [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
+    <ng-template #rowActions let-boardingStop>
+        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer"
+            (click)="onDeleteClick(boardingStop)">
+            Delete
+        </button>
+    </ng-template>
+</app-data-table>
+
+<app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
+    (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />
+
+<app-confirm-dialog [open]="confirmDialog.state().open" [title]="confirmDialog.state().title"
+    [message]="confirmDialog.state().message" [confirmLabel]="confirmDialog.state().confirmLabel"
+    [variant]="confirmDialog.state().variant" (confirm)="confirmDialog.confirm()" (cancel)="confirmDialog.cancel()" />
