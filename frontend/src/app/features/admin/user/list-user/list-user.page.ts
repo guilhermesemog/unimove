@@ -7,94 +7,48 @@ import { CpfPipe } from '../../../../shared/pipes/cpf-pipe';
 import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { ConfirmDialogState, CLOSED_DIALOG } from '../../../../shared/components/confirm-dialog/confirm-dialog.type';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
+import { SearchBarComponent } from '../../../../shared/components/search-bar/search-bar.component';
+import { ListState } from '../../../../shared/utils/list-state';
+import { ConfirmDialogController } from '../../../../shared/utils/confirm-dialog.controller';
+import { TableColumn } from '../../../../shared/components/data-table/table-column.type';
+import { DataTableComponent } from '../../../../shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'app-list-user',
-  imports: [CommonModule, CpfPipe, PhonePipe, PaginationComponent, ConfirmDialogComponent],
+  imports: [DataTableComponent, HeaderComponent, SearchBarComponent, CommonModule, PaginationComponent, ConfirmDialogComponent],
   templateUrl: './list-user.page.html',
+  providers: [CpfPipe, PhonePipe],
 })
 export class ListUserPage {
-  confirmDialog = signal<ConfirmDialogState>(CLOSED_DIALOG);
 
   authService = inject(AuthService);
   userService = inject(UserService);
   router = inject(Router);
 
-  users = signal<Array<User>>([]);
+  constructor(private cpfPipe: CpfPipe, private phonePipe: PhonePipe) { }
 
-  totalPages = signal(0);
-  page = signal(0);
-  pageSize = signal(10);
-  sortBy = signal('firstName');
-  sortDirection = signal<'asc' | 'desc'>('asc');
-  searchTerm = signal('');
+  list = new ListState<User>({
+    initialSortBy: 'firstName',
+    fetchAll: (q) => this.userService.getUsers(q),
+    fetchByQuery: (term, q) => this.userService.getUsersByFullName(term, q),
+  });
 
+  confirmDialog = new ConfirmDialogController();
+
+  columns: TableColumn<User>[] = [
+    { key: 'firstName', label: 'First Name', sortable: true },
+    { key: 'lastName', label: 'Last Name', sortable: true },
+    { key: 'cpf', label: 'CPF', sortable: true, format: (user) => this.cpfPipe.transform(user.cpf) as string },
+    { key: 'phone', label: 'Phone', sortable: true, format: (user) => this.phonePipe.transform(user.phone) as string },
+    { key: 'role', label: 'Role', sortable: true },
+    { key: 'active', label: 'Active', sortable: true, format: (user) => user.active ? 'Yes' : 'No' },
+  ]
 
   ngOnInit() {
-    this.fetchUsers();
-  }
-
-  fetchUsers() {
-    this.userService.getUsers({
-      page: this.page(),
-      size: this.pageSize(),
-      sortBy: this.sortBy(),
-      sortDirection: this.sortDirection()
-    }).subscribe((page) => {
-      this.users.set(page.content);
-      this.totalPages.set(page.page.totalPages);
-      this.page.set(page.page.number);
-    });
-  }
-
-  fetchUsersByFullName() {
-    this.userService.getUsersByFullName(this.searchTerm(), {
-      page: this.page(),
-      size: this.pageSize(),
-      sortBy: this.sortBy(),
-      sortDirection: this.sortDirection()
-    }).subscribe((page) => {
-      this.users.set(page.content);
-      this.totalPages.set(page.page.totalPages);
-      this.page.set(page.page.number);
-    });
-  }
-
-  onSort(field: string) {
-    if (this.sortBy() === field) {
-      this.sortDirection.set(this.sortDirection() === 'asc' ? 'desc' : 'asc');
-    } else {
-      this.sortBy.set(field);
-      this.sortDirection.set('asc');
-    }
-
-    this.page.set(0);
-    this.fetchUsers();
-  }
-
-  onPageChange(newPage: number) {
-    this.page.set(newPage);
-    this.fetchUsers();
-  }
-
-  onPageSizeChange(newSize: number) {
-    this.pageSize.set(newSize);
-    this.page.set(0);
-    this.searchTerm() ? this.fetchUsersByFullName() : this.fetchUsers();
-  }
-
-  onSearch() {
-    this.page.set(0);
-    this.fetchUsersByFullName();
-  }
-
-  onClearSearch() {
-    this.searchTerm.set('');
-    this.page.set(0);
-    this.fetchUsers();
+    this.list.fetch();
   }
 
   onEdit(user: User) {
@@ -107,10 +61,8 @@ export class ListUserPage {
     }
   }
 
-
   onDeleteClick(user: User) {
-    this.confirmDialog.set({
-      open: true,
+    this.confirmDialog.open({
       title: 'Delete user',
       message: `Are you sure you want to delete ${user.firstName} ${user.lastName}? This action cannot be undone.`,
       confirmLabel: 'Delete',
@@ -120,8 +72,7 @@ export class ListUserPage {
   }
 
   onDeactivateClick(user: User) {
-    this.confirmDialog.set({
-      open: true,
+    this.confirmDialog.open({
       title: 'Deactivate user',
       message: `Are you sure you want to deactivate ${user.firstName} ${user.lastName}? They will lose access to the system.`,
       confirmLabel: 'Deactivate',
@@ -131,8 +82,7 @@ export class ListUserPage {
   }
 
   onActivateClick(user: User) {
-    this.confirmDialog.set({
-      open: true,
+    this.confirmDialog.open({
       title: 'Activate user',
       message: `Activate ${user.firstName} ${user.lastName}? They will regain access to the system.`,
       confirmLabel: 'Activate',
@@ -145,29 +95,15 @@ export class ListUserPage {
     this.router.navigate(['/admin/users/create']);
   }
 
-  onConfirmDialogConfirm() {
-    this.confirmDialog().action?.();
-    this.closeConfirmDialog();
-  }
-
-  onConfirmDialogCancel() {
-    this.closeConfirmDialog();
-  }
-
-  private closeConfirmDialog() {
-    this.confirmDialog.set(CLOSED_DIALOG);
-  }
-
-
   private deleteUser(user: User) {
     this.userService.deleteUser(user.id).subscribe(() => {
-      this.fetchUsers();
+      this.list.fetch();
     });
   }
 
   private toggleUserStatus(user: User) {
     this.userService.toggleUserActiveStatus(user.id).subscribe(() => {
-      this.fetchUsers();
+      this.list.fetch();
     });
   }
 }
