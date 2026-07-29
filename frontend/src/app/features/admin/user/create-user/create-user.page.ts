@@ -206,4 +206,20 @@ export class CreateUserPage {
             return;
         }
     }
+
+    isFormInvalid = computed(() => {
+        const role = this.roleForm().value();
+
+        let invalid = false;
+
+        if (role === UserRole.Conductor) {
+            invalid = this.conductorForm().invalid() || !this.conductorForm().dirty();
+        }
+        if (role === UserRole.Student) {
+            invalid = this.studentForm().invalid() || !this.studentForm().dirty();
+        }
+
+        return this.userForm().invalid() || !this.userForm().dirty() || invalid;
+
+    });
 }
