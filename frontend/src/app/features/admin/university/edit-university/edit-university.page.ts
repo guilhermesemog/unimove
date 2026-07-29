@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, signal } from '@angular/core';
 import { form, FormField, required } from '@angular/forms/signals';
 
-import { University } from '../../../../shared/types/university.type';
+import { University, UniversityUpdateRequest } from '../../../../shared/types/university.type';
 import { UniversityService } from '../university.service';
 import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -62,7 +62,7 @@ export class EditUniversityPage {
       confirmLabel: 'Save',
       variant: 'default',
       action: () => {
-        const updatedUniversity: University = {
+        const updatedUniversity: UniversityUpdateRequest = {
           ...this.university()!,
           name: this.universityFormModel().name,
           address: this.universityFormModel().address,

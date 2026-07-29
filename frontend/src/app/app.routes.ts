@@ -10,16 +10,23 @@ import { HomePage } from './features/home/home.page';
 import { UnauthorizedPage } from './features/error/unauthorized/unauthorized.page';
 
 import { AdminHomePage } from './features/admin/home/home.page';
+
 import { ListUserPage } from './features/admin/user/list-user/list-user.page';
 import { CreateUserPage } from './features/admin/user/create-user/create-user.page';
 import { EditUserPage } from './features/admin/user/edit-user/edit-user.page';
 import { EditStudentPage } from './features/admin/student/edit-student/edit-student.page';
 import { EditConductorPage } from './features/admin/conductor/edit-conductor/edit-conductor.page';
+
 import { ListUniversityPage } from './features/admin/university/list-university/list-university.page';
 import { CreateUniversityPage } from './features/admin/university/create-university/create-university.page';
 import { EditUniversityPage } from './features/admin/university/edit-university/edit-university.page';
+
 import { ListBoardingStopPage } from './features/admin/boarding-stop/list-boarding-stop/list-boarding-stop.page';
 import { CreateBoardingStop } from './features/admin/boarding-stop/create-boarding-stop/create-boarding-stop.page';
+
+import { ListVehiclePage } from './features/admin/vehicle/list-vehicle/list-vehicle.page';
+import { EditVehiclePage } from './features/admin/vehicle/edit-vehicle/edit-vehicle.page';
+import { CreateVehiclePage } from './features/admin/vehicle/create-vehicle/create-vehicle.page';
 
 export const routes: Routes = [
     {
@@ -100,6 +107,24 @@ export const routes: Routes = [
                 path: 'admin/boarding-stops/create',
                 pathMatch: 'full',
                 component: CreateBoardingStop,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/vehicles',
+                pathMatch: 'full',
+                component: ListVehiclePage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/vehicles/:id/edit',
+                pathMatch: 'full',
+                component: EditVehiclePage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/vehicles/create',
+                pathMatch: 'full',
+                component: CreateVehiclePage,
                 canActivate: [roleGuard([UserRole.Admin])],
             }
         ]

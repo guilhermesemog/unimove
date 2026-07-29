@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/vehicles")
 public class VehicleController {
@@ -37,8 +39,14 @@ public class VehicleController {
 
     @GetMapping("/plate/{plate}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<VehicleResponse> getByPlate(@PathVariable String plate) {
-        VehicleResponse responseBody = vehicleService.getByPlate(plate);
+    public ResponseEntity<Page<VehicleResponse>> getAllByPlate(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @PathVariable String plate
+    ) {
+        Page<VehicleResponse> responseBody = vehicleService.getAllByPlate(page, size, sortBy, sortDirection, plate);
         return ResponseEntity.ok(responseBody);
     }
 
@@ -51,6 +59,13 @@ public class VehicleController {
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
         Page<VehicleResponse> responseBody = vehicleService.getAll(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<VehicleResponse>> getAll() {
+        List<VehicleResponse> responseBody = vehicleService.getAll();
         return ResponseEntity.ok(responseBody);
     }
 

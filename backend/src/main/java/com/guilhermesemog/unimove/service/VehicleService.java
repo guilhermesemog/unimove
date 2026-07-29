@@ -14,6 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class VehicleService {
     private final VehicleRepository vehicleRepository;
@@ -34,9 +38,14 @@ public class VehicleService {
         return vehicleMapper.toResponse(vehicle);
     }
 
-    public VehicleResponse getByPlate(String plate) {
-        Vehicle vehicle = getVehicle(plate);
-        return vehicleMapper.toResponse(vehicle);
+    public Page<VehicleResponse> getAllByPlate(int page, int size, String sortBy, String sortDirection, String plate) {
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return vehicleRepository.findAllByPlateContainsIgnoreCase(plate, pageable).map(vehicleMapper::toResponse);
     }
 
     public Page<VehicleResponse> getAll(int page, int size, String sortBy, String sortDirection) {
@@ -47,6 +56,10 @@ public class VehicleService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return vehicleRepository.findAll(pageable).map(vehicleMapper::toResponse);
+    }
+
+    public List<VehicleResponse> getAll() {
+        return vehicleRepository.findAll().stream().map(vehicleMapper::toResponse).collect(toList());
     }
 
     public void delete(Long id) {
@@ -68,10 +81,6 @@ public class VehicleService {
 
     private Vehicle getVehicle(Long id) {
         return vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
-    }
-
-    private Vehicle getVehicle(String plate) {
-        return vehicleRepository.findByPlate(plate).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
     }
 
 }
