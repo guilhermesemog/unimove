@@ -1,1 +1,12 @@
 <router-outlet></router-outlet>
+
+<app-confirm-dialog
+  [open]="errorDialogService.state().open"
+  [title]="errorDialogService.state().title"
+  [message]="errorDialogService.state().message"
+  confirmLabel="OK"
+  variant="danger"
+  [hideCancel]="true"
+  (confirm)="errorDialogService.close()"
+  (cancel)="errorDialogService.close()"
+/>

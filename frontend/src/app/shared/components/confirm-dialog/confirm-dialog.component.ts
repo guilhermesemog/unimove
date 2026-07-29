@@ -16,6 +16,7 @@ export class ConfirmDialogComponent {
   confirmLabel = input('Confirm');
   cancelLabel = input('Cancel');
   variant = input<ConfirmDialogVariant>('default');
+  hideCancel = input(false);
 
   confirm = output<void>();
   cancel = output<void>();
