@@ -11,12 +11,12 @@
 <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm p-8">
     <form>
         <app-text-field [formField]="universityForm.name" label="Name" placeholder="Enter the university name" />
-        <app-text-field [formField]="universityForm.address" label="Address" placeholder="Enter the university address" />
+        <app-text-field [formField]="universityForm.address" label="Address"
+            placeholder="Enter the university address" />
 
-        <button
+        <button type="button"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            [disabled]="(universityForm().invalid() || !universityForm().dirty())"
-            (click)="onSubmit()">
+            [disabled]="(universityForm().invalid() || !universityForm().dirty())" (click)="onSubmit()">
             Save Changes
         </button>
     </form>

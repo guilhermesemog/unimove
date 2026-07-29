@@ -9,7 +9,7 @@
         <app-number-field [formField]="vehicleForm.capacity" label="Capacity"
             placeholder="Enter the vehicle capacity" />
 
-        <button
+        <button type="button"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             [disabled]="(vehicleForm().invalid() || !vehicleForm().dirty())" (click)="onSubmit()">
             Save Changes

@@ -6,33 +6,36 @@
             <h2 class="text-lg">Please enter your credentials</h2>
         </div>
 
-        <div class="flex flex-col gap-2">
-            <label for="cpf">CPF</label>
+        <form>
+            <div class="flex flex-col gap-2">
+                <label for="cpf">CPF</label>
 
-            <input class="border rounded p-2" type="text" id="cpf" [formField]="loginForm.cpf"
-                placeholder="Enter your CPF" />
+                <input class="border rounded p-2" type="text" id="cpf" [formField]="loginForm.cpf"
+                    placeholder="Enter your CPF" />
 
-            @if (loginForm.cpf().getError('required') && loginForm.cpf().touched()) {
-            <small class="text-red-500">CPF is required</small>
-            }
-        </div>
+                @if (loginForm.cpf().getError('required') && loginForm.cpf().touched()) {
+                <small class="text-red-500">CPF is required</small>
+                }
+            </div>
 
-        <div class="flex flex-col gap-2 mt-4">
-            <label for="password">Password</label>
+            <div class="flex flex-col gap-2 mt-4">
+                <label for="password">Password</label>
 
-            <input class="border rounded p-2" type="password" id="password" [formField]="loginForm.password"
-                placeholder="Enter your password" />
+                <input class="border rounded p-2" type="password" id="password" [formField]="loginForm.password"
+                    placeholder="Enter your password" />
 
-            @if (loginForm.password().getError('required') && loginForm.password().touched()) {
-            <small class="text-red-500">Password is required</small>
-            }
-        </div>
+                @if (loginForm.password().getError('required') && loginForm.password().touched()) {
+                <small class="text-red-500">Password is required</small>
+                }
+            </div>
 
-        <button
-            class="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 cursor-pointer"
-            [disabled]="loginForm().invalid()" (click)="onSubmit()">
-            Login
-        </button>
+            <button type="button"
+                class="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 cursor-pointer"
+                [disabled]="loginForm().invalid()" (click)="onSubmit()">
+                Login
+            </button>
+        </form>
+
 
     </div>
 </div>
