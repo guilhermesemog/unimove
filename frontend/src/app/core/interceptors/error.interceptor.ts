@@ -13,42 +13,42 @@ interface BackendErrorBody {
 }
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-    const router = inject(Router);
     const authService = inject(AuthService);
     const errorDialogService = inject(ErrorDialogService);
 
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
+            const body = error.error as BackendErrorBody;
             switch (error.status) {
                 case 401:
-                    const body = error.error as BackendErrorBody;
-                    errorDialogService.show(
-                        body.message ?? 'The request could not be completed. Please check the form and try again.',
-                        body.details ?? 'You are not authorized to perform this action. Please log in and try again.'
-                    );
+                    if (body.message === 'JWT token has expired') {
+                        errorDialogService.show(
+                            'Session expired',
+                            'Your session has expired. Please log in again to continue.'
+                        );
+                    }
+
+                    if (body.message === 'Authentication failed') {
+                        errorDialogService.show(
+                            body.message ?? 'Wrong credentials',
+                            body.details ?? 'Your credentials are invalid. Please check them and try again.'
+                        );
+                    }
+
                     authService.logout();
                     break;
 
                 case 403:
-                    authService.logout();
-                    break;
-
-                case 400:
-                case 409:
-                case 422: {
-                    const body = error.error as BackendErrorBody;
                     errorDialogService.show(
-                        'Request error',
-                        body.message ?? 'The request could not be completed. Please check the form and try again.'
+                        'Access denied',
+                        'You are not authorized to perform this action. Please log in or check your permissions and try again.'
                     );
                     break;
-                }
 
-                case 500:
                 default:
                     errorDialogService.show(
-                        'Something went wrong',
-                        'An unexpected error occurred. Please try again later.'
+                        body.message ?? 'Server error',
+                        body.details ?? 'An unexpected error occurred. Please try again later.'
                     );
                     break;
             }
