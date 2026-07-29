@@ -22,11 +22,13 @@ public class ConductorService {
     private final ConductorRepository conductorRepository;
     private final ConductorMapper conductorMapper;
     private final AuthService authService;
+    private final UserValidationService userValidationService;
 
-    public ConductorService(ConductorRepository conductorRepository, ConductorMapper conductorMapper, AuthService authService) {
+    public ConductorService(ConductorRepository conductorRepository, ConductorMapper conductorMapper, AuthService authService, UserValidationService userValidationService) {
         this.conductorRepository = conductorRepository;
         this.conductorMapper = conductorMapper;
         this.authService = authService;
+        this.userValidationService = userValidationService;
     }
 
     public ConductorResponse create(ConductorCreate requestBody) {
@@ -60,17 +62,15 @@ public class ConductorService {
 
     public void update(Long id, ConductorUpdate requestBody) {
         Conductor conductor = getConductor(id);
-
+        this.userValidationService.validateCpf(id, requestBody.user().cpf());
         conductor = conductorMapper.update(requestBody, conductor);
-
         conductorRepository.save(conductor);
     }
 
     public void update(Long id, ConductorPatch requestBody) {
         Conductor conductor = getConductor(id);
-
+        this.userValidationService.validateCpf(id, requestBody.user().cpf());
         conductor = conductorMapper.update(requestBody, conductor);
-
         conductorRepository.save(conductor);
     }
 

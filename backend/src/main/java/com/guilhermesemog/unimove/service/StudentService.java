@@ -28,13 +28,15 @@ public class StudentService {
     private final UniversityRepository universityRepository;
     private final BoardingStopRepository boardingStopRepository;
     private final AuthService authService;
+    private final UserValidationService userValidationService;
 
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, UniversityRepository universityRepository, BoardingStopRepository boardingStopRepository, AuthService authService) {
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, UniversityRepository universityRepository, BoardingStopRepository boardingStopRepository, AuthService authService, UserValidationService userValidationService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.universityRepository = universityRepository;
         this.boardingStopRepository = boardingStopRepository;
         this.authService = authService;
+        this.userValidationService = userValidationService;
     }
 
     public StudentResponse create(StudentCreate requestBody) {
@@ -74,8 +76,9 @@ public class StudentService {
         Student student = getStudent(id);
         University university = getUniversity(requestBody.universityId());
 
-        student = studentMapper.update(requestBody, student, university, getBoardingStop(requestBody.preferredBoardingStopId()));
+        this.userValidationService.validateCpf(id, requestBody.user().cpf());
 
+        student = studentMapper.update(requestBody, student, university, getBoardingStop(requestBody.preferredBoardingStopId()));
         studentRepository.save(student);
     }
 
@@ -83,8 +86,9 @@ public class StudentService {
         Student student = getStudent(id);
         University university = getUniversity(requestBody.universityId());
 
-        student = studentMapper.update(requestBody, student, university, getBoardingStop(requestBody.preferredBoardingStopId()));
+        this.userValidationService.validateCpf(id, requestBody.user().cpf());
 
+        student = studentMapper.update(requestBody, student, university, getBoardingStop(requestBody.preferredBoardingStopId()));
         studentRepository.save(student);
     }
 

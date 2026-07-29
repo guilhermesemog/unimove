@@ -4,12 +4,13 @@ import com.guilhermesemog.unimove.dto.user.UserCreate;
 import com.guilhermesemog.unimove.dto.user.UserPatch;
 import com.guilhermesemog.unimove.dto.user.UserResponse;
 import com.guilhermesemog.unimove.dto.user.UserUpdate;
+import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
 import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.UserMapper;
 import com.guilhermesemog.unimove.model.User;
-import com.guilhermesemog.unimove.repository.UserRepository;
-import com.guilhermesemog.unimove.repository.StudentRepository;
 import com.guilhermesemog.unimove.repository.ConductorRepository;
+import com.guilhermesemog.unimove.repository.StudentRepository;
+import com.guilhermesemog.unimove.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,14 +27,16 @@ public class UserService {
 
     private final UserMapper userMapper;
     private final AuthService authService;
+    private final UserValidationService userValidationService;
 
     public UserService(UserRepository userRepository, StudentRepository studentRepository,
-            ConductorRepository conductorRepository, UserMapper userMapper, AuthService authService) {
+                       ConductorRepository conductorRepository, UserMapper userMapper, AuthService authService, UserValidationService userValidationService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.authService = authService;
         this.studentRepository = studentRepository;
         this.conductorRepository = conductorRepository;
+        this.userValidationService = userValidationService;
     }
 
     public UserResponse create(UserCreate userCreate) {
@@ -68,7 +71,7 @@ public class UserService {
     }
 
     public Page<UserResponse> getAllByFullName(int page, int size, String sortBy, String sortDirection,
-            String fullName) {
+                                               String fullName) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
@@ -82,19 +85,21 @@ public class UserService {
 
     public void delete(Long id) {
         User user = getUser(id);
-        studentRepository.findById(id).ifPresent(student -> studentRepository.delete(student));
-        conductorRepository.findById(id).ifPresent(conductor -> conductorRepository.delete(conductor));
+        studentRepository.findById(id).ifPresent(studentRepository::delete);
+        conductorRepository.findById(id).ifPresent(conductorRepository::delete);
         userRepository.delete(user);
     }
 
     public void update(Long id, UserUpdate userUpdate) {
         User user = getUser(id);
+        this.userValidationService.validateCpf(id, userUpdate.cpf());
         user = userMapper.updateUser(userUpdate, user);
         userRepository.save(user);
     }
 
     public void update(Long id, UserPatch userPatch) {
         User user = getUser(id);
+        this.userValidationService.validateCpf(id, userPatch.cpf());
         user = userMapper.updateUser(userPatch, user);
         userRepository.save(user);
     }

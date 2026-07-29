@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByCpf(String cpf);
 
+    boolean existsByCpfAndIdNot(String cpf, long id);
+
     @Query("SELECT u FROM User u WHERE LOWER(CONCAT(u.firstName, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :fullName, '%'))")
     Page<User> findAllByFullName(@Param("fullName") String fullName, Pageable pageable);
 }

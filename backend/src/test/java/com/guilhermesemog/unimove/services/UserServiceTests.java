@@ -8,11 +8,12 @@ import com.guilhermesemog.unimove.dto.user.UserUpdate;
 import com.guilhermesemog.unimove.mapper.UserMapper;
 import com.guilhermesemog.unimove.model.User;
 import com.guilhermesemog.unimove.model.enums.Role;
-import com.guilhermesemog.unimove.repository.UserRepository;
-import com.guilhermesemog.unimove.repository.StudentRepository;
 import com.guilhermesemog.unimove.repository.ConductorRepository;
+import com.guilhermesemog.unimove.repository.StudentRepository;
+import com.guilhermesemog.unimove.repository.UserRepository;
 import com.guilhermesemog.unimove.service.AuthService;
 import com.guilhermesemog.unimove.service.UserService;
+import com.guilhermesemog.unimove.service.UserValidationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -59,6 +60,9 @@ public class UserServiceTests {
     @Mock
     private UserResponse userResponse;
 
+    @Mock
+    private UserValidationService userValidationService;
+
     private UserService userService;
 
     private static final Long USER_ID = 1L;
@@ -70,7 +74,7 @@ public class UserServiceTests {
 
     @BeforeEach
     void setup() {
-        userService = new UserService(userRepository, studentRepository, conductorRepository, userMapper, authService);
+        userService = new UserService(userRepository, studentRepository, conductorRepository, userMapper, authService, userValidationService);
     }
 
     @Nested
