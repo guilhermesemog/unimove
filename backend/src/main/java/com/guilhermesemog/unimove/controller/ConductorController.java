@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.controller;
 
+import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponse;
 import com.guilhermesemog.unimove.dto.conductor.ConductorCreate;
 import com.guilhermesemog.unimove.dto.conductor.ConductorPatch;
 import com.guilhermesemog.unimove.dto.conductor.ConductorResponse;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/conductors")
@@ -47,6 +50,11 @@ public class ConductorController {
         return ResponseEntity.ok(responseBody);
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<List<ConductorResponse>> getAll() {
+        List<ConductorResponse> responseBody = conductorService.getAll();
+        return ResponseEntity.ok(responseBody);
+    }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

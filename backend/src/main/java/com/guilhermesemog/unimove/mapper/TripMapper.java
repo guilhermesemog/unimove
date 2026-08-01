@@ -3,7 +3,6 @@ package com.guilhermesemog.unimove.mapper;
 import com.guilhermesemog.unimove.dto.conductor.ConductorResponse;
 import com.guilhermesemog.unimove.dto.interestlist.InterestListResponse;
 import com.guilhermesemog.unimove.dto.trip.TripCreate;
-import com.guilhermesemog.unimove.dto.trip.TripPatch;
 import com.guilhermesemog.unimove.dto.trip.TripResponse;
 import com.guilhermesemog.unimove.dto.vehicle.VehicleResponse;
 import com.guilhermesemog.unimove.model.InterestList;
@@ -37,7 +36,7 @@ public class TripMapper {
 
         return new TripResponse(
                 trip.getId(),
-                trip.getTripStatus(),
+                trip.getStatus(),
                 interestListResponse,
                 conductorResponse,
                 vehicleResponse

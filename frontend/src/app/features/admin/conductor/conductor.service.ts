@@ -15,6 +15,10 @@ export class ConductorService {
         return this.http.get<Conductor>(`${API_BASE_URL}/conductors/${userId}`);
     }
 
+    getConductorsAsList(): Observable<Array<Conductor>> {
+        return this.http.get<Array<Conductor>>(`${API_BASE_URL}/conductors/list`);
+    }
+
     updateConductor(userId: number, conductor: Conductor): Observable<void> {
         const updatableConductor: ConductorUpdateRequest = {
             user: {

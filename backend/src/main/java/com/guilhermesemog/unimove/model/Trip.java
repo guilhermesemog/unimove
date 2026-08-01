@@ -21,7 +21,7 @@ public class Trip {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TripStatus tripStatus = TripStatus.PROCESSING;
+    private TripStatus status = TripStatus.PROCESSING;
 
     @ManyToOne
     @JoinColumn(name = "conductor_id")

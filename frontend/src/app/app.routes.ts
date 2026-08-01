@@ -28,6 +28,9 @@ import { ListVehiclePage } from './features/admin/vehicle/list-vehicle/list-vehi
 import { EditVehiclePage } from './features/admin/vehicle/edit-vehicle/edit-vehicle.page';
 import { CreateVehiclePage } from './features/admin/vehicle/create-vehicle/create-vehicle.page';
 
+import { ListTripPage } from './features/admin/trip/list-trip/list-trip.page';
+import { EditTripPage } from './features/admin/trip/edit-trip/edit-trip.page';
+
 export const routes: Routes = [
     {
         path: '',
@@ -125,6 +128,18 @@ export const routes: Routes = [
                 path: 'admin/vehicles/create',
                 pathMatch: 'full',
                 component: CreateVehiclePage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/trips',
+                pathMatch: 'full',
+                component: ListTripPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/trips/:id/edit',
+                pathMatch: 'full',
+                component: EditTripPage,
                 canActivate: [roleGuard([UserRole.Admin])],
             }
         ]

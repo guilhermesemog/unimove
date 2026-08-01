@@ -1,0 +1,29 @@
+<!-- Header -->
+<app-header title="Trips" description="Manage UNIMOVE system trips..."></app-header>
+
+
+<!-- Search -->
+<div class="w-full mb-6 justify-between items-center">
+    <app-search-bar [value]="list.searchTerm()" placeholder="Search by conductor (name) or vehicle (plate)..."
+        (valueChange)="list.searchTerm.set($event)" (search)="list.onSearch()" (clear)="list.onClearSearch()" />
+</div>
+<!-- List -->
+<app-data-table [columns]="columns" [data]="list.items()" [sortBy]="list.sortBy()"
+    [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
+    <ng-template #rowActions let-university>
+        <button type="button" class="text-sky-500 hover:text-sky-700 cursor-pointer" (click)="onEdit(university)">
+            Edit
+        </button>
+        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer"
+            (click)="onDeleteClick(university)">
+            Delete
+        </button>
+    </ng-template>
+</app-data-table>
+
+<app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
+    (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />
+
+<app-confirm-dialog [open]="confirmDialog.state().open" [title]="confirmDialog.state().title"
+    [message]="confirmDialog.state().message" [confirmLabel]="confirmDialog.state().confirmLabel"
+    [variant]="confirmDialog.state().variant" (confirm)="confirmDialog.confirm()" (cancel)="confirmDialog.cancel()" />

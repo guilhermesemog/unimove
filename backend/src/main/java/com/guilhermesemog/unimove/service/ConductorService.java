@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ConductorService {
 
@@ -54,6 +56,12 @@ public class ConductorService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return conductorRepository.findAll(pageable).map(conductorMapper::toResponse);
+    }
+
+    public List<ConductorResponse> getAll() {
+        return conductorRepository.findAll().stream()
+                .map(conductorMapper::toResponse)
+                .toList();
     }
 
     public void delete(Long id) {

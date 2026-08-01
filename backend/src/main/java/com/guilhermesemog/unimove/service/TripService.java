@@ -109,6 +109,15 @@ public class TripService {
         tripRepository.save(trip);
     }
 
+    public Page<TripResponse> getAllTripsByConductorOrVehicle(int page, int size, String sortBy, String sortDirection, String searchTerm) {
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return tripRepository.findAllBySearch(searchTerm, pageable).map(tripMapper::toResponse);
+    }
 
     private InterestList getInterestList(Long id) {
         return interestListRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Interest list not found"));

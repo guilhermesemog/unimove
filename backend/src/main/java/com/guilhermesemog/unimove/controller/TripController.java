@@ -63,4 +63,16 @@ public class TripController {
         tripService.updateVehicle(id, requestBody);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Page<TripResponse>> searchTrips(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(defaultValue = "") String searchTerm
+    ) {
+        return ResponseEntity.ok(tripService.getAllTripsByConductorOrVehicle(page, size, sortBy, sortDirection, searchTerm));
+    }
 }
