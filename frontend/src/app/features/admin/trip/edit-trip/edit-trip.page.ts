@@ -1,11 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { form, FormField, required } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 import { Component, computed, inject, Input, signal } from '@angular/core';
 import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { TextFieldComponent } from '../../../../shared/components/forms/text-field/text-field.component';
 import { SelectFieldComponent, SelectOption } from '../../../../shared/components/forms/select-field/select-field.component';
-import { CLOSED_DIALOG, ConfirmDialogState } from '../../../../shared/components/confirm-dialog/confirm-dialog.type';
 import { ConfirmDialogController } from '../../../../shared/utils/confirm-dialog.controller';
 import { Router } from '@angular/router';
 import { TripService } from '../trip.service';
@@ -17,7 +15,7 @@ import { Vehicle } from '../../../../shared/types/vehicle.type';
 
 @Component({
   selector: 'app-edit-trip',
-  imports: [CommonModule, FormField, TextFieldComponent, SelectFieldComponent, ConfirmDialogComponent, BackButtonComponent],
+  imports: [CommonModule, FormField, SelectFieldComponent, ConfirmDialogComponent, BackButtonComponent],
   templateUrl: './edit-trip.page.html',
 })
 export class EditTripPage {
