@@ -1,36 +1,24 @@
 <!-- Header -->
-<app-header title="Users" description="Manage UNIMOVE system users..."></app-header>
+<app-header title="Interest Lists" description="Manage UNIMOVE interest lists..."></app-header>
 
 <!-- Search -->
 <div class="w-full flex flex-row mb-6 gap-2 justify-between items-center">
-    <app-search-bar [value]="list.searchTerm()" placeholder="Search by name..."
-        (valueChange)="list.searchTerm.set($event)" (search)="list.onSearch()" (clear)="list.onClearSearch()" />
-
     <button type="button"
         class="rounded-md  p-2 text-sm font-semibold border border-gray-300 text-gray-700 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors"
         (click)="onCreate()">
-        Create User
+        Create Interest List
     </button>
 </div>
 
 <!-- List -->
 <app-data-table [columns]="columns" [data]="list.items()" [sortBy]="list.sortBy()"
     [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
-    <ng-template #rowActions let-user>
-        @if (user.active) {
-        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer" (click)="onDeactivateClick(user)">
-            Deactivate
-        </button>
-        } @else {
-        <button type="button" class="text-green-500 hover:text-green-700 cursor-pointer"
-            (click)="onActivateClick(user)">
-            Activate
-        </button>
-        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer" (click)="onDeleteClick(user)">
+    <ng-template #rowActions let-interestList>
+        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer"
+            (click)="onDeleteClick(interestList)">
             Delete
         </button>
-        }
-        <button type="button" class="text-sky-500 hover:text-sky-700 cursor-pointer" (click)="onEdit(user)">
+        <button type="button" class="text-sky-500 hover:text-sky-700 cursor-pointer" (click)="onEdit(interestList)">
             Edit
         </button>
     </ng-template>

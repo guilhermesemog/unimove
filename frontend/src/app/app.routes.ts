@@ -31,6 +31,10 @@ import { CreateVehiclePage } from './features/admin/vehicle/create-vehicle/creat
 import { ListTripPage } from './features/admin/trip/list-trip/list-trip.page';
 import { EditTripPage } from './features/admin/trip/edit-trip/edit-trip.page';
 
+import { ListInterestListPage } from './features/admin/interest-list/list-interest-list/list-interest-list.page';
+import { CreateInterestListPage } from './features/admin/interest-list/create-interest-list/create-interest-list.page';
+import { EditInterestListPage } from './features/admin/interest-list/edit-interest-list/edit-interest-list.page';
+
 export const routes: Routes = [
     {
         path: '',
@@ -140,6 +144,24 @@ export const routes: Routes = [
                 path: 'admin/trips/:id/edit',
                 pathMatch: 'full',
                 component: EditTripPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/interest-lists',
+                pathMatch: 'full',
+                component: ListInterestListPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/interest-lists/create',
+                pathMatch: 'full',
+                component: CreateInterestListPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/interest-lists/:id/edit',
+                pathMatch: 'full',
+                component: EditInterestListPage,
                 canActivate: [roleGuard([UserRole.Admin])],
             }
         ]

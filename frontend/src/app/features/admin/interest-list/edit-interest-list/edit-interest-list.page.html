@@ -1,0 +1,49 @@
+<div class="mb-6 gap-4 flex flex-row items-baseline justify-between">
+    <div>
+        <h1 class="text-2xl font-semibold text-gray-900">Interest Lists</h1>
+        <p class="mt-1 text-sm text-gray-500">
+            Edit the interest list {{ interestList()?.id }} information below.
+        </p>
+    </div>
+    <app-back-button />
+</div>
+
+<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm p-8">
+    <form>
+
+        <app-date-field [formField]="interestListForm.referenceDate" label="Reference Date"
+            placeholder="Enter the reference date" />
+        <app-time-field [formField]="interestListForm.closingTime" label="Closing Time"
+            placeholder="Enter the closing time" />
+        <app-time-field [formField]="interestListForm.departureTime" label="Departure Time"
+            placeholder="Enter the departure time" />
+        <app-time-field [formField]="interestListForm.arrivalTime" label="Arrival Time"
+            placeholder="Enter the arrival time" />
+        <app-time-field [formField]="interestListForm.returnDepartureTime" label="Return Departure Time"
+            placeholder="Enter the return departure time" />
+        <app-time-field [formField]="interestListForm.returnArrivalTime" label="Return Arrival Time"
+            placeholder="Enter the return arrival time" />
+
+        <app-select-field [formField]="interestListForm.destinationId" label="University"
+            placeholder="Select a university" [options]="universityOptions()" optionLabel="label" optionValue="value" />
+
+        <app-select-field [formField]="interestListForm.listStatus" label="Status" placeholder="Select a status"
+            [options]="statusOptions()" optionLabel="label" optionValue="value" />
+
+        <div class="flex flex-row justify-between mb-4">
+            <button type="button"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                [disabled]="interestListForm().invalid() || !interestListForm().dirty()" (click)="onSubmit()">
+                Save Changes
+            </button>
+            <button type="button" class="bg-gray-500 none hover:bg-gray-700 text-white font-bold py-2 px-4 rounded cursor-pointer
+        disabled:hidden" (click)="onDeleteClick()">
+                Delete
+            </button>
+        </div>
+    </form>
+</div>
+
+<app-confirm-dialog [open]="confirmDialog.state().open" [title]="confirmDialog.state().title"
+    [message]="confirmDialog.state().message" [confirmLabel]="confirmDialog.state().confirmLabel"
+    [variant]="confirmDialog.state().variant" (confirm)="confirmDialog.confirm()" (cancel)="confirmDialog.cancel()" />
