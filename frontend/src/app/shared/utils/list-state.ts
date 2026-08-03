@@ -6,6 +6,7 @@ import { PageResponse, PageParameters } from '../types/page.type';
 export interface ListStateConfig<T> {
     initialSortBy: string;
     initialPageSize?: number;
+    initialSortDirection?: 'asc' | 'desc';
     fetchAll: (query: PageParameters) => Observable<PageResponse<T>>;
     fetchByQuery: (term: string, query: PageParameters) => Observable<PageResponse<T>>;
 }
@@ -26,7 +27,8 @@ export class ListState<T> {
         this.fetchAll = config.fetchAll;
         this.fetchByQuery = config.fetchByQuery;
         this.pageSize = signal(config.initialPageSize ?? 10);
-        this.sortBy = signal(config.initialSortBy);
+        this.sortDirection = signal(config.initialSortDirection ?? 'asc');
+        this.sortBy = signal(config.initialSortBy ?? 'id');
     }
 
     fetch() {
