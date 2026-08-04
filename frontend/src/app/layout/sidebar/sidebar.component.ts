@@ -10,7 +10,7 @@ import { AuthService } from '../../core/auth/auth.service';
 })
 export class Sidebar {
   authService = inject(AuthService);
-  isAdmin = this.authService.getRole() === 'ADMIN';
+  isAdmin = this.authService.identify().then((user) => user.role === 'ADMIN');
 
   logout() {
     this.authService.logout();

@@ -14,13 +14,6 @@ export interface User {
     role: UserRole;
 }
 
-export interface UserProfile {
-    id: number;
-    firstName: string;
-    lastName: string;
-    role: UserRole;
-}
-
 export interface UserUpdateRequest {
     cpf: string;
     firstName: string;

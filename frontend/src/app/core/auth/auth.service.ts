@@ -3,7 +3,7 @@ import { inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { environment } from '../../../environments/environment.development';
-import { User, UserProfile, UserRole } from '../../shared/types/user.type';
+import { User, UserRole } from '../../shared/types/user.type';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 
 const API_BASE_URL = environment.apiUrl;
@@ -24,14 +24,14 @@ export class AuthService {
 
         localStorage.setItem('accessToken', response.accessToken);
 
-        await this.identify();
+        await this.identify().then(async (user) => {
+            if (user.role === UserRole.Admin) {
+                this.router.navigate(['/admin']);
+                return;
+            }
 
-        if (this.getRole() === UserRole.Admin) {
-            await this.router.navigate(['/admin']);
-            return;
-        }
-
-        await this.router.navigate(['/']);
+            this.router.navigate(['/']);
+        });
     }
 
     async identify(): Promise<User> {
@@ -39,56 +39,12 @@ export class AuthService {
             this.http.get<User>(`${API_BASE_URL}/users/me`)
         );
 
-        const profile: UserProfile = { id: user.id, role: user.role, firstName: user.firstName, lastName: user.lastName };
-        localStorage.setItem('userProfile', JSON.stringify(profile));
-
         return user;
     }
 
     logout(): void {
         localStorage.removeItem('accessToken');
-        localStorage.removeItem('userProfile');
-
-        this.router.navigate(['/login']);
-    }
-
-    getRole(): UserRole | null {
-        const profileString = localStorage.getItem('userProfile');
-        if (!profileString) {
-            return null;
-        }
-
-        const profile: UserProfile = JSON.parse(profileString);
-        return profile.role;
-    }
-
-    getFirstName(): string | null {
-        const profileString = localStorage.getItem('userProfile');
-        if (!profileString) {
-            return null;
-        }
-
-        const profile: UserProfile = JSON.parse(profileString);
-        return profile.firstName;
-    }
-
-    getLastName(): string | null {
-        const profileString = localStorage.getItem('userProfile');
-        if (!profileString) {
-            return null;
-        }
-
-        const profile: UserProfile = JSON.parse(profileString);
-        return profile.lastName;
-    }
-
-    getId(): number | null {
-        const profileString = localStorage.getItem('userProfile');
-        if (!profileString) {
-            return null;
-        }
-
-        const profile: UserProfile = JSON.parse(profileString);
-        return profile.id;
+        // window.location.href > router.navigate
+        window.location.href = '/login';
     }
 }
