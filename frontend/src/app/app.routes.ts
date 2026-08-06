@@ -35,6 +35,8 @@ import { ListInterestListPage } from './features/admin/interest-list/list-intere
 import { CreateInterestListPage } from './features/admin/interest-list/create-interest-list/create-interest-list.page';
 import { EditInterestListPage } from './features/admin/interest-list/edit-interest-list/edit-interest-list.page';
 
+import { ViewInterestListPage } from './features/admin/interest-list/view-interest-list/view-interest-list.page';
+
 export const routes: Routes = [
     {
         path: '',
@@ -162,6 +164,12 @@ export const routes: Routes = [
                 path: 'admin/interest-lists/:id/edit',
                 pathMatch: 'full',
                 component: EditInterestListPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/interest-lists/:id/view',
+                pathMatch: 'full',
+                component: ViewInterestListPage,
                 canActivate: [roleGuard([UserRole.Admin])],
             }
         ]

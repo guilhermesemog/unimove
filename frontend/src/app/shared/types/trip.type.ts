@@ -4,7 +4,7 @@ import { InterestList } from './interest-list.type';
 
 export interface Trip {
     id: number;
-    status: 'PROCESSING' | 'SCHEDULED' | 'STARTED' | 'COMPLETED';
+    status: TripStatus;
     interestList: InterestList;
     conductor: Conductor;
     vehicle: Vehicle;
@@ -17,4 +17,11 @@ export interface TripCreateRequest {
 export interface TripUpdateRequest {
     conductorId?: number;
     vehicleId?: number;
+}
+
+export enum TripStatus {
+    PROCESSING = 'PROCESSING',
+    SCHEDULED = 'SCHEDULED',
+    STARTED = 'STARTED',
+    COMPLETED = 'COMPLETED',
 }

@@ -14,12 +14,15 @@
 <app-data-table [columns]="columns" [data]="list.items()" [sortBy]="list.sortBy()"
     [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
     <ng-template #rowActions let-interestList>
-        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer"
-            (click)="onDeleteClick(interestList)">
-            Delete
+        <button type="button" class="text-emerald-500 hover:text-emerald-700 cursor-pointer"
+            (click)="onView(interestList)">
+            View
         </button>
         <button type="button" class="text-sky-500 hover:text-sky-700 cursor-pointer" (click)="onEdit(interestList)">
             Edit
+        </button>
+        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer" (click)="onDelete(interestList)">
+            Delete
         </button>
     </ng-template>
 </app-data-table>

@@ -7,7 +7,6 @@ import { InterestList } from '../../../../shared/types/interest-list.type';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
-import { SearchBarComponent } from '../../../../shared/components/search-bar/search-bar.component';
 import { ListState } from '../../../../shared/utils/list-state';
 import { ConfirmDialogController } from '../../../../shared/utils/confirm-dialog.controller';
 import { TableColumn } from '../../../../shared/components/data-table/table-column.type';
@@ -15,7 +14,7 @@ import { DataTableComponent } from '../../../../shared/components/data-table/dat
 
 @Component({
   selector: 'app-list-interest-list.page',
-  imports: [CommonModule, DataTableComponent, HeaderComponent, SearchBarComponent, PaginationComponent, ConfirmDialogComponent],
+  imports: [CommonModule, DataTableComponent, HeaderComponent, PaginationComponent, ConfirmDialogComponent],
   templateUrl: './list-interest-list.page.html'
 })
 export class ListInterestListPage {
@@ -52,7 +51,7 @@ export class ListInterestListPage {
     this.router.navigate(['/admin/interest-lists', interestList.id, 'edit']);
   }
 
-  onDeleteClick(interestList: InterestList) {
+  onDelete(interestList: InterestList) {
     this.confirmDialog.open({
       title: 'Delete Interest List',
       message: `Are you sure you want to delete the interest list with reference date ${interestList.referenceDate}? This action cannot be undone.`,
@@ -64,6 +63,10 @@ export class ListInterestListPage {
 
   onCreate() {
     this.router.navigate(['/admin/interest-lists/create']);
+  }
+
+  onView(interestList: InterestList) {
+    this.router.navigate(['/admin/interest-lists', interestList.id, 'view']);
   }
 
   private deleteInterestList(interestList: InterestList) {
