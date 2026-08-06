@@ -24,8 +24,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                     if (body.message === 'JWT token has expired') {
                         errorDialogService.show(
                             'Session expired',
-                            'Your session has expired. Please log in again to continue.'
+                            'Your session has expired. Please log in again to continue.',
+                            { onConfirm: () => authService.logout() }
                         );
+                        break;
                     }
 
                     if (body.message === 'Authentication failed') {
@@ -33,9 +35,14 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                             body.message ?? 'Wrong credentials',
                             body.details ?? 'Your credentials are invalid. Please check them and try again.'
                         );
+                        break;
                     }
 
-                    authService.logout();
+                    errorDialogService.show(
+                        body.message ?? 'Authentication error',
+                        body.details ?? 'Your session is no longer valid. Please log in again.',
+                        { onConfirm: () => authService.logout() }
+                    );
                     break;
 
                 case 403:
