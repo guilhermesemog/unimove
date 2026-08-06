@@ -3,9 +3,11 @@ package com.guilhermesemog.unimove.service;
 import com.guilhermesemog.unimove.dto.trip.TripCreate;
 import com.guilhermesemog.unimove.dto.trip.TripPatch;
 import com.guilhermesemog.unimove.dto.trip.TripResponse;
+import com.guilhermesemog.unimove.exception.type.ResourceAlreadyExists;
 import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.TripMapper;
 import com.guilhermesemog.unimove.model.*;
+import com.guilhermesemog.unimove.model.enums.ListStatus;
 import com.guilhermesemog.unimove.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,16 +43,20 @@ public class TripService {
     }
 
     public TripResponse create(TripCreate requestBody) {
+        if (this.tripRepository.existsByInterestList_Id(requestBody.interestListId())) {
+            throw new ResourceAlreadyExists("Trip already exists for this interest list");
+        }
+
         InterestList interestList = getInterestList(requestBody.interestListId());
-
         List<Booking> bookings = bookingRepository.findByInterestList_Id(requestBody.interestListId());
-
         Trip trip = tripRepository.save(tripMapper.toEntity(requestBody, interestList));
 
         for (Booking booking : bookings) {
             tripStudentRepository.save(new TripStudent(trip, booking.getStudent()));
         }
 
+        interestList.setListStatus(ListStatus.CLOSED);
+        interestListRepository.save(interestList);
         return tripMapper.toResponse(trip);
     }
 

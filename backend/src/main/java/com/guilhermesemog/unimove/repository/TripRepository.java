@@ -27,4 +27,6 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
             Pageable pageable
     );
 
+    boolean existsByInterestList_Id(Long id);
+
 }
