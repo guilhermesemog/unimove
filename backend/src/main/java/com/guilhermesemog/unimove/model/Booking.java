@@ -42,7 +42,7 @@ public class Booking {
     private University destination;
 
     @ManyToOne
-    @JoinColumn(name = "boarding_location_id")
+    @JoinColumn(name = "boarding_location_id", nullable = false)
     private BoardingStop boardingLocation;
 
     public Booking(Student student, InterestList interestList, BookingStatus bookingStatus, TripType tripType, University destination, BoardingStop boardingLocation) {

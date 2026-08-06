@@ -8,6 +8,22 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BookingMapper {
+
+    private final StudentMapper studentMapper;
+    private final InterestListMapper interestListMapper;
+    private final UniversityMapper universityMapper;
+    private final BoardingStopMapper boardingStopMapper;
+
+    public BookingMapper(
+            StudentMapper studentMapper, InterestListMapper interestListMapper,
+            UniversityMapper universityMapper, BoardingStopMapper boardingStopMapper
+    ) {
+        this.studentMapper = studentMapper;
+        this.interestListMapper = interestListMapper;
+        this.universityMapper = universityMapper;
+        this.boardingStopMapper = boardingStopMapper;
+    }
+
     public Booking toEntity(
             Student student,
             InterestList interestList,
@@ -26,15 +42,21 @@ public class BookingMapper {
         );
     }
 
-    public BookingResponse toResponse(Booking booking, Long studentId, Long interestListId, Long destinationId, Long boardingLocationId) {
+    public BookingResponse toResponse(
+            Booking booking,
+            Student student,
+            InterestList interestList,
+            University university,
+            BoardingStop boardingStop
+    ) {
         return new BookingResponse(
                 booking.getId(),
                 booking.getTripType(),
                 booking.getBookingStatus(),
-                studentId,
-                interestListId,
-                destinationId,
-                boardingLocationId
+                studentMapper.toResponse(student),
+                interestListMapper.toResponse(interestList),
+                universityMapper.toResponse(university),
+                boardingStopMapper.toResponse(boardingStop)
         );
     }
 }

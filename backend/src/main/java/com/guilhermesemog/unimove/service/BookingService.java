@@ -11,6 +11,10 @@ import com.guilhermesemog.unimove.model.enums.BookingStatus;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
 import com.guilhermesemog.unimove.model.enums.TripType;
 import com.guilhermesemog.unimove.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +54,10 @@ public class BookingService {
             throw new ResourceAlreadyExists("Student already has a booking");
         }
 
+        if (requestBody.boardingStopId() == null && student.getPreferredBoardingStop() == null) {
+            throw new ResourceNotFoundException("No preferred boarding stop found for the student, the boarding stop must be specified");
+        }
+
         BoardingStop boardingStop = requestBody.boardingStopId() == null ? student.getPreferredBoardingStop() : boardingStopRepository.findById(requestBody.boardingStopId())
                 .orElseThrow(() -> new ResourceNotFoundException("Boarding stop not found"));
 
@@ -66,22 +74,39 @@ public class BookingService {
 
     public BookingResponse getById(Long id) {
         return bookingRepository.findById(id)
-                .map(booking -> bookingMapper.toResponse(booking, booking.getStudent().getId(), booking.getInterestList().getId(), booking.getDestination().getId(), booking.getBoardingLocation().getId()))
+                .map(booking -> bookingMapper.toResponse(booking, booking.getStudent(), booking.getInterestList(), booking.getDestination(), booking.getBoardingLocation()))
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+    }
+
+    public Page<BookingResponse> getAllBookingsByInterestList(Long interestListId, int page, int size, String sortBy, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return bookingRepository.findByInterestList_Id(interestListId, pageable)
+                .map(booking -> bookingMapper.toResponse(booking, booking.getStudent(), booking.getInterestList(), booking.getDestination(), booking.getBoardingLocation()));
     }
 
     public List<BookingResponse> getAllBookingsByInterestList(Long interestListId) {
         return bookingRepository.findByInterestList_Id(interestListId)
                 .stream()
-                .map(booking -> bookingMapper.toResponse(booking, booking.getStudent().getId(), booking.getInterestList().getId(), booking.getDestination().getId(), booking.getBoardingLocation().getId()))
+                .map(booking -> bookingMapper.toResponse(booking, booking.getStudent(), booking.getInterestList(), booking.getDestination(), booking.getBoardingLocation()))
                 .toList();
     }
 
-    public List<BookingResponse> getAllBookingsByStudent(Authentication authentication) {
+    public Page<BookingResponse> getAllBookingsByStudent(Authentication authentication, int page, int size, String sortBy, String sortDirection) {
         Student student = getStudentByAuthentication(authentication);
 
-        return bookingRepository.findByStudentId(student.getId())
-                .stream().map(booking -> bookingMapper.toResponse(booking, booking.getStudent().getId(), booking.getInterestList().getId(), booking.getDestination().getId(), booking.getBoardingLocation().getId())).toList();
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return bookingRepository.findByStudentId(student.getId(), pageable)
+                .map(booking -> bookingMapper.toResponse(booking, booking.getStudent(), booking.getInterestList(), booking.getDestination(), booking.getBoardingLocation()));
     }
 
     public void deleteById(Long id) {

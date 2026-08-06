@@ -4,6 +4,7 @@ import com.guilhermesemog.unimove.dto.booking.BookingCreate;
 import com.guilhermesemog.unimove.dto.booking.BookingResponse;
 import com.guilhermesemog.unimove.service.BookingService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -38,15 +39,27 @@ public class BookingController {
 
     @GetMapping("/interest-list/{interestListId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<BookingResponse>> getAllByInterestList(@PathVariable Long interestListId) {
-        List<BookingResponse> response = bookingService.getAllBookingsByInterestList(interestListId);
+    public ResponseEntity<Page<BookingResponse>> getAllByInterestList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @PathVariable Long interestListId
+    ) {
+        Page<BookingResponse> response = bookingService.getAllBookingsByInterestList(interestListId, page, size, sortBy, sortDirection);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<List<BookingResponse>> getAllByStudent(Authentication authentication) {
-        List<BookingResponse> response = bookingService.getAllBookingsByStudent(authentication);
+    public ResponseEntity<Page<BookingResponse>> getAllByStudent(
+            Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    ) {
+        Page<BookingResponse> response = bookingService.getAllBookingsByStudent(authentication, page, size, sortBy, sortDirection);
         return ResponseEntity.ok(response);
     }
 
