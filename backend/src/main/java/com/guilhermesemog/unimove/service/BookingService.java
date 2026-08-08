@@ -85,12 +85,23 @@ public class BookingService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return bookingRepository.findByInterestList_Id(interestListId, pageable)
+        return bookingRepository.findAllByInterestList_Id(interestListId, pageable)
+                .map(booking -> bookingMapper.toResponse(booking, booking.getStudent(), booking.getInterestList(), booking.getDestination(), booking.getBoardingLocation()));
+    }
+
+    public Page<BookingResponse> getAllBookingsByTrip(Long tripId, int page, int size, String sortBy, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return bookingRepository.findAllByInterestList_Id(tripId, pageable)
                 .map(booking -> bookingMapper.toResponse(booking, booking.getStudent(), booking.getInterestList(), booking.getDestination(), booking.getBoardingLocation()));
     }
 
     public List<BookingResponse> getAllBookingsByInterestList(Long interestListId) {
-        return bookingRepository.findByInterestList_Id(interestListId)
+        return bookingRepository.findAllByInterestList_Id(interestListId)
                 .stream()
                 .map(booking -> bookingMapper.toResponse(booking, booking.getStudent(), booking.getInterestList(), booking.getDestination(), booking.getBoardingLocation()))
                 .toList();
@@ -105,7 +116,7 @@ public class BookingService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return bookingRepository.findByStudentId(student.getId(), pageable)
+        return bookingRepository.findAllByStudentId(student.getId(), pageable)
                 .map(booking -> bookingMapper.toResponse(booking, booking.getStudent(), booking.getInterestList(), booking.getDestination(), booking.getBoardingLocation()));
     }
 

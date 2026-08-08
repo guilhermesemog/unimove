@@ -7,6 +7,7 @@ import { PageParameters, PageResponse } from '../../../shared/types/page.type';
 import { Observable } from 'rxjs/internal/Observable';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { Student } from '../../../shared/types/student.type';
 const API_BASE_URL = environment.apiUrl;
 
 @Service()
@@ -32,6 +33,17 @@ export class TripService {
         return this.http.get<PageResponse<Trip>>(`${API_BASE_URL}/trips/search`, {
             params: {
                 searchTerm,
+                page: params.page.toString(),
+                size: params.size.toString(),
+                sortBy: params.sortBy,
+                sortDirection: params.sortDirection
+            }
+        });
+    }
+
+    getStudentsByTripId(id: number, params: PageParameters): Observable<PageResponse<Student>> {
+        return this.http.get<PageResponse<Student>>(`${API_BASE_URL}/trips/${id}/students`, {
+            params: {
                 page: params.page.toString(),
                 size: params.size.toString(),
                 sortBy: params.sortBy,

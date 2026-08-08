@@ -1,10 +1,12 @@
 package com.guilhermesemog.unimove.service;
 
+import com.guilhermesemog.unimove.dto.student.StudentResponse;
 import com.guilhermesemog.unimove.dto.trip.TripCreate;
 import com.guilhermesemog.unimove.dto.trip.TripPatch;
 import com.guilhermesemog.unimove.dto.trip.TripResponse;
 import com.guilhermesemog.unimove.exception.type.ResourceAlreadyExists;
 import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
+import com.guilhermesemog.unimove.mapper.StudentMapper;
 import com.guilhermesemog.unimove.mapper.TripMapper;
 import com.guilhermesemog.unimove.model.*;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
@@ -23,6 +25,8 @@ import java.util.Objects;
 public class TripService {
 
     private final TripMapper tripMapper;
+    private final StudentMapper studentMapper;
+
     private final TripRepository tripRepository;
     private final TripStudentRepository tripStudentRepository;
     private final InterestListRepository interestListRepository;
@@ -31,8 +35,14 @@ public class TripService {
     private final ConductorRepository conductorRepository;
     private final VehicleRepository vehicleRepository;
 
-    public TripService(TripMapper tripMapper, TripRepository tripRepository, TripStudentRepository tripStudentRepository, InterestListRepository interestListRepository, BookingRepository bookingRepository, StudentRepository studentRepository, ConductorRepository conductorRepository, VehicleRepository vehicleRepository) {
+    public TripService(
+            TripMapper tripMapper, StudentMapper studentMapper,
+            TripRepository tripRepository, TripStudentRepository tripStudentRepository,
+            InterestListRepository interestListRepository, BookingRepository bookingRepository,
+            StudentRepository studentRepository, ConductorRepository conductorRepository, VehicleRepository vehicleRepository
+    ) {
         this.tripMapper = tripMapper;
+        this.studentMapper = studentMapper;
         this.tripRepository = tripRepository;
         this.tripStudentRepository = tripStudentRepository;
         this.interestListRepository = interestListRepository;
@@ -48,7 +58,7 @@ public class TripService {
         }
 
         InterestList interestList = getInterestList(requestBody.interestListId());
-        List<Booking> bookings = bookingRepository.findByInterestList_Id(requestBody.interestListId());
+        List<Booking> bookings = bookingRepository.findAllByInterestList_Id(requestBody.interestListId());
         Trip trip = tripRepository.save(tripMapper.toEntity(requestBody, interestList));
 
         for (Booking booking : bookings) {
@@ -99,6 +109,21 @@ public class TripService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return tripRepository.findAll(pageable).map(tripMapper::toResponse);
+    }
+
+    public Page<StudentResponse> getAllStudentsByTrip(Long id, int page, int size, String sortBy, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<TripStudent> tripStudents = tripStudentRepository.findAllByTrip_Id(id, pageable);
+
+        return tripStudents.map(tripStudent -> {
+            Student student = tripStudent.getStudent();
+            return studentMapper.toResponse(student);
+        });
     }
 
     public void updateConductor(Long id, TripPatch requestBody) {

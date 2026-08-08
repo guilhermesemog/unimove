@@ -23,6 +23,7 @@ export class ListTripPage {
 
   list = new ListState<Trip>({
     initialSortBy: 'id',
+    initialSortDirection: 'desc',
     fetchAll: (q) => this.tripService.getTrips(q),
     fetchByQuery: (term, q) => this.tripService.getTripByConductorOrVehicle(term, q),
   });
@@ -56,6 +57,10 @@ export class ListTripPage {
 
   onCreate() {
     this.router.navigate(['/admin/trips/create']);
+  }
+
+  onView(trip: Trip) {
+    this.router.navigate(['/admin/trips', trip.id, 'view']);
   }
 
   private deleteTrip(trip: Trip) {

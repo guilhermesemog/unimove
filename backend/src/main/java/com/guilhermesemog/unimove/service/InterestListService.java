@@ -40,6 +40,7 @@ public class InterestListService {
 
     public InterestListResponse getById(Long id) {
         InterestList interestList = getInterestList(id);
+
         return interestListMapper.toResponse(interestList);
     }
 

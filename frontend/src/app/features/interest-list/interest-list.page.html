@@ -1,1 +1,12 @@
-<p>interest-list.page works!</p>
+<!-- Header -->
+<app-header title="Interest Lists" description="Manage UNIMOVE interest lists..."></app-header>
+
+<!-- List -->
+@for (item of this.list.items(); track item.id) {
+<p>{{item.id}} - {{item.destinationId}}</p>
+<button type="button" (click)="this.createBooking(item.id)">Create Booking</button>
+}
+
+
+<app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
+    (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />

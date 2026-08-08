@@ -37,6 +37,8 @@ import { EditInterestListPage } from './features/admin/interest-list/edit-intere
 
 import { ViewInterestListPage } from './features/admin/interest-list/view-interest-list/view-interest-list.page';
 
+import { ViewTripPage } from './features/admin/trip/view-trip/view-trip.page';
+
 export const routes: Routes = [
     {
         path: '',
@@ -146,6 +148,12 @@ export const routes: Routes = [
                 path: 'admin/trips/:id/edit',
                 pathMatch: 'full',
                 component: EditTripPage,
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/trips/:id/view',
+                pathMatch: 'full',
+                component: ViewTripPage,
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {

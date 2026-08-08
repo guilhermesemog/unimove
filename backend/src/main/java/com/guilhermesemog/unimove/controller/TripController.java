@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.controller;
 
+import com.guilhermesemog.unimove.dto.student.StudentResponse;
 import com.guilhermesemog.unimove.dto.trip.TripCreate;
 import com.guilhermesemog.unimove.dto.trip.TripPatch;
 import com.guilhermesemog.unimove.dto.trip.TripResponse;
@@ -48,6 +49,17 @@ public class TripController {
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_CONDUCTOR')")
     public ResponseEntity<List<TripResponse>> getAllByUser(Authentication authentication) {
         return ResponseEntity.ok(tripService.getAllByUser(authentication));
+    }
+
+    @GetMapping("/{id}/students")
+    public ResponseEntity<Page<StudentResponse>> getAllTripStudents(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    ) {
+        return ResponseEntity.ok(tripService.getAllStudentsByTrip(id, page, size, sortBy, sortDirection));
     }
 
     @PatchMapping("/{id}/conductor")
