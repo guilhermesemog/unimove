@@ -8,9 +8,10 @@ import { TableColumn } from './table-column.type';
   imports: [CommonModule],
   templateUrl: './data-table.component.html',
 })
-export class DataTableComponent<T extends { id: string | number }> {
+export class DataTableComponent<T> {
   columns = input.required<TableColumn<T>[]>();
   data = input.required<T[]>();
+  trackBy = input<(row: T) => string | number>((row: any) => row.id);
   sortBy = input<string | null>(null);
   sortDirection = input<'asc' | 'desc'>('asc');
   emptyMessage = input('No data available.');
