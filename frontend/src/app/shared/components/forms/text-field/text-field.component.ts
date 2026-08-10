@@ -1,4 +1,4 @@
-import { Component, input, model } from '@angular/core';
+import { Component, computed, input, model, signal } from '@angular/core';
 import { FormValueControl, WithOptionalFieldTree, ValidationError } from '@angular/forms/signals';
 import { CommonModule } from '@angular/common';
 
@@ -20,4 +20,16 @@ export class TextFieldComponent implements FormValueControl<string> {
   readonly placeholder = input<string>('');
   readonly type = input<string>('text');
   readonly id = input<string>();
+
+  protected readonly showPassword = signal(false);
+
+  protected readonly hasError = computed(() => this.touched() && this.errors().length > 0);
+
+  protected readonly resolvedType = computed(() =>
+    this.type() === 'password' && this.showPassword() ? 'text' : this.type()
+  );
+
+  protected toggleShowPassword(): void {
+    this.showPassword.update((v) => !v);
+  }
 }

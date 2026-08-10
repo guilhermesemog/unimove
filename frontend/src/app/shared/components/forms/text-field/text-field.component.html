@@ -1,18 +1,40 @@
-<div class="flex flex-col gap-1 mb-4">
-  <label [for]="id() ?? label()">
+<div class="flex flex-col gap-1.5 mb-4">
+  <label [for]="id() ?? label()" class="text-sm font-medium text-gray-700">
     {{ label() }}
     @if (required()) {
     <span class="text-red-500">*</span>
     }
   </label>
 
-  <input class="border rounded p-2" [id]="id() ?? label()" [type]="type()" [placeholder]="placeholder()"
-    [disabled]="disabled()" [value]="value()" (input)="value.set($any($event.target).value)"
-    (blur)="touched.set(true)" />
+  <div class="relative">
+    <input
+      class="w-full border rounded-lg py-2.5 px-3 text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none focus:ring-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+      [class.pr-10]="type() === 'password'" [class.border-red-400]="hasError()" [class.focus:ring-red-400]="hasError()"
+      [class.focus:border-red-400]="hasError()" [class.border-gray-300]="!hasError()"
+      [class.focus:ring-blue-500]="!hasError()" [class.focus:border-blue-500]="!hasError()" [id]="id() ?? label()"
+      [type]="resolvedType()" [placeholder]="placeholder()" [disabled]="disabled()" [value]="value()"
+      (input)="value.set($any($event.target).value)" (blur)="touched.set(true)" />
 
-  @if (touched() && errors().length > 0) {
+    @if (type() === 'password') {
+    <button type="button" tabindex="-1"
+      class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 cursor-pointer"
+      (click)="toggleShowPassword()">
+      @if (showPassword()) {
+      <span class="material-icons">
+        visibility_off
+      </span>
+      } @else {
+      <span class="material-icons">
+        visibility
+      </span>
+      }
+    </button>
+    }
+  </div>
+
+  @if (hasError()) {
   @for (error of errors(); track $index) {
-  <small class="text-red-500">{{ error.message }}</small>
+  <small class="text-red-500 text-sm">{{ error.message }}</small>
   }
   }
 </div>
