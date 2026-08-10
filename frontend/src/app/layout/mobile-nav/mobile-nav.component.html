@@ -1,0 +1,35 @@
+<nav class="fixed bottom-2 inset-x-0 z-20 bg-white border border-gray-200 shadow-sm mx-2 rounded-lg flex items-stretch"
+    style="padding-bottom: env(safe-area-inset-bottom);">
+
+    <a routerLink="/" routerLinkActive="text-gray-900" [routerLinkActiveOptions]="{ exact: true }"
+        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
+        <span class="material-icons">
+            home
+        </span>
+        <p class="text-xs font-medium">Home</p>
+    </a>
+
+    <a routerLink="/bookings" routerLinkActive="text-gray-900"
+        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
+        <span class="material-icons">
+            calendar_month
+        </span>
+        <p class="text-xs font-medium">Bookings</p>
+    </a>
+
+    <a routerLink="/interest-lists" routerLinkActive="text-gray-900"
+        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
+        <span class="material-icons">
+            edit_note
+        </span>
+        <p class="text-xs font-medium">Lists</p>
+    </a>
+
+    <a routerLink="/profile" routerLinkActive="text-gray-900"
+        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
+        <span class="material-icons">
+            person
+        </span>
+        <p class="text-xs font-medium">Profile</p>
+    </a>
+</nav>

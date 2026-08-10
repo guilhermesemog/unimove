@@ -1,8 +1,23 @@
-<div class="flex min-h-screen bg-gray-50">
-    <app-sidebar></app-sidebar>
-    <main class="flex-1 p-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+@if (isReady()) {
+@if (isAdmin()) {
+<div class="min-h-screen bg-gray-50 lg:flex">
+    <app-mobile-admin-header (menuToggle)="toggleDrawer()"></app-mobile-admin-header>
+
+    <app-sidebar [isOpen]="isDrawerOpen()" (closeDrawer)="closeDrawer()"></app-sidebar>
+
+    <main class="flex-1 p-4 lg:p-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 lg:py-8">
             <router-outlet></router-outlet>
         </div>
     </main>
 </div>
+} @else {
+<div class="min-h-screen bg-gray-50 flex flex-col">
+    <app-mobile-header></app-mobile-header>
+    <main class="flex-1 px-4 py-6 pb-24">
+        <router-outlet></router-outlet>
+    </main>
+    <app-mobile-nav></app-mobile-nav>
+</div>
+}
+}
