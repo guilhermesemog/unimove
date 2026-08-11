@@ -47,8 +47,14 @@ public class TripController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_CONDUCTOR')")
-    public ResponseEntity<List<TripResponse>> getAllByUser(Authentication authentication) {
-        return ResponseEntity.ok(tripService.getAllByUser(authentication));
+    public ResponseEntity<Page<TripResponse>> getAllByUser(
+            Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    ) {
+        return ResponseEntity.ok(tripService.getAllByUser(authentication, page, size, sortBy, sortDirection));
     }
 
     @GetMapping("/{id}/students")

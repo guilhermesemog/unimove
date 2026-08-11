@@ -3,10 +3,9 @@
 
 <!-- List -->
 @for (item of this.list.items(); track item.id) {
-<p>{{item.id}} - {{item.destinationId}}</p>
+<p>{{item.id}} - {{ item.destination.id }}</p>
 <button type="button" (click)="this.createBooking(item.id)">Create Booking</button>
 }
-
 
 <app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
     (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />

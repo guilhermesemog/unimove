@@ -74,31 +74,33 @@ public class TripService {
         return tripMapper.toResponse(getTrip(id));
     }
 
-    public List<TripResponse> getAllByUser(Authentication authentication) {
+    public Page<TripResponse> getAllByUser(Authentication authentication, int page, int size, String sortBy, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
         return authentication.getAuthorities().stream()
                 .anyMatch(authority -> Objects.equals(authority.getAuthority(), "ROLE_STUDENT"))
-                ? getAllTripsByStudent(authentication)
-                : getAllTripsByConductor(authentication);
+                ? getAllTripsByStudent(authentication, pageable)
+                : getAllTripsByConductor(authentication, pageable);
 
     }
 
-    public List<TripResponse> getAllTripsByStudent(Authentication authentication) {
+    public Page<TripResponse> getAllTripsByStudent(Authentication authentication, Pageable pageable) {
         Student student = getStudentByAuthentication(authentication);
 
-        return tripStudentRepository.findAllByStudent_Id(student.getId())
-                .stream()
+        return tripStudentRepository.findAllByStudent_Id(student.getId(), pageable)
                 .map(TripStudent::getTrip)
-                .map(tripMapper::toResponse)
-                .toList();
+                .map(tripMapper::toResponse);
     }
 
-    public List<TripResponse> getAllTripsByConductor(Authentication authentication) {
+    public Page<TripResponse> getAllTripsByConductor(Authentication authentication, Pageable pageable) {
         Conductor conductor = getConductorByAuthentication(authentication);
 
-        return tripRepository.findAllByConductor_Id(conductor.getId())
-                .stream()
-                .map(tripMapper::toResponse)
-                .toList();
+        return tripRepository.findAllByConductor_Id(conductor.getId(), pageable)
+                .map(tripMapper::toResponse);
     }
 
     public Page<TripResponse> getAll(int page, int size, String sortBy, String sortDirection) {

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface TripStudentRepository extends JpaRepository<TripStudent, Long> {
-    List<TripStudent> findAllByStudent_Id(Long studentId);
+    Page<TripStudent> findAllByStudent_Id(Long studentId, Pageable pageable);
 
     Page<TripStudent> findAllByTrip_Id(Long tripId, Pageable pageable);
 }

@@ -39,7 +39,7 @@ export class ListInterestListPage {
     { key: 'arrivalTime', label: 'Arrival Time', sortable: true },
     { key: 'returnDepartureTime', label: 'Return Departure Time', sortable: true },
     { key: 'returnArrivalTime', label: 'Return Arrival Time', sortable: true },
-    { key: 'destinationId', label: 'Destination ID', sortable: true, align: 'center' },
+    { key: 'destination', label: 'Destination ID', sortable: true, align: 'center', format: (row) => row.destination.id.toString() },
     { key: 'listStatus', label: 'List Status', sortable: true }
   ]
 

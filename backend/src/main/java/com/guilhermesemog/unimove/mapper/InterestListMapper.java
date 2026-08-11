@@ -4,6 +4,7 @@ import com.guilhermesemog.unimove.dto.interestlist.InterestListCreate;
 import com.guilhermesemog.unimove.dto.interestlist.InterestListPatch;
 import com.guilhermesemog.unimove.dto.interestlist.InterestListResponse;
 import com.guilhermesemog.unimove.dto.interestlist.InterestListUpdate;
+import com.guilhermesemog.unimove.dto.university.UniversityResponse;
 import com.guilhermesemog.unimove.model.InterestList;
 import com.guilhermesemog.unimove.model.University;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class InterestListMapper {
+
+    UniversityMapper universityMapper;
+
+    public InterestListMapper(UniversityMapper universityMapper) {
+        this.universityMapper = universityMapper;
+    }
+
     public InterestList toEntity(InterestListCreate body, University destination) {
         return new InterestList(
                 body.referenceDate(),
@@ -24,6 +32,8 @@ public class InterestListMapper {
     }
 
     public InterestListResponse toResponse(InterestList interestList) {
+        UniversityResponse destinationResponse = universityMapper.toResponse(interestList.getDestination());
+
         return new InterestListResponse(
                 interestList.getId(),
                 interestList.getReferenceDate(),
@@ -32,7 +42,7 @@ public class InterestListMapper {
                 interestList.getArrivalTime(),
                 interestList.getReturnDepartureTime(),
                 interestList.getReturnArrivalTime(),
-                interestList.getDestination().getId(),
+                destinationResponse,
                 interestList.getListStatus()
         );
     }

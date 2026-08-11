@@ -1,3 +1,5 @@
+import { University } from "./university.type";
+
 export enum ListStatus {
     OPEN = 'OPEN',
     PROCESSING = 'PROCESSING',
@@ -12,7 +14,7 @@ export interface InterestList {
     arrivalTime: string;
     returnDepartureTime: string;
     returnArrivalTime: string;
-    destinationId: number;
+    destination: University;
     listStatus: ListStatus;
 }
 

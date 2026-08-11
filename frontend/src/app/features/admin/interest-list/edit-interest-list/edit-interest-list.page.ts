@@ -56,7 +56,7 @@ export class EditInterestListPage {
         arrivalTime: interestList.arrivalTime,
         returnDepartureTime: interestList.returnDepartureTime,
         returnArrivalTime: interestList.returnArrivalTime,
-        destinationId: interestList.destinationId,
+        destinationId: interestList.destination.id,
         listStatus: interestList.listStatus,
       });
       this.interestList.set(interestList);

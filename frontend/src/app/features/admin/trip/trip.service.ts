@@ -52,6 +52,17 @@ export class TripService {
         });
     }
 
+    getTripsByUser(params: PageParameters): Observable<PageResponse<Trip>> {
+        return this.http.get<PageResponse<Trip>>(`${API_BASE_URL}/trips/me`, {
+            params: {
+                page: params.page.toString(),
+                size: params.size.toString(),
+                sortBy: params.sortBy,
+                sortDirection: params.sortDirection
+            }
+        });
+    }
+
     updateTripConductor(id: number, trip: TripUpdateRequest): Observable<Trip> {
         return this.http.patch<Trip>(`${API_BASE_URL}/trips/${id}/conductor`, trip);
     }

@@ -27,4 +27,15 @@ export class BookingService {
             }
         });
     }
+
+    getUserBookings(params: PageParameters): Observable<PageResponse<Booking>> {
+        return this.http.get<PageResponse<Booking>>(`${API_BASE_URL}/bookings/me`, {
+            params: {
+                page: params.page.toString(),
+                size: params.size.toString(),
+                sortBy: params.sortBy,
+                sortDirection: params.sortDirection
+            }
+        });
+    }
 }

@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TripRepository extends JpaRepository<Trip, Long> {
-    List<Trip> findAllByConductor_Id(Long id);
+    Page<Trip> findAllByConductor_Id(Long id, Pageable pageable);
 
     @Query("""
                 SELECT t
