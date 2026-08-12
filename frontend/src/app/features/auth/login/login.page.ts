@@ -20,8 +20,8 @@ export class LoginPage {
   });
 
   loginForm = form(this.loginModel, (schema) => {
-    required(schema.cpf, { message: 'CPF é obrigatório' });
-    required(schema.password, { message: 'Senha é obrigatória' });
+    required(schema.cpf, { message: 'CPF is required' });
+    required(schema.password, { message: 'Password is required' });
   });
 
   async onSubmit() {
