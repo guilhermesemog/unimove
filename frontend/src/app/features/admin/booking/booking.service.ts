@@ -1,6 +1,6 @@
 import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment.development';
 import { Booking, BookingCreateRequest } from '../../../shared/types/booking.type';
@@ -12,8 +12,8 @@ const API_BASE_URL = environment.apiUrl;
 export class BookingService {
     private http = inject(HttpClient);
 
-    createBooking(booking: BookingCreateRequest): Observable<Booking> {
-        return this.http.post<Booking>(`${API_BASE_URL}/bookings`, booking);
+    createBooking(booking: BookingCreateRequest): Observable<void> {
+        return this.http.post<void>(`${API_BASE_URL}/bookings`, booking);
     }
 
 

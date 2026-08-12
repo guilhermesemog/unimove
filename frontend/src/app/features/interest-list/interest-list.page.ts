@@ -1,28 +1,34 @@
-import { Component, inject, signal } from '@angular/core';
-import { InterestListService } from '../admin/interest-list/interest-list.service';
-import { InterestList } from '../../shared/types/interest-list.type';
-import { Router } from '@angular/router';
-import { ListState } from '../../shared/utils/list-state';
 import { CommonModule } from '@angular/common';
-import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
-import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
-import { HeaderComponent } from '../../shared/components/list-header/header.component';
-import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
-import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
+import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { BookingService } from '../admin/booking/booking.service';
-import { TripType } from '../../shared/types/booking.type';
+import { InterestListService } from '../admin/interest-list/interest-list.service';
+import { HeaderComponent } from '../../shared/components/list-header/header.component';
+import { EnumPipe } from '../../shared/pipes/enum-pipe';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { ListState } from '../../shared/utils/list-state';
+import { BookingCreateRequest, TripType } from '../../shared/types/booking.type';
+import { InterestList } from '../../shared/types/interest-list.type';
 
 @Component({
   selector: 'app-interest-list.page',
-  imports: [CommonModule, HeaderComponent, PaginationComponent],
+  standalone: true,
+  imports: [CommonModule, HeaderComponent, PaginationComponent, EnumPipe],
   templateUrl: './interest-list.page.html',
 })
 export class InterestListPage {
+  readonly TripType = TripType;
+
   interestListService = inject(InterestListService);
   bookingService = inject(BookingService);
 
-  interestLists = signal<Array<InterestList>>([]);
   router = inject(Router);
+
+  selectedInterestList = signal<InterestList | null>(null);
+  selectedTripType = signal<TripType>(TripType.ROUND_TRIP);
+  bookingLoading = signal(false);
+  bookingSuccess = signal<string | null>(null);
 
   list = new ListState<InterestList>({
     initialSortBy: 'id',
@@ -35,17 +41,50 @@ export class InterestListPage {
     this.list.fetch();
   }
 
-  createBooking(interestListId: number) {
-    this.bookingService.createBooking({
-      interestListId: interestListId,
-      tripType: TripType.ROUND_TRIP,
-    }).subscribe({
+  openDetails(interestList: InterestList) {
+    this.selectedInterestList.set(interestList);
+    this.selectedTripType.set(TripType.ROUND_TRIP);
+    this.bookingSuccess.set(null);
+  }
+
+  closeDetails() {
+    if (this.bookingLoading()) {
+      return;
+    }
+
+    this.selectedInterestList.set(null);
+    this.bookingSuccess.set(null);
+  }
+
+  updateTripType(tripType: TripType) {
+    this.selectedTripType.set(tripType);
+  }
+
+  createBooking() {
+    const interestList = this.selectedInterestList();
+
+    if (!interestList || this.bookingLoading() || interestList.listStatus !== 'OPEN') {
+      return;
+    }
+
+    const request: BookingCreateRequest = {
+      interestListId: interestList.id,
+      tripType: this.selectedTripType(),
+    };
+
+    this.bookingLoading.set(true);
+    this.bookingSuccess.set(null);
+
+    this.bookingService.createBooking(request).subscribe({
       next: () => {
-        alert('Booking created successfully!');
+        this.bookingSuccess.set('Agendamento criado com sucesso.');
+      },
+      complete: () => {
+        this.bookingLoading.set(false);
       },
       error: (err) => {
         console.error('Error creating booking:', err);
-        alert('Failed to create booking. Please try again.');
+        this.bookingLoading.set(false);
       }
     });
   }
