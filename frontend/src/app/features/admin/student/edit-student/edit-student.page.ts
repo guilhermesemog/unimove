@@ -9,7 +9,7 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 import { ConfirmDialogState, CLOSED_DIALOG } from '../../../../shared/components/confirm-dialog/confirm-dialog.type';
 import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
 import { UserService } from '../../user/user.service';
-import { Student } from '../../../../shared/types/student.type';
+import { Student, StudentUpdateRequest } from '../../../../shared/types/student.type';
 import { TextFieldComponent } from '../../../../shared/components/forms/text-field/text-field.component';
 import { NumberFieldComponent } from '../../../../shared/components/forms/number-field/number-field.component';
 import { SelectFieldComponent, SelectOption } from "../../../../shared/components/forms/select-field/select-field.component";
@@ -48,7 +48,7 @@ export class EditStudentPage {
         period: this.student()?.period || 0,
         course: this.student()?.course || '',
         address: this.student()?.address || '',
-        universityId: this.student()?.universityId ?? null,
+        universityId: this.student()?.university?.id ?? null,
     });
 
     studentForm = form(this.studentFormModel, (schema) => {
@@ -77,7 +77,7 @@ export class EditStudentPage {
                 period: student.period,
                 course: student.course,
                 address: student.address,
-                universityId: student.universityId,
+                universityId: student.university.id,
             });
             this.student.set(student);
         });
@@ -106,7 +106,7 @@ export class EditStudentPage {
             confirmLabel: 'Save',
             variant: 'default',
             action: () => {
-                const updatedStudent: Student = {
+                const updatedStudent: StudentUpdateRequest = {
                     ...this.student()!,
                     user: {
                         ...this.student()!.user,
@@ -119,6 +119,7 @@ export class EditStudentPage {
                     course: this.studentFormModel().course,
                     address: this.studentFormModel().address,
                     universityId: this.studentFormModel().universityId!,
+                    preferredBoardingStopId: this.student()!.preferredBoardingStop ? this.student()!.preferredBoardingStop!.id : null,
                 };
 
                 this.studentService.updateStudent(this.id, updatedStudent).subscribe(() => {

@@ -1,12 +1,14 @@
-import { User, UserCommomCreate, UserCreateRequest, UserUpdateRequest } from "./user.type";
+import { BoardingStop } from "./boarding-stop.type";
+import { University } from "./university.type";
+import { User, UserCommomCreate, UserUpdateRequest } from "./user.type";
 
 export interface Student {
     user: User;
     period: number;
     course: string;
     address: string;
-    universityId: number;
-    preferredBoardingStopId: number | null;
+    university: University;
+    preferredBoardingStop: BoardingStop | null;
 }
 
 export interface StudentUpdateRequest {

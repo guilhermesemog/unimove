@@ -16,7 +16,7 @@ export class StudentService {
         return this.http.get<Student>(`${API_BASE_URL}/students/${userId}`);
     }
 
-    updateStudent(userId: number, student: Student): Observable<void> {
+    updateStudent(userId: number, student: StudentUpdateRequest): Observable<void> {
         const updatableStudent: StudentUpdateRequest = {
             user: {
                 cpf: student.user.cpf,
@@ -28,7 +28,7 @@ export class StudentService {
             course: student.course,
             address: student.address,
             universityId: student.universityId,
-            preferredBoardingStopId: student.preferredBoardingStopId
+            preferredBoardingStopId: student.preferredBoardingStopId,
         };
 
         return this.http.put<void>(`${API_BASE_URL}/students/${userId}`, updatableStudent);
