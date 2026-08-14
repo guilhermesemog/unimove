@@ -1,21 +1,27 @@
 import { CanActivateFn, Router } from '@angular/router';
-import { UserRole } from '../../shared/types/user.type';
+import { inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
-import { inject } from '@angular/core/primitives/di';
+import { UserRole } from '../../shared/types/user.type';
 
 export const roleGuard = (allowedRoles: UserRole[]): CanActivateFn => {
   return async () => {
     const authService = inject(AuthService);
     const router = inject(Router);
 
-    const userRole = await authService.identify().then((user) => user.role);
+    try {
+      const user = await firstValueFrom(authService.identify());
 
-    if (!userRole || !allowedRoles.includes(userRole)) {
-      router.navigate(['/unauthorized']);
+      if (!allowedRoles.includes(user.role)) {
+        await router.navigate(['/unauthorized']);
+        return false;
+      }
+
+      return true;
+    } catch {
+      await router.navigate(['/unauthorized']);
       return false;
     }
-
-    return true;
-  }
+  };
 };

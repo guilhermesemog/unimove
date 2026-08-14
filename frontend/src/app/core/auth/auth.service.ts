@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment.development';
 import { User, UserRole } from '../../shared/types/user.type';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
+import { Observable } from 'rxjs/internal/Observable';
 
 const API_BASE_URL = environment.apiUrl;
 
@@ -17,29 +18,26 @@ export class AuthService {
     http = inject(HttpClient);
     router = inject(Router);
 
-    async login(cpf: string, password: string): Promise<void> {
-        const response = await firstValueFrom(
-            this.http.post<LoginResponse>(`${API_BASE_URL}/auth/login`, { cpf, password })
-        );
+    login(cpf: string, password: string): void {
 
-        localStorage.setItem('accessToken', response.accessToken);
+        this.http.post<LoginResponse>(`${API_BASE_URL}/auth/login`, { cpf, password })
+            .subscribe((response) => {
+                localStorage.setItem('accessToken', response.accessToken);
+                this.identify().subscribe(
+                    (user) => {
+                        if (user.role === UserRole.Admin) {
+                            this.router.navigate(['/admin']);
+                            return;
+                        }
 
-        await this.identify().then(async (user) => {
-            if (user.role === UserRole.Admin) {
-                this.router.navigate(['/admin']);
-                return;
-            }
-
-            this.router.navigate(['/']);
-        });
+                        this.router.navigate(['/']);
+                    });
+            });
     }
 
-    async identify(): Promise<User> {
-        const user = await firstValueFrom(
-            this.http.get<User>(`${API_BASE_URL}/users/me`)
-        );
+    identify(): Observable<User> {
+        return this.http.get<User>(`${API_BASE_URL}/users/me`)
 
-        return user;
     }
 
     logout(): void {
