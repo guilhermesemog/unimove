@@ -1,5 +1,7 @@
 package com.guilhermesemog.unimove.dto.student;
 
+import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponse;
+import com.guilhermesemog.unimove.dto.university.UniversityResponse;
 import com.guilhermesemog.unimove.dto.user.UserResponse;
 
 public record StudentResponse(
@@ -7,7 +9,7 @@ public record StudentResponse(
         Long period,
         String course,
         String address,
-        Long universityId,
-        Long preferredBoardingStopId
+        UniversityResponse university,
+        BoardingStopResponse preferredBoardingStop
 ) {
 }

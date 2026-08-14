@@ -19,7 +19,7 @@ export class MainLayout {
   isDrawerOpen = signal<boolean>(false);
 
   ngOnInit() {
-    this.authService.identify().then((user) => {
+    this.authService.identify().subscribe((user) => {
       this.isAdmin.set(user.role === UserRole.Admin);
       this.isReady.set(true);
     });

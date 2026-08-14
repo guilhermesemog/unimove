@@ -29,7 +29,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(#id, authentication)")
     public ResponseEntity<StudentResponse> getById(@PathVariable Long id) {
         StudentResponse responseBody = studentService.getById(id);
         return ResponseEntity.ok(responseBody);

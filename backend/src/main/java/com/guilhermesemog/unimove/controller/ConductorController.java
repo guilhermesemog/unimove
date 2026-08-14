@@ -32,7 +32,7 @@ public class ConductorController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(#id, authentication)")
     public ResponseEntity<ConductorResponse> getById(@PathVariable Long id) {
         ConductorResponse responseBody = conductorService.getById(id);
         return ResponseEntity.ok(responseBody);

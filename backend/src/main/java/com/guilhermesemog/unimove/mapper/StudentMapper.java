@@ -14,9 +14,13 @@ import org.springframework.stereotype.Component;
 public class StudentMapper {
 
     private final UserMapper userMapper;
+    private final UniversityMapper universityMapper;
+    private final BoardingStopMapper boardingStopMapper;
 
-    public StudentMapper(UserMapper userMapper) {
+    public StudentMapper(UserMapper userMapper, BoardingStopMapper boardingStopMapper, UniversityMapper universityMapper) {
         this.userMapper = userMapper;
+        this.universityMapper = universityMapper;
+        this.boardingStopMapper = boardingStopMapper;
     }
 
     public Student toEntity(StudentCreate studentBody, User user, University university, BoardingStop boardingStop) {
@@ -36,8 +40,8 @@ public class StudentMapper {
                 student.getPeriod(),
                 student.getCourse(),
                 student.getAddress(),
-                student.getUniversity().getId(),
-                student.getPreferredBoardingStop() != null ? student.getPreferredBoardingStop().getId() : null
+                universityMapper.toResponse(student.getUniversity()),
+                student.getPreferredBoardingStop() != null ? boardingStopMapper.toResponse(student.getPreferredBoardingStop()) : null
         );
     }
 

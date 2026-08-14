@@ -43,6 +43,8 @@ import { BookingsPage } from './features/bookings/bookings.page';
 
 import { InterestListPage } from './features/interest-list/interest-list.page';
 
+import { UserPage } from './features/user/user.page';
+
 export const routes: Routes = [
     {
         path: '',
@@ -195,6 +197,10 @@ export const routes: Routes = [
                 path: 'interest-lists',
                 pathMatch: 'full',
                 component: InterestListPage,
+            }, {
+                path: 'user',
+                pathMatch: 'full',
+                component: UserPage,
             }
         ]
     },

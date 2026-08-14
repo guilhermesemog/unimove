@@ -1,0 +1,79 @@
+<div class="max-w-xl mx-auto">
+    <!-- Header -->
+    <div class="px-2">
+        <app-header title="Profile" description="This is your UNIMOVE profile..."></app-header>
+    </div>
+
+    <!-- User Info -->
+    <div class="flex flex-col gap-4 justify-center flex-wrap px-2">
+        <div>
+            <p class="p-1">Personal Information</p>
+            <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-6 sm:min-w-xl">
+
+                <div class="flex justify-between items-start">
+                    <p class="text-lg">{{ user()?.firstName }} {{ user()?.lastName }}</p>
+                    <p class="bg-green-100 text-green-800 px-2 py-1 rounded">{{user()?.role | capitalize}}</p>
+                </div>
+
+                <div class="flex flex-col items-start">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">CPF</p>
+                    <p class="text-sm font-medium text-slate-900">{{ user()?.cpf | cpf }}</p>
+                </div>
+
+                <div class="flex flex-col items-start">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Phone</p>
+                    <p class="text-sm font-medium text-slate-900">{{ user()?.phone | phone }}</p>
+                </div>
+            </div>
+        </div>
+
+        @if (student()){
+        <div>
+            <p class="p-1">Student Information</p>
+            <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-6 sm:min-w-xl">
+
+                <div class="flex flex-col items-start">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Address</p>
+                    <p class="text-sm font-medium text-slate-900">{{ student()?.address }}</p>
+                </div>
+
+                <div class="flex flex-col items-start">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">University</p>
+                    <p class="text-sm font-medium text-slate-900">{{ student()?.university?.name }}</p>
+                </div>
+
+                <div class="flex flex-row justify-between items-start gap-4">
+
+                    <div class="flex flex-col items-start">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Course</p>
+                        <p class="text-sm font-medium text-slate-900">{{ student()?.course }}</p>
+                    </div>
+
+                    <div class="flex flex-col items-end">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Period</p>
+                        <p class="text-sm font-medium text-slate-900">{{ student()?.period }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+
+        @if (conductor()){
+        <div>
+            <p class="p-1">Conductor Information</p>
+            <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-6 sm:min-w-xl">
+
+                <div class="flex flex-col items-start">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">License</p>
+                    <p class="text-sm font-medium text-slate-900">{{ conductor()?.license }}</p>
+                </div>
+
+                <div class="flex flex-col items-start">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">License Expiration Date</p>
+                    <p class="text-sm font-medium text-slate-900">{{ conductor()?.licenseExpirationDate }}</p>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
