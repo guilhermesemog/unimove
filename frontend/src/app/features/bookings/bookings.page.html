@@ -1,105 +1,107 @@
-<div class="px-2 sm:px-16">
-    <app-header title="Bookings" description="Check your schedule and history." />
-</div>
-
-<div class="flex justify-between sm:justify-start sm:px-16 gap-8 mb-4 sm:mb-12">
-    <button class="px-4 py-2 rounded w-48"
-        [ngClass]="window() === 'Bookings' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
-        (click)="window.set('Bookings')">Bookings</button>
-
-    <button class="px-4 py-2 rounded w-48"
-        [ngClass]="window() === 'Trips' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
-        (click)="window.set('Trips')">Trips</button>
-</div>
-
-
-@if (window() === 'Bookings') {
-
-<div class="sm:flex flex-row gap-4 justify-center flex-wrap">
-    @for (item of this.bokingList.items(); track $index) {
-    <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-2 sm:min-w-xl">
-        <div class="flex justify-between items-start">
-            <div class="flex flex-col gap-2 items-start">
-                <p class="text-sm font-semibold">{{ item.destination.name}}</p>
-                <p class="text-sm text-gray-500">{{ item.tripType | enum }}</p>
-            </div>
-            <p class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">{{item.bookingStatus | enum}}</p>
-        </div>
-        <div class="flex flex-row justify-between items-start gap-4">
-            <div class="flex flex-col items-start">
-                <p class="text-xs uppercase">Departure</p>
-                <p class="text-sm ">{{ item.interestList.departureTime }}</p>
-            </div>
-
-            <div class="flex flex-col items-end">
-                <p class="text-xs uppercase">Return</p>
-                <p class="text-sm">{{ item.interestList.returnDepartureTime }}</p>
-            </div>
-        </div>
-        <div class="mt-2">
-            <p class="text-sm text-gray-500 text-center">You can still edit this booking until {{
-                item.interestList.closingTime }}
-            </p>
-        </div>
+<div class="max-w-xl mx-auto">
+    <div class="px-2">
+        <app-header title="Bookings" description="Check your schedule and history." />
     </div>
-    }
-</div>
-<div class="px-2 sm:px-16">
-    <app-pagination [page]="bokingList.page()" [totalPages]="bokingList.totalPages()" [pageSize]="bokingList.pageSize()"
-        (pageChange)="bokingList.onPageChange($event)" (pageSizeChange)="bokingList.onPageSizeChange($event)" />
-</div>
 
-} @else {
+    <div class="flex justify-between sm:justify-start sm:px-16 gap-8 mb-4 sm:my-8">
+        <button class="px-4 py-2 rounded w-48"
+            [ngClass]="window() === 'Bookings' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
+            (click)="window.set('Bookings')">Bookings</button>
 
-<div class="sm:flex flex-row gap-4 justify-center flex-wrap">
-    @for (item of this.tripList.items(); track $index) {
-    <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-2 sm:min-w-xl">
-        <div class="flex justify-between items-center">
-            <p class="text-sm font-semibold">{{ item.interestList.destination.name}}</p>
-            <p class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">{{item.status| enum}}</p>
-        </div>
-        <div class="flex flex-row justify-between items-start gap-4">
-            <div class="flex flex-col items-start">
-                <p class="text-xs uppercase">Departure</p>
-                <p class="text-sm ">{{ item.interestList.departureTime }}</p>
-            </div>
+        <button class="px-4 py-2 rounded w-48"
+            [ngClass]="window() === 'Trips' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
+            (click)="window.set('Trips')">Trips</button>
+    </div>
 
-            <div class="flex flex-col items-end">
-                <p class="text-xs uppercase">Return Departure</p>
-                <p class="text-sm">{{ item.interestList.returnDepartureTime }}</p>
-            </div>
-        </div>
-        <div class="flex flex-row justify-between items-start gap-4">
-            <div class="flex flex-col items-start">
-                <p class="text-xs uppercase">Arrival</p>
-                <p class="text-sm ">{{ item.interestList.arrivalTime }}</p>
-            </div>
 
-            <div class="flex flex-col items-end">
-                <p class="text-xs uppercase">Return Arrival</p>
-                <p class="text-sm">{{ item.interestList.returnArrivalTime }}</p>
+    @if (window() === 'Bookings') {
+
+    <div class="sm:flex flex-row gap-4 justify-center flex-wrap">
+        @for (item of this.bokingList.items(); track $index) {
+        <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-2 sm:min-w-xl">
+            <div class="flex justify-between items-start">
+                <div class="flex flex-col gap-2 items-start">
+                    <p class="text-sm font-semibold">{{ item.destination.name}}</p>
+                    <p class="text-sm text-gray-500">{{ item.tripType | enum }}</p>
+                </div>
+                <p class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">{{item.bookingStatus | enum}}</p>
             </div>
-        </div>
-        <div class="flex flex-row justify-between items-start gap-4 border-t-2 border-slate-200 pt-2">
-            <div class="flex flex-col items-start">
-                <p class="text-xs uppercase font-semibold">Conductor</p>
-                <p class="text-sm ">{{ item.conductor ? item.conductor.user.firstName : 'To be assigned' }}
+            <div class="flex flex-row justify-between items-start gap-4">
+                <div class="flex flex-col items-start">
+                    <p class="text-xs uppercase">Departure</p>
+                    <p class="text-sm ">{{ item.interestList.departureTime }}</p>
+                </div>
+
+                <div class="flex flex-col items-end">
+                    <p class="text-xs uppercase">Return</p>
+                    <p class="text-sm">{{ item.interestList.returnDepartureTime }}</p>
+                </div>
+            </div>
+            <div class="mt-2">
+                <p class="text-sm text-gray-500 text-center">You can still edit this booking until {{
+                    item.interestList.closingTime }}
                 </p>
             </div>
+        </div>
+        }
+    </div>
+    <div class="px-2 sm:px-16">
+        <app-pagination [page]="bokingList.page()" [totalPages]="bokingList.totalPages()"
+            [pageSize]="bokingList.pageSize()" (pageChange)="bokingList.onPageChange($event)"
+            (pageSizeChange)="bokingList.onPageSizeChange($event)" />
+    </div>
 
-            <div class="flex flex-col items-end">
-                <p class="text-xs uppercase font-">Vehicle</p>
-                <p class="text-sm">{{ item.vehicle ? item.vehicle.plate : 'To be assigned' }}</p>
+    } @else {
+
+    <div class="sm:flex flex-row gap-4 justify-center flex-wrap">
+        @for (item of this.tripList.items(); track $index) {
+        <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-2 sm:min-w-xl">
+            <div class="flex justify-between items-center">
+                <p class="text-sm font-semibold">{{ item.interestList.destination.name}}</p>
+                <p class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">{{item.status| enum}}</p>
+            </div>
+            <div class="flex flex-row justify-between items-start gap-4">
+                <div class="flex flex-col items-start">
+                    <p class="text-xs uppercase">Departure</p>
+                    <p class="text-sm ">{{ item.interestList.departureTime }}</p>
+                </div>
+
+                <div class="flex flex-col items-end">
+                    <p class="text-xs uppercase">Return Departure</p>
+                    <p class="text-sm">{{ item.interestList.returnDepartureTime }}</p>
+                </div>
+            </div>
+            <div class="flex flex-row justify-between items-start gap-4">
+                <div class="flex flex-col items-start">
+                    <p class="text-xs uppercase">Arrival</p>
+                    <p class="text-sm ">{{ item.interestList.arrivalTime }}</p>
+                </div>
+
+                <div class="flex flex-col items-end">
+                    <p class="text-xs uppercase">Return Arrival</p>
+                    <p class="text-sm">{{ item.interestList.returnArrivalTime }}</p>
+                </div>
+            </div>
+            <div class="flex flex-row justify-between items-start gap-4 border-t-2 border-slate-200 pt-2">
+                <div class="flex flex-col items-start">
+                    <p class="text-xs uppercase font-semibold">Conductor</p>
+                    <p class="text-sm ">{{ item.conductor ? item.conductor.user.firstName : 'To be assigned' }}
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-end">
+                    <p class="text-xs uppercase font-">Vehicle</p>
+                    <p class="text-sm">{{ item.vehicle ? item.vehicle.plate : 'To be assigned' }}</p>
+                </div>
             </div>
         </div>
+        }
+    </div>
+
+    <div class="px-2 sm:px-16">
+        <app-pagination [page]="tripList.page()" [totalPages]="tripList.totalPages()" [pageSize]="tripList.pageSize()"
+            (pageChange)="tripList.onPageChange($event)" (pageSizeChange)="tripList.onPageSizeChange($event)" />
     </div>
     }
+
 </div>
-
-<div class="px-2 sm:px-16">
-    <app-pagination [page]="tripList.page()" [totalPages]="tripList.totalPages()" [pageSize]="tripList.pageSize()"
-        (pageChange)="tripList.onPageChange($event)" (pageSizeChange)="tripList.onPageSizeChange($event)" />
-</div>
-
-
-}
