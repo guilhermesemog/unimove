@@ -1,4 +1,4 @@
-<nav class="fixed bottom-2 inset-x-0 z-20 bg-white border border-gray-200 shadow-sm mx-2 rounded-lg flex items-stretch"
+<nav class="fixed bottom-2 inset-x-0 z-20 bg-white border border-gray-200 shadow-sm mx-2 rounded-lg flex items-stretch max-w-2xl sm:mx-auto"
     style="padding-bottom: env(safe-area-inset-bottom);">
 
     <a routerLink="/" routerLinkActive="text-gray-900" [routerLinkActiveOptions]="{ exact: true }"
@@ -9,6 +9,7 @@
         <p class="text-xs font-medium">Home</p>
     </a>
 
+    @if (isStudent()) {
     <a routerLink="/bookings" routerLinkActive="text-gray-900"
         class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
         <span class="material-icons">
@@ -25,6 +26,18 @@
         <p class="text-xs font-medium">Lists</p>
     </a>
 
+    }
+
+    @if (isConductor()) {
+    <a routerLink="/trips" routerLinkActive="text-gray-900"
+        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
+        <span class="material-icons">
+            calendar_month
+        </span>
+        <p class="text-xs font-medium">Trips</p>
+    </a>
+    }
+
     <a routerLink="/user" routerLinkActive="text-gray-900"
         class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
         <span class="material-icons">
@@ -32,4 +45,5 @@
         </span>
         <p class="text-xs font-medium">Profile</p>
     </a>
+
 </nav>

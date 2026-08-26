@@ -1,0 +1,16 @@
+<div class="max-w-xl mx-auto">
+
+    <!-- Header -->
+    <div class="px-2">
+        <app-header title="Trip Details" description="Check the trip details and confirmed passengers." />
+    </div>
+
+    <!-- List -->
+    <app-data-table [columns]="columns" [data]="list.items()" [sortBy]="list.sortBy()"
+        [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
+    </app-data-table>
+
+    <app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
+        (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />
+
+</div>

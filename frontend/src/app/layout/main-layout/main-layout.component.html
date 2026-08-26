@@ -17,7 +17,7 @@
     <main class="flex-1 px-4 py-6 pb-24">
         <router-outlet></router-outlet>
     </main>
-    <app-mobile-nav></app-mobile-nav>
+    <app-mobile-nav [userRole]="userRole()"></app-mobile-nav>
 </div>
 }
 }

@@ -17,10 +17,12 @@ export class MainLayout {
   isAdmin = signal<boolean>(false);
   isReady = signal<boolean>(false);
   isDrawerOpen = signal<boolean>(false);
+  userRole = signal<UserRole | null>(null);
 
   ngOnInit() {
     this.authService.identify().subscribe((user) => {
-      this.isAdmin.set(user.role === UserRole.Admin);
+      this.userRole.set(user.role);
+      this.isAdmin.set(this.userRole() === UserRole.Admin);
       this.isReady.set(true);
     });
   }

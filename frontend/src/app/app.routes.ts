@@ -45,6 +45,9 @@ import { InterestListPage } from './features/interest-list/interest-list.page';
 
 import { UserPage } from './features/user/user.page';
 
+import { TripsPage } from './features/trips/trips.page';
+import { TripsDetailPage } from './features/trips/trips-detail/trips-detail.page';
+
 export const routes: Routes = [
     {
         path: '',
@@ -187,17 +190,38 @@ export const routes: Routes = [
                 canActivate: [roleGuard([UserRole.Admin])],
             },
 
-            // USERS PAGES
+            // STUDENT PAGES
 
             {
                 path: 'bookings',
                 pathMatch: 'full',
                 component: BookingsPage,
+                canActivate: [roleGuard([UserRole.Student])],
             }, {
                 path: 'interest-lists',
                 pathMatch: 'full',
                 component: InterestListPage,
-            }, {
+                canActivate: [roleGuard([UserRole.Student])],
+            },
+
+            // CONDUCTOR PAGES
+
+            {
+                path: 'trips',
+                pathMatch: 'full',
+                component: TripsPage,
+                canActivate: [roleGuard([UserRole.Conductor])],
+            },
+            {
+                path: 'trips/:id',
+                pathMatch: 'full',
+                component: TripsDetailPage,
+                canActivate: [roleGuard([UserRole.Conductor])],
+            },
+
+            // COMMON PAGES
+
+            {
                 path: 'user',
                 pathMatch: 'full',
                 component: UserPage,
