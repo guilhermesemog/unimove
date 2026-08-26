@@ -1,11 +1,11 @@
-<header class="h-14 flex items-center justify-between px-4 bg-white border-b border-gray-200 sticky top-0 z-20"
+<header class="sticky top-0 z-20 border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur-lg"
     style="padding-top: env(safe-area-inset-top);">
-    <h1 class="text-lg font-semibold text-gray-800">UNIMOVE</h1>
+    <div class="mx-auto flex h-16 w-full max-w-2xl items-center justify-between">
+        <app-brand />
 
-    <button type="button" (click)="logout()" aria-label="Sair"
-        class="p-2 -mr-2 text-gray-500 hover:text-red-600 active:text-red-600 rounded-lg cursor-pointer">
-        <span class="material-icons">
-            logout
-        </span>
-    </button>
+        <button type="button" (click)="logout()" [attr.aria-label]="copy.actions.signOut"
+            class="ui-icon-button -mr-2 cursor-pointer">
+            <app-icon iconName="logout" />
+        </button>
+    </div>
 </header>

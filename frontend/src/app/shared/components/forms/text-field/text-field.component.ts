@@ -1,11 +1,13 @@
 import { Component, computed, input, model, signal } from '@angular/core';
 import { FormValueControl, WithOptionalFieldTree, ValidationError } from '@angular/forms/signals';
 import { CommonModule } from '@angular/common';
+import { Icon } from '../../icon/icon';
+import { FieldErrorsComponent } from '../field-errors/field-errors.component';
 
 @Component({
   selector: 'app-text-field',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Icon, FieldErrorsComponent],
   templateUrl: './text-field.component.html',
 })
 export class TextFieldComponent implements FormValueControl<string> {

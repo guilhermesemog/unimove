@@ -14,13 +14,7 @@
                     <p class="text-sm font-semibold">{{ item.destination.name}}</p>
                     <p class="text-sm text-gray-500">{{ item.referenceDate }}</p>
                 </div>
-                @if (item.listStatus === 'OPEN') {
-                <p class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">{{item.listStatus | enum}}</p>
-                } @else if (item.listStatus === 'PROCESSING') {
-                <p class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">{{item.listStatus | enum}}</p>
-                } @else {
-                <p class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">{{item.listStatus | enum}}</p>
-                }
+                <app-status-chip [status]="item.listStatus" />
             </div>
             <div class="flex flex-row justify-between items-start gap-4">
                 <div class="flex flex-col items-start">
@@ -68,13 +62,7 @@
                         <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Destination</p>
                         <p class="mt-2 text-sm font-medium text-slate-900">{{ item.destination.name }}</p>
                     </div>
-                    @if (item.listStatus === 'OPEN') {
-                    <p class="bg-green-100 text-green-800 px-2 py-1 rounded">{{item.listStatus | enum}}</p>
-                    } @else if (item.listStatus === 'PROCESSING') {
-                    <p class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">{{item.listStatus | enum}}</p>
-                    } @else {
-                    <p class="bg-red-100 text-red-800 px-2 py-1 rounded">{{item.listStatus | enum}}</p>
-                    }
+                    <app-status-chip [status]="item.listStatus" />
                 </div>
 
                 <div class="flex flex-row justify-between items-start gap-4">

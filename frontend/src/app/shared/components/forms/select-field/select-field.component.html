@@ -1,13 +1,13 @@
-<div class="flex flex-col gap-1 mb-4">
-  <label [for]="id() ?? label()">
+<div class="mb-5 flex flex-col gap-1.5">
+  <label [for]="id() ?? label()" class="text-sm font-semibold text-navy-900">
     {{ label() }}
     @if (required()) {
-    <span class="text-red-500">*</span>
+    <span class="text-red-600" aria-hidden="true">*</span>
     }
   </label>
 
   <select
-    class="border rounded p-2 bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
+    class="ui-field cursor-pointer"
     [id]="id() ?? label()"
     [disabled]="disabled()"
     (change)="onChange($event)"
@@ -25,8 +25,6 @@
   </select>
 
   @if (touched() && errors().length > 0) {
-  @for (error of errors(); track $index) {
-  <small class="text-red-500">{{ error.message }}</small>
-  }
+  <app-field-errors [errors]="errors()" />
   }
 </div>

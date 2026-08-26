@@ -1,23 +1,35 @@
 @if (isReady()) {
 @if (isAdmin()) {
-<div class="min-h-screen bg-gray-50 lg:flex">
+<div class="min-h-screen bg-[var(--ui-bg)] lg:flex">
     <app-mobile-admin-header (menuToggle)="toggleDrawer()"></app-mobile-admin-header>
 
     <app-sidebar [isOpen]="isDrawerOpen()" (closeDrawer)="closeDrawer()"></app-sidebar>
 
-    <main class="flex-1 p-4 lg:p-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 lg:py-8">
+    <main class="min-w-0 flex-1 px-4 pb-8 pt-5 sm:px-6 lg:px-8 lg:py-8">
+        <div class="ui-page">
             <router-outlet></router-outlet>
         </div>
     </main>
 </div>
 } @else {
-<div class="min-h-screen bg-gray-50 flex flex-col">
+<div class="min-h-screen bg-[var(--ui-bg)] flex flex-col">
     <app-mobile-header></app-mobile-header>
-    <main class="flex-1 px-4 py-6 pb-24">
-        <router-outlet></router-outlet>
+    <main class="flex-1 px-4 pb-28 pt-6 sm:px-6">
+        <div class="mx-auto w-full max-w-2xl">
+            <router-outlet></router-outlet>
+        </div>
     </main>
     <app-mobile-nav [userRole]="userRole()"></app-mobile-nav>
 </div>
 }
+} @else {
+<div class="grid min-h-screen place-items-center bg-[var(--ui-bg)] px-6" role="status" aria-live="polite">
+    <div class="flex flex-col items-center gap-5 text-center">
+        <app-brand [showTagline]="true" />
+        <div class="flex items-center gap-3 text-sm font-medium text-slate-500">
+            <span class="size-4 animate-spin rounded-full border-2 border-brand-200 border-t-brand-600"></span>
+            {{ copy.states.loading }}
+        </div>
+    </div>
+</div>
 }

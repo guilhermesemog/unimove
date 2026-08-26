@@ -6,13 +6,16 @@ import { MobileNavComponent } from '../mobile-nav/mobile-nav.component';
 import { AuthService } from '../../core/auth/auth.service';
 import { UserRole } from '../../shared/types/user.type';
 import { MobileAdminHeaderComponent } from '../mobile-admin-header/mobile-admin-header.component';
+import { BrandComponent } from '../../shared/components/brand/brand.component';
+import { UI_COPY } from '../../core/content/ui-copy';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [RouterOutlet, SidebarComponent, MobileHeaderComponent, MobileNavComponent, MobileAdminHeaderComponent],
+  imports: [RouterOutlet, SidebarComponent, MobileHeaderComponent, MobileNavComponent, MobileAdminHeaderComponent, BrandComponent],
   templateUrl: './main-layout.component.html',
 })
 export class MainLayout {
+  protected readonly copy = UI_COPY;
   private authService = inject(AuthService);
   isAdmin = signal<boolean>(false);
   isReady = signal<boolean>(false);

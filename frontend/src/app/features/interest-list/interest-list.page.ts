@@ -5,16 +5,16 @@ import { Router } from '@angular/router';
 import { BookingService } from '../admin/booking/booking.service';
 import { InterestListService } from '../admin/interest-list/interest-list.service';
 import { HeaderComponent } from '../../shared/components/list-header/header.component';
-import { EnumPipe } from '../../shared/pipes/enum-pipe';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { ListState } from '../../shared/utils/list-state';
 import { BookingCreateRequest, TripType } from '../../shared/types/booking.type';
 import { InterestList } from '../../shared/types/interest-list.type';
+import { StatusChipComponent } from '../../shared/components/status-chip/status-chip.component';
 
 @Component({
   selector: 'app-interest-list.page',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, PaginationComponent, EnumPipe],
+  imports: [CommonModule, HeaderComponent, PaginationComponent, StatusChipComponent],
   templateUrl: './interest-list.page.html',
 })
 export class InterestListPage {
@@ -77,7 +77,7 @@ export class InterestListPage {
 
     this.bookingService.createBooking(request).subscribe({
       next: () => {
-        this.bookingSuccess.set('Agendamento criado com sucesso.');
+        this.bookingSuccess.set('Your booking has been confirmed.');
       },
       complete: () => {
         this.bookingLoading.set(false);

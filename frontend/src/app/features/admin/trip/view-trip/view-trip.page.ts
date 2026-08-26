@@ -6,7 +6,6 @@ import { DataTableComponent } from '../../../../shared/components/data-table/dat
 import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
 import { TableColumn } from '../../../../shared/components/data-table/table-column.type';
 import { ListState } from '../../../../shared/utils/list-state';
 import { ConfirmDialogController } from '../../../../shared/utils/confirm-dialog.controller';
@@ -16,7 +15,7 @@ import { Trip } from '../../../../shared/types/trip.type';
 
 @Component({
   selector: 'app-view-trip.page',
-  imports: [CommonModule, HeaderComponent, BackButtonComponent, DataTableComponent, PaginationComponent, ConfirmDialogComponent],
+  imports: [CommonModule, HeaderComponent, DataTableComponent, PaginationComponent, ConfirmDialogComponent],
   templateUrl: './view-trip.page.html',
 })
 export class ViewTripPage {

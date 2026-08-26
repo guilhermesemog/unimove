@@ -1,11 +1,12 @@
 import { Component, input, model } from '@angular/core';
 import { FormValueControl, WithOptionalFieldTree, ValidationError } from '@angular/forms/signals';
 import { CommonModule } from '@angular/common';
+import { FieldErrorsComponent } from '../field-errors/field-errors.component';
 
 @Component({
   selector: 'app-number-field',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FieldErrorsComponent],
   templateUrl: './number-field.component.html',
 })
 export class NumberFieldComponent implements FormValueControl<number> {

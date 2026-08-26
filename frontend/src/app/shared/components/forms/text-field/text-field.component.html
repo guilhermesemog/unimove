@@ -1,40 +1,33 @@
-<div class="flex flex-col gap-1.5 mb-4">
-  <label [for]="id() ?? label()" class="text-sm font-medium text-gray-700">
+<div class="mb-5 flex flex-col gap-1.5">
+  <label [for]="id() ?? label()" class="text-sm font-semibold text-navy-900">
     {{ label() }}
     @if (required()) {
-    <span class="text-red-500">*</span>
+    <span class="text-red-600" aria-hidden="true">*</span>
     }
   </label>
 
   <div class="relative">
-    <input
-      class="w-full border rounded-lg py-2.5 px-3 text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none focus:ring-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+    <input class="ui-field"
       [class.pr-10]="type() === 'password'" [class.border-red-400]="hasError()" [class.focus:ring-red-400]="hasError()"
-      [class.focus:border-red-400]="hasError()" [class.border-gray-300]="!hasError()"
-      [class.focus:ring-blue-500]="!hasError()" [class.focus:border-blue-500]="!hasError()" [id]="id() ?? label()"
+      [class.ui-field-error]="hasError()" [id]="id() ?? label()"
+      [attr.aria-invalid]="hasError()" [attr.aria-required]="required()"
       [type]="resolvedType()" [placeholder]="placeholder()" [disabled]="disabled()" [value]="value()"
       (input)="value.set($any($event.target).value)" (blur)="touched.set(true)" />
 
     @if (type() === 'password') {
     <button type="button" tabindex="-1"
-      class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 cursor-pointer"
+      class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-700"
       (click)="toggleShowPassword()">
       @if (showPassword()) {
-      <span class="material-icons">
-        visibility_off
-      </span>
+      <app-icon iconName="visibility_off" />
       } @else {
-      <span class="material-icons">
-        visibility
-      </span>
+      <app-icon iconName="visibility" />
       }
     </button>
     }
   </div>
 
   @if (hasError()) {
-  @for (error of errors(); track $index) {
-  <small class="text-red-500 text-sm">{{ error.message }}</small>
-  }
+  <app-field-errors [errors]="errors()" />
   }
 </div>

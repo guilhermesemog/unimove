@@ -8,14 +8,14 @@ import { UserService } from '../user.service';
 import { TextFieldComponent } from '../../../../shared/components/forms/text-field/text-field.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogState, CLOSED_DIALOG } from '../../../../shared/components/confirm-dialog/confirm-dialog.type';
-import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
+import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
 import { CpfPipe } from '../../../../shared/pipes/cpf-pipe';
 
 @Component({
   selector: 'app-edit-user',
-  imports: [CommonModule, FormField, TextFieldComponent, ConfirmDialogComponent, BackButtonComponent, PhonePipe, CpfPipe],
+  imports: [CommonModule, FormField, TextFieldComponent, ConfirmDialogComponent, HeaderComponent, PhonePipe, CpfPipe],
   templateUrl: './edit-user.page.html',
 })
 export class EditUserPage {

@@ -1,0 +1,8 @@
+<div class="flex flex-col gap-1" role="alert" aria-live="polite">
+  @for (error of errors(); track $index) {
+    <small class="flex items-start gap-1.5 text-sm leading-5 text-red-600">
+      <app-icon iconName="error_outline" size="sm" class="mt-0.5" />
+      <span>{{ error.message }}</span>
+    </small>
+  }
+</div>

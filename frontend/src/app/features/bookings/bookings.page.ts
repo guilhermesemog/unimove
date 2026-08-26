@@ -3,17 +3,17 @@ import { BookingService } from '../admin/booking/booking.service';
 import { ListState } from '../../shared/utils/list-state';
 import { Booking } from '../../shared/types/booking.type';
 import { PageParameters } from '../../shared/types/page.type';
-import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { Trip } from '../../shared/types/trip.type';
 import { TripService } from '../admin/trip/trip.service';
 import { CommonModule } from '@angular/common';
 import { EnumPipe } from '../../shared/pipes/enum-pipe';
 import { HeaderComponent } from '../../shared/components/list-header/header.component';
+import { StatusChipComponent } from '../../shared/components/status-chip/status-chip.component';
 
 @Component({
   selector: 'app-bookings.page',
-  imports: [PaginationComponent, CommonModule, EnumPipe, HeaderComponent],
+  imports: [PaginationComponent, CommonModule, EnumPipe, HeaderComponent, StatusChipComponent],
   templateUrl: './bookings.page.html',
 })
 export class BookingsPage {

@@ -6,4 +6,4 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   templateUrl: './auth-layout.component.html',
 })
-export class AuthLayout{}
+export class AuthLayout { }

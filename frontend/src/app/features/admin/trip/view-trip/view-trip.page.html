@@ -1,8 +1,4 @@
-<div class="flex flex-row items-baseline justify-between">
-    <app-header title="Trip" description="View details about the trip with ID {{ trip()?.id }}...">
-    </app-header>
-    <app-back-button />
-</div>
+<app-header title="Trip" description="View details about the trip with ID {{ trip()?.id }}..." [showBack]="true" />
 
 <div>
     <p class="text-sm text-gray-600 mb-6">
@@ -12,7 +8,7 @@
 
 
 <!-- List -->
-<app-data-table [trackBy]="studentTrackBy" [columns]="columns" [data]="list.items()" [sortBy]="list.sortBy()"
+<app-data-table [trackBy]="studentTrackBy" [columns]="columns" [data]="list.items()" [loading]="list.loading()" [error]="list.error()" (retry)="list.fetch()" [sortBy]="list.sortBy()"
     [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
 
 </app-data-table>

@@ -5,14 +5,14 @@ import { form, FormField, required } from '@angular/forms/signals';
 
 import { University, UniversityUpdateRequest } from '../../../../shared/types/university.type';
 import { UniversityService } from '../university.service';
-import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
+import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { TextFieldComponent } from '../../../../shared/components/forms/text-field/text-field.component';
 import { ConfirmDialogState, CLOSED_DIALOG } from '../../../../shared/components/confirm-dialog/confirm-dialog.type';
 
 @Component({
   selector: 'app-edit-university.page',
-  imports: [CommonModule, FormField, TextFieldComponent, ConfirmDialogComponent, BackButtonComponent],
+  imports: [CommonModule, FormField, TextFieldComponent, ConfirmDialogComponent, HeaderComponent],
   templateUrl: './edit-university.page.html',
 })
 export class EditUniversityPage {

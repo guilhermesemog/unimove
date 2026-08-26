@@ -1,8 +1,5 @@
-<div class="flex flex-row items-baseline justify-between">
-    <app-header title="Interest List"
-        description="View details about the interest list with ID {{ interestList()?.id }} ..."></app-header>
-    <app-back-button />
-</div>
+<app-header title="Interest List" description="View details about the interest list with ID {{ interestList()?.id }} ..."
+    [showBack]="true" />
 
 <div class="w-full flex flex-row mb-6 gap-2 justify-between items-center">
     <button type="button" (click)="onGenerateTrip()" [disabled]="this.interestList()?.listStatus != 'OPEN'"
@@ -19,7 +16,7 @@
 
 
 <!-- List -->
-<app-data-table [columns]="columns" [data]="list.items()" [sortBy]="list.sortBy()"
+<app-data-table [columns]="columns" [data]="list.items()" [loading]="list.loading()" [error]="list.error()" (retry)="list.fetch()" [sortBy]="list.sortBy()"
     [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
 
 </app-data-table>

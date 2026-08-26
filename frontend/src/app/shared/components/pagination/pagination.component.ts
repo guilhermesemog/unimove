@@ -1,5 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UI_COPY } from '../../../core/content/ui-copy';
 
 @Component({
   selector: 'app-pagination',
@@ -8,6 +9,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './pagination.component.html',
 })
 export class PaginationComponent {
+  protected readonly copy = UI_COPY;
   page = input.required<number>();
   totalPages = input.required<number>();
   maxVisiblePages = input(5);

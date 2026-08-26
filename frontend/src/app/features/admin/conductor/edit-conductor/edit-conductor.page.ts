@@ -6,7 +6,7 @@ import { form, FormField, minLength, maxLength, required, min } from '@angular/f
 import { User } from '../../../../shared/types/user.type';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogState, CLOSED_DIALOG } from '../../../../shared/components/confirm-dialog/confirm-dialog.type';
-import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
+import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
 import { UserService } from '../../user/user.service';
 import { TextFieldComponent } from '../../../../shared/components/forms/text-field/text-field.component';
 import { ConductorService } from '../conductor.service';
@@ -17,7 +17,7 @@ import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
 
 @Component({
     selector: 'app-edit-conductor',
-    imports: [CommonModule, FormField, TextFieldComponent, DateFieldComponent, ConfirmDialogComponent, BackButtonComponent, CpfPipe, PhonePipe],
+    imports: [CommonModule, FormField, TextFieldComponent, DateFieldComponent, ConfirmDialogComponent, HeaderComponent, CpfPipe, PhonePipe],
     templateUrl: './edit-conductor.page.html',
 })
 export class EditConductorPage {

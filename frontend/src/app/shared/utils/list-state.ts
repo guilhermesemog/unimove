@@ -1,5 +1,5 @@
 import { signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 
 import { PageResponse, PageParameters } from '../types/page.type';
 
@@ -19,6 +19,8 @@ export class ListState<T> {
     readonly sortBy;
     readonly sortDirection = signal<'asc' | 'desc'>('asc');
     readonly searchTerm = signal('');
+    readonly loading = signal(false);
+    readonly error = signal<string | null>(null);
 
     private readonly fetchAll: ListStateConfig<T>['fetchAll'];
     private readonly fetchByQuery: ListStateConfig<T>['fetchByQuery'];
@@ -32,6 +34,9 @@ export class ListState<T> {
     }
 
     fetch() {
+        this.loading.set(true);
+        this.error.set(null);
+
         const query: PageParameters = {
             page: this.page(),
             size: this.pageSize(),
@@ -43,10 +48,15 @@ export class ListState<T> {
             ? this.fetchByQuery(this.searchTerm(), query)
             : this.fetchAll(query);
 
-        obs.subscribe((result) => {
-            this.items.set(result.content);
-            this.totalPages.set(result.page.totalPages);
-            this.page.set(result.page.number);
+        obs.pipe(finalize(() => this.loading.set(false))).subscribe({
+            next: (result) => {
+                this.items.set(result.content);
+                this.totalPages.set(result.page.totalPages);
+                this.page.set(result.page.number);
+            },
+            error: () => {
+                this.error.set('We could not load this information. Please try again.');
+            },
         });
     }
 

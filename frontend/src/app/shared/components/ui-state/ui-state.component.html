@@ -1,0 +1,16 @@
+<div class="flex flex-col items-center justify-center text-center" [class.py-8]="compact()" [class.py-16]="!compact()"
+  [attr.role]="kind() === 'error' ? 'alert' : 'status'" aria-live="polite">
+  <span class="mb-4 grid size-12 place-items-center rounded-2xl"
+    [class.bg-brand-50]="kind() !== 'error'" [class.text-brand-700]="kind() !== 'error'"
+    [class.bg-red-50]="kind() === 'error'" [class.text-red-600]="kind() === 'error'">
+    <app-icon [iconName]="icon()" size="lg" [spin]="kind() === 'loading'" />
+  </span>
+  <h3 class="font-display text-base font-bold text-navy-900">{{ resolvedTitle() }}</h3>
+  <p class="mt-1 max-w-sm text-sm leading-6 text-slate-500">{{ resolvedDescription() }}</p>
+  @if (kind() === 'error') {
+    <button type="button" class="ui-button ui-button-secondary mt-5" (click)="retry.emit()">
+      <app-icon iconName="refresh" />
+      {{ copy.states.retry }}
+    </button>
+  }
+</div>

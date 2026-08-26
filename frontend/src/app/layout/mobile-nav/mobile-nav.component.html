@@ -1,49 +1,38 @@
-<nav class="fixed bottom-2 inset-x-0 z-20 bg-white border border-gray-200 shadow-sm mx-2 rounded-lg flex items-stretch max-w-2xl sm:mx-auto"
-    style="padding-bottom: env(safe-area-inset-bottom);">
+<nav class="fixed inset-x-3 bottom-3 z-20 mx-auto flex max-w-xl items-stretch rounded-2xl border border-slate-200/90 bg-white/95 p-1.5 shadow-[0_16px_40px_rgba(16,42,67,0.16)] backdrop-blur-lg"
+    style="margin-bottom: env(safe-area-inset-bottom);" aria-label="Primary navigation">
 
-    <a routerLink="/" routerLinkActive="text-gray-900" [routerLinkActiveOptions]="{ exact: true }"
-        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
-        <span class="material-icons">
-            home
-        </span>
-        <p class="text-xs font-medium">Home</p>
+    <a routerLink="/" routerLinkActive="bg-brand-50 text-brand-700" [routerLinkActiveOptions]="{ exact: true }"
+        class="flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-slate-400 transition-colors active:bg-slate-50">
+        <app-icon [iconName]="isConductor() ? 'today' : 'home'" size="lg" />
+        <span class="text-[0.6875rem] font-bold">{{ isConductor() ? copy.navigation.driver.today : copy.navigation.student.home }}</span>
     </a>
 
     @if (isStudent()) {
-    <a routerLink="/bookings" routerLinkActive="text-gray-900"
-        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
-        <span class="material-icons">
-            calendar_month
-        </span>
-        <p class="text-xs font-medium">Bookings</p>
+    <a routerLink="/interest-lists" routerLinkActive="bg-brand-50 text-brand-700"
+        class="flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-slate-400 transition-colors active:bg-slate-50">
+        <app-icon iconName="add_road" size="lg" />
+        <span class="text-[0.6875rem] font-bold">{{ copy.navigation.student.bookTrip }}</span>
     </a>
 
-    <a routerLink="/interest-lists" routerLinkActive="text-gray-900"
-        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
-        <span class="material-icons">
-            edit_note
-        </span>
-        <p class="text-xs font-medium">Lists</p>
+    <a routerLink="/bookings" routerLinkActive="bg-brand-50 text-brand-700"
+        class="flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-slate-400 transition-colors active:bg-slate-50">
+        <app-icon iconName="confirmation_number" size="lg" />
+        <span class="text-[0.6875rem] font-bold">{{ copy.navigation.student.myTrips }}</span>
     </a>
-
     }
 
     @if (isConductor()) {
-    <a routerLink="/trips" routerLinkActive="text-gray-900"
-        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
-        <span class="material-icons">
-            calendar_month
-        </span>
-        <p class="text-xs font-medium">Trips</p>
+    <a routerLink="/trips" routerLinkActive="bg-brand-50 text-brand-700"
+        class="flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-slate-400 transition-colors active:bg-slate-50">
+        <app-icon iconName="calendar_month" size="lg" />
+        <span class="text-[0.6875rem] font-bold">{{ copy.navigation.driver.schedule }}</span>
     </a>
     }
 
-    <a routerLink="/user" routerLinkActive="text-gray-900"
-        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-gray-400 active:bg-gray-50">
-        <span class="material-icons">
-            person
-        </span>
-        <p class="text-xs font-medium">Profile</p>
+    <a routerLink="/user" routerLinkActive="bg-brand-50 text-brand-700"
+        class="flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-slate-400 transition-colors active:bg-slate-50">
+        <app-icon iconName="person" size="lg" />
+        <span class="text-[0.6875rem] font-bold">{{ copy.navigation.student.profile }}</span>
     </a>
 
 </nav>

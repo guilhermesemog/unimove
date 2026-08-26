@@ -9,7 +9,6 @@ import { HeaderComponent } from '../../../../shared/components/list-header/heade
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { StudentService } from '../../student/student.service';
-import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
 import { TableColumn } from '../../../../shared/components/data-table/table-column.type';
 import { ListState } from '../../../../shared/utils/list-state';
 import { TripService } from '../../trip/trip.service';
@@ -17,7 +16,7 @@ import { ConfirmDialogController } from '../../../../shared/utils/confirm-dialog
 
 @Component({
   selector: 'app-view-interest-list.page',
-  imports: [CommonModule, HeaderComponent, BackButtonComponent, DataTableComponent, PaginationComponent, ConfirmDialogComponent],
+  imports: [CommonModule, HeaderComponent, DataTableComponent, PaginationComponent, ConfirmDialogComponent],
   templateUrl: './view-interest-list.page.html',
 })
 export class ViewInterestListPage {

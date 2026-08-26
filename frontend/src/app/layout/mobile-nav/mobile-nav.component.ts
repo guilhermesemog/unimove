@@ -1,20 +1,17 @@
-import { Component, input, signal } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, computed, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserRole } from '../../shared/types/user.type';
+import { UI_COPY } from '../../core/content/ui-copy';
+import { Icon } from '../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-mobile-nav',
-  imports: [RouterLink, RouterLinkActive, MatIconModule],
+  imports: [RouterLink, RouterLinkActive, Icon],
   templateUrl: './mobile-nav.component.html',
 })
 export class MobileNavComponent {
   userRole = input<UserRole | null>(null);
-  isStudent = signal<boolean>(false);
-  isConductor = signal<boolean>(false);
-
-  ngOnInit() {
-    this.isStudent.set(this.userRole() === UserRole.Student);
-    this.isConductor.set(this.userRole() === UserRole.Conductor);
-  }
+  protected readonly copy = UI_COPY;
+  protected readonly isStudent = computed(() => this.userRole() === UserRole.Student);
+  protected readonly isConductor = computed(() => this.userRole() === UserRole.Conductor);
 }

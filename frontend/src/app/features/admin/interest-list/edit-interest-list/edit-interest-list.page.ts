@@ -2,7 +2,7 @@ import { Component, computed, inject, Input, input, signal } from '@angular/core
 import { Router } from '@angular/router';
 import { form, FormField, required } from '@angular/forms/signals';
 
-import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
+import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
 import { DateFieldComponent } from '../../../../shared/components/forms/date-field/date-field.component';
 import { SelectFieldComponent, SelectOption } from '../../../../shared/components/forms/select-field/select-field.component';
 import { TimeFieldComponent } from '../../../../shared/components/forms/time-field/time-field.component';
@@ -15,7 +15,7 @@ import { UniversityService } from '../../university/university.service';
 
 @Component({
   selector: 'app-edit-interest-list.page',
-  imports: [ConfirmDialogComponent, BackButtonComponent, TimeFieldComponent, DateFieldComponent, FormField, SelectFieldComponent, SelectFieldComponent],
+  imports: [ConfirmDialogComponent, HeaderComponent, TimeFieldComponent, DateFieldComponent, FormField, SelectFieldComponent],
   templateUrl: './edit-interest-list.page.html',
 })
 export class EditInterestListPage {

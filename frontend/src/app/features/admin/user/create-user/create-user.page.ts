@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { form, FormField, maxLength, minLength, required } from '@angular/forms/signals';
 import { TextFieldComponent } from '../../../../shared/components/forms/text-field/text-field.component';
 import { SelectFieldComponent, SelectOption } from '../../../../shared/components/forms/select-field/select-field.component';
-import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
+import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
 import { CpfPipe } from '../../../../shared/pipes/cpf-pipe';
 import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
 import { ConductorCreateRequest } from '../../../../shared/types/conductor.type';
@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-create-user',
-    imports: [FormField, BackButtonComponent, TextFieldComponent, NumberFieldComponent, DateFieldComponent, SelectFieldComponent, CpfPipe, PhonePipe],
+    imports: [FormField, HeaderComponent, TextFieldComponent, NumberFieldComponent, DateFieldComponent, SelectFieldComponent, CpfPipe, PhonePipe],
     templateUrl: './create-user.page.html',
 })
 export class CreateUserPage {

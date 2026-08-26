@@ -7,7 +7,7 @@ import { User } from '../../../../shared/types/user.type';
 import { StudentService } from '../student.service';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogState, CLOSED_DIALOG } from '../../../../shared/components/confirm-dialog/confirm-dialog.type';
-import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
+import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
 import { UserService } from '../../user/user.service';
 import { Student, StudentUpdateRequest } from '../../../../shared/types/student.type';
 import { TextFieldComponent } from '../../../../shared/components/forms/text-field/text-field.component';
@@ -20,7 +20,7 @@ import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
 
 @Component({
     selector: 'app-edit-student',
-    imports: [CommonModule, FormField, TextFieldComponent, NumberFieldComponent, SelectFieldComponent, ConfirmDialogComponent, BackButtonComponent, CpfPipe, PhonePipe],
+    imports: [CommonModule, FormField, TextFieldComponent, NumberFieldComponent, SelectFieldComponent, ConfirmDialogComponent, HeaderComponent, CpfPipe, PhonePipe],
     templateUrl: './edit-student.page.html',
 })
 export class EditStudentPage {

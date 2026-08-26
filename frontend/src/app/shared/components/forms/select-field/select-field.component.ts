@@ -1,6 +1,7 @@
 import { Component, input, model } from '@angular/core';
 import { FormValueControl, WithOptionalFieldTree, ValidationError } from '@angular/forms/signals';
 import { CommonModule } from '@angular/common';
+import { FieldErrorsComponent } from '../field-errors/field-errors.component';
 
 export interface SelectOption<T> {
   value: T;
@@ -10,7 +11,7 @@ export interface SelectOption<T> {
 @Component({
   selector: 'app-select-field',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FieldErrorsComponent],
   templateUrl: './select-field.component.html',
 })
 export class SelectFieldComponent<T> implements FormValueControl<T | null> {

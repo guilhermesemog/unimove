@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { form, FormField, required, minDate } from '@angular/forms/signals';
 import { InterestListService } from '../interest-list.service';
 import { InterestListCreateRequest } from '../../../../shared/types/interest-list.type';
-import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
 import { DateFieldComponent } from '../../../../shared/components/forms/date-field/date-field.component';
 import { HeaderComponent } from "../../../../shared/components/list-header/header.component";
 import { TimeFieldComponent } from '../../../../shared/components/forms/time-field/time-field.component';
@@ -13,7 +12,7 @@ import { University } from '../../../../shared/types/university.type';
 
 @Component({
   selector: 'app-create-interest-list.page',
-  imports: [BackButtonComponent, TimeFieldComponent, DateFieldComponent, FormField, HeaderComponent, SelectFieldComponent, SelectFieldComponent],
+  imports: [TimeFieldComponent, DateFieldComponent, FormField, HeaderComponent, SelectFieldComponent],
   templateUrl: './create-interest-list.page.html',
 })
 export class CreateInterestListPage {

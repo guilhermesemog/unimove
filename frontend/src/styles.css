@@ -1,7 +1,224 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
 
-* {
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Manrope', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-50: #edfdf8;
+  --color-brand-100: #d5f8ec;
+  --color-brand-200: #aef0da;
+  --color-brand-300: #78e3c2;
+  --color-brand-400: #3bd0a4;
+  --color-brand-500: #18a77a;
+  --color-brand-600: #0e8b66;
+  --color-brand-700: #0d6f54;
+  --color-brand-800: #0e5946;
+  --color-brand-900: #0d493b;
+
+  --color-navy-50: #f3f7fa;
+  --color-navy-100: #e6eef4;
+  --color-navy-200: #c8dce8;
+  --color-navy-300: #9abfd2;
+  --color-navy-400: #659db7;
+  --color-navy-500: #447f9d;
+  --color-navy-600: #376781;
+  --color-navy-700: #31546a;
+  --color-navy-800: #2d4859;
+  --color-navy-900: #102a43;
+  --color-navy-950: #0a1b2c;
+}
+
+:root {
+  --ui-bg: #f5f8fa;
+  --ui-surface: #ffffff;
+  --ui-surface-subtle: #eef4f6;
+  --ui-text: #102a43;
+  --ui-text-muted: #5d7282;
+  --ui-border: #dbe5ea;
+  --ui-primary: #18a77a;
+  --ui-primary-hover: #0e8b66;
+  --ui-focus: #3bd0a4;
+  --ui-danger: #c23f3f;
+  --ui-warning: #c57a0a;
+  --ui-radius-sm: 0.5rem;
+  --ui-radius-md: 0.75rem;
+  --ui-radius-lg: 1rem;
+  --ui-shadow-sm: 0 1px 2px rgb(16 42 67 / 0.05);
+  --ui-shadow-md: 0 12px 28px rgb(16 42 67 / 0.08);
+  --ui-content: 80rem;
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  background: var(--ui-bg);
+  color: var(--ui-text);
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ui-focus) 55%, transparent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: #aef0da;
+  color: #102a43;
+}
+
+.font-display {
+  font-family: 'Manrope', 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+.ui-page {
+  width: 100%;
+  max-width: var(--ui-content);
+  margin-inline: auto;
+}
+
+.ui-card {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow-sm);
+}
+
+.ui-icon-button {
+  display: inline-flex;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--ui-radius-md);
+  color: var(--ui-text-muted);
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.ui-icon-button:hover {
+  background: var(--ui-surface-subtle);
+  color: var(--ui-text);
+}
+
+.ui-icon-button:active {
+  transform: scale(0.97);
+}
+
+.ui-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--ui-radius-md);
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.ui-button:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.ui-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.ui-button-primary {
+  background: var(--ui-primary);
+  color: white;
+}
+
+.ui-button-primary:hover:not(:disabled) {
+  background: var(--ui-primary-hover);
+}
+
+.ui-button-secondary {
+  background: white;
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text);
+}
+
+.ui-button-secondary:hover:not(:disabled) {
+  background: var(--ui-surface-subtle);
+}
+
+.ui-button-danger {
+  background: var(--ui-danger);
+  color: white;
+}
+
+.ui-field {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  background: white;
+  padding: 0.625rem 0.75rem;
+  color: var(--ui-text);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.ui-field::placeholder {
+  color: #8ba0ad;
+}
+
+.ui-field:focus {
+  border-color: var(--ui-primary);
+  box-shadow: 0 0 0 3px rgb(24 167 122 / 0.15);
+  outline: none;
+}
+
+.ui-field:disabled {
+  cursor: not-allowed;
+  background: var(--ui-surface-subtle);
+  color: var(--ui-text-muted);
+}
+
+.ui-field-error {
+  border-color: var(--ui-danger);
+}
+
+.ui-field-error:focus {
+  border-color: var(--ui-danger);
+  box-shadow: 0 0 0 3px rgb(194 63 63 / 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

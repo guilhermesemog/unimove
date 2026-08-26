@@ -1,0 +1,18 @@
+<div class="flex items-center gap-3" aria-label="UNIMOVE">
+  <span class="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-xl bg-navy-900 shadow-sm" aria-hidden="true">
+    <span class="absolute h-6 w-2 rotate-45 rounded-full bg-brand-400"></span>
+    <span class="absolute h-2 w-2 -translate-x-2 translate-y-2 rounded-full border-2 border-white bg-navy-900"></span>
+    <span class="absolute h-2 w-2 translate-x-2 -translate-y-2 rounded-full border-2 border-white bg-navy-900"></span>
+  </span>
+
+  @if (!compact()) {
+    <span class="min-w-0">
+      <span class="font-display block text-lg font-extrabold tracking-[-0.04em] text-navy-900">
+        UNI<span class="text-brand-600">MOVE</span>
+      </span>
+      @if (showTagline()) {
+        <span class="block truncate text-xs text-slate-500">{{ copy.tagline }}</span>
+      }
+    </span>
+  }
+</div>

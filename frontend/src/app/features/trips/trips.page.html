@@ -10,7 +10,7 @@
         <div (click)="onViewTrip(item)" class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-2 sm:min-w-xl">
             <div class="flex justify-between items-center">
                 <p class="text-sm font-semibold">{{ item.interestList.destination.name}}</p>
-                <p class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">{{item.status| enum}}</p>
+                <app-status-chip [status]="item.status" />
             </div>
             <div class="flex flex-row justify-between items-start gap-4">
                 <div class="flex flex-col items-start">

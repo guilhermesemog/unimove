@@ -5,7 +5,6 @@ import { form, FormField, required, minLength, maxLength, min } from '@angular/f
 
 import { Vehicle, VehicleUpdateRequest } from '../../../../shared/types/vehicle.type';
 import { VehicleService } from '../vehicle.service';
-import { BackButtonComponent } from '../../../../shared/components/buttons/back-button/back-button.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { TextFieldComponent } from '../../../../shared/components/forms/text-field/text-field.component';
 import { ConfirmDialogState, CLOSED_DIALOG } from '../../../../shared/components/confirm-dialog/confirm-dialog.type';
@@ -14,7 +13,7 @@ import { NumberFieldComponent } from '../../../../shared/components/forms/number
 
 @Component({
   selector: 'app-edit-vehicle',
-  imports: [CommonModule, HeaderComponent, FormField, TextFieldComponent, ConfirmDialogComponent, BackButtonComponent, NumberFieldComponent],
+  imports: [CommonModule, HeaderComponent, FormField, TextFieldComponent, ConfirmDialogComponent, NumberFieldComponent],
   templateUrl: './edit-vehicle.page.html',
 })
 export class EditVehiclePage {

@@ -1,18 +1,20 @@
-<div class="flex flex-row gap-2 items-center w-full max-w-xl">
-    <button type="button"
-        class="rounded-md p-2 text-sm font-semibold border border-gray-300 text-gray-700 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors"
-        (click)="search.emit()">
-        Search
-    </button>
-
+<div class="flex w-full max-w-xl items-center gap-2">
+    <div class="relative min-w-0 flex-1">
+    <app-icon class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" iconName="search" />
     <input type="text" [placeholder]="placeholder()"
-        class="w-full rounded-md border-0 p-2 text-sm text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+        class="ui-field pl-10! pr-10! text-sm"
+        [attr.aria-label]="placeholder()"
         [ngModel]="value()" (ngModelChange)="onInput($event)" (keyup.enter)="search.emit()" />
 
     @if (value()) {
-    <button type="button" class="relative right-8 text-gray-400 hover:text-gray-600 cursor-pointer"
+    <button type="button" class="absolute right-1 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+        [attr.aria-label]="copy.actions.clear"
         (click)="clear.emit()">
-        x
+        <app-icon iconName="close" size="sm" />
     </button>
     }
+    </div>
+    <button type="button" class="ui-button ui-button-secondary shrink-0" (click)="search.emit()">
+        {{ copy.actions.search }}
+    </button>
 </div>

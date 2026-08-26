@@ -3,11 +3,10 @@ import { form, FormField, required } from '@angular/forms/signals';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { TextFieldComponent } from '../../../shared/components/forms/text-field/text-field.component';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
-  imports: [FormField, TextFieldComponent, MatIconModule],
+  imports: [FormField, TextFieldComponent],
   templateUrl: './login.html',
 })
 export class LoginPage {

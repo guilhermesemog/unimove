@@ -2,14 +2,17 @@ import { Component, HostListener, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ConfirmDialogVariant } from './confirm-dialog.type';
+import { UI_COPY } from '../../../core/content/ui-copy';
+import { Icon } from '../icon/icon';
 
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Icon],
   templateUrl: './confirm-dialog.component.html',
 })
 export class ConfirmDialogComponent {
+  protected readonly copy = UI_COPY;
   open = input.required<boolean>();
   title = input('Are you sure?');
   message = input('This action cannot be undone.');

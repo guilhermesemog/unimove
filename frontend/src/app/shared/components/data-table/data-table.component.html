@@ -1,17 +1,18 @@
-<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-  <table class="min-w-full divide-y divide-gray-200">
-    <thead class="bg-gray-50">
+<div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+  <div class="overflow-x-auto">
+  <table class="min-w-full divide-y divide-slate-200">
+    <thead class="bg-slate-50/80">
       <tr>
         @for (column of columns(); track column.key) {
-        <th scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider" [class]="{
+        <th scope="col" class="px-5 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider" [class]="{
                 'text-left': column.align !== 'right' && column.align !== 'center',
                 'text-right': column.align === 'right',
                 'text-center': column.align === 'center'
               }" [style.width]="column.width">
           @if (column.sortable) {
-          <button type="button" class="flex items-center gap-1 hover:text-gray-700" (click)="onSort(column)">
+          <button type="button" class="flex items-center gap-1 rounded hover:text-navy-900" (click)="onSort(column)">
             {{ column.label }}
-            <span class="w-3 inline-block">
+            <span class="inline-block w-3 text-brand-600">
               @if (sortBy() === column.key) {
               {{ sortDirection() === 'asc' ? '↑' : '↓' }}
               }
@@ -23,18 +24,31 @@
         </th>
         }
         @if (rowActions()) {
-        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-          Ações
+        <th scope="col" class="px-5 py-3.5 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">
+          Actions
         </th>
         }
       </tr>
     </thead>
 
-    <tbody class="bg-white divide-y divide-gray-200">
+    <tbody class="divide-y divide-slate-100 bg-white">
+      @if (error()) {
+      <tr>
+        <td [attr.colspan]="getColumnCount()">
+          <app-ui-state kind="error" [description]="error()!" [compact]="true" (retry)="retry.emit()" />
+        </td>
+      </tr>
+      } @else if (loading()) {
+      <tr>
+        <td [attr.colspan]="getColumnCount()">
+          <app-ui-state kind="loading" [compact]="true" />
+        </td>
+      </tr>
+      } @else {
       @for (row of data(); track trackBy()(row)) {
-      <tr class="odd:bg-gray-100 even:bg-white hover:bg-gray-200">
+      <tr class="transition-colors hover:bg-brand-50/40">
         @for (column of columns(); track column.key) {
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" [class]="{
+        <td class="px-5 py-4 whitespace-nowrap text-sm text-slate-700" [class]="{
                 'text-left': column.align !== 'right' && column.align !== 'center',
                 'text-right': column.align === 'right',
                 'text-center': column.align === 'center'
@@ -43,7 +57,7 @@
         </td>
         }
         @if (rowActions(); as actions) {
-        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+        <td class="space-x-3 whitespace-nowrap px-5 py-4 text-right text-sm font-semibold">
           <ng-container [ngTemplateOutlet]="actions" [ngTemplateOutletContext]="{ $implicit: row }" />
         </td>
         }
@@ -52,12 +66,12 @@
 
       @if (data().length === 0) {
       <tr>
-        <td [attr.colspan]="columns().length + (rowActions() ? 1 : 0)"
-          class="px-6 py-8 text-center text-sm text-gray-500">
-          {{ emptyMessage() }}
+        <td [attr.colspan]="getColumnCount()">
+          <app-ui-state kind="empty" [description]="emptyMessage()" [compact]="true" />
         </td>
       </tr>
       }
+      }
     </tbody>
-  </table>
+  </table></div>
 </div>
