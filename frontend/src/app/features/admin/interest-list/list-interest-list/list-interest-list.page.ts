@@ -1,77 +1,111 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Component, computed, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { InterestListService } from '../interest-list.service';
-import { InterestList } from '../../../../shared/types/interest-list.type';
-import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
+import { UI_COPY } from '../../../../core/content/ui-copy';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
-import { ListState } from '../../../../shared/utils/list-state';
+import { Icon } from '../../../../shared/components/icon/icon';
+import { OccupancyMeterComponent } from '../../../../shared/components/occupancy-meter/occupancy-meter.component';
+import { StatusChipComponent } from '../../../../shared/components/status-chip/status-chip.component';
+import { UiStateComponent } from '../../../../shared/components/ui-state/ui-state.component';
+import { DateLabelPipe } from '../../../../shared/pipes/date-label.pipe';
+import { TimeLabelPipe } from '../../../../shared/pipes/time-label.pipe';
+import { AdminOperation } from '../../../../shared/types/admin-operation.type';
 import { ConfirmDialogController } from '../../../../shared/utils/confirm-dialog.controller';
-import { TableColumn } from '../../../../shared/components/data-table/table-column.type';
-import { DataTableComponent } from '../../../../shared/components/data-table/data-table.component';
+import { parseLocalDate } from '../../../../shared/utils/date-time';
+import { AdminOperationService } from '../../operations/admin-operation.service';
+import { InterestListService } from '../interest-list.service';
 
 @Component({
-  selector: 'app-list-interest-list.page',
-  imports: [CommonModule, DataTableComponent, HeaderComponent, PaginationComponent, ConfirmDialogComponent],
-  templateUrl: './list-interest-list.page.html'
+  selector: 'app-list-interest-list-page',
+  imports: [ConfirmDialogComponent, DateLabelPipe, HeaderComponent, Icon, OccupancyMeterComponent, StatusChipComponent, TimeLabelPipe, UiStateComponent],
+  templateUrl: './list-interest-list.page.html',
 })
 export class ListInterestListPage {
+  private readonly operationService = inject(AdminOperationService);
+  private readonly interestListService = inject(InterestListService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
-  interestListService = inject(InterestListService);
-  router = inject(Router);
+  protected readonly copy = UI_COPY.admin.demand;
+  protected readonly loading = signal(true);
+  protected readonly error = signal<string | null>(null);
+  protected readonly operations = signal<AdminOperation[]>([]);
+  protected readonly destinationId = signal(this.numberParam('destination'));
+  protected readonly status = signal(this.route.snapshot.queryParamMap.get('status') ?? 'ALL');
+  protected readonly dateFrom = signal(this.route.snapshot.queryParamMap.get('from') ?? '');
+  protected readonly dateTo = signal(this.route.snapshot.queryParamMap.get('to') ?? '');
+  protected readonly confirmDialog = new ConfirmDialogController();
 
-  list = new ListState<InterestList>({
-    initialSortBy: 'id',
-    initialSortDirection: 'desc',
-    fetchAll: (q) => this.interestListService.getInterestLists(q),
-    fetchByQuery: (term, q) => this.interestListService.getInterestLists(q),
-  });
+  protected readonly destinations = computed(() => [...new Map(this.operations()
+    .map((operation) => [operation.demand.destination.id, operation.demand.destination] as const)).values()]
+    .sort((a, b) => a.name.localeCompare(b.name)));
+  protected readonly filteredOperations = computed(() => this.operations()
+    .filter((operation) => this.destinationId() === null || operation.demand.destination.id === this.destinationId())
+    .filter((operation) => this.status() === 'ALL' || operation.demand.listStatus === this.status())
+    .filter((operation) => !this.dateFrom() || operation.demand.referenceDate >= this.dateFrom())
+    .filter((operation) => !this.dateTo() || operation.demand.referenceDate <= this.dateTo())
+    .sort((a, b) => parseLocalDate(a.demand.referenceDate).getTime() - parseLocalDate(b.demand.referenceDate).getTime()));
 
-  confirmDialog = new ConfirmDialogController();
+  ngOnInit(): void { this.fetch(); }
 
-  columns: TableColumn<InterestList>[] = [
-    { key: 'id', label: 'ID', sortable: true, align: 'center' },
-    { key: 'referenceDate', label: 'Reference Date', sortable: true },
-    { key: 'closingTime', label: 'Closing Time', sortable: true },
-    { key: 'departureTime', label: 'Departure Time', sortable: true },
-    { key: 'arrivalTime', label: 'Arrival Time', sortable: true },
-    { key: 'returnDepartureTime', label: 'Return Departure Time', sortable: true },
-    { key: 'returnArrivalTime', label: 'Return Arrival Time', sortable: true },
-    { key: 'destination', label: 'Destination ID', sortable: true, align: 'center', format: (row) => row.destination.id.toString() },
-    { key: 'listStatus', label: 'List Status', sortable: true }
-  ]
-
-  ngOnInit() {
-    this.list.fetch();
+  protected fetch(): void {
+    this.loading.set(true);
+    this.error.set(null);
+    this.operationService.getOperations().subscribe({
+      next: (operations) => this.operations.set(operations),
+      error: () => { this.error.set('We could not load demand. Please try again.'); this.loading.set(false); },
+      complete: () => this.loading.set(false),
+    });
   }
 
-  onEdit(interestList: InterestList) {
-    this.router.navigate(['/admin/interest-lists', interestList.id, 'edit']);
+  protected selectDestination(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    this.destinationId.set(value ? Number(value) : null);
+    this.updateUrl();
   }
 
-  onDelete(interestList: InterestList) {
+  protected selectStatus(event: Event): void { this.status.set((event.target as HTMLSelectElement).value); this.updateUrl(); }
+  protected setDateFrom(event: Event): void { this.dateFrom.set((event.target as HTMLInputElement).value); this.updateUrl(); }
+  protected setDateTo(event: Event): void { this.dateTo.set((event.target as HTMLInputElement).value); this.updateUrl(); }
+
+  protected clearFilters(): void {
+    this.destinationId.set(null);
+    this.status.set('ALL');
+    this.dateFrom.set('');
+    this.dateTo.set('');
+    this.updateUrl();
+  }
+
+  protected openOperation(operation: AdminOperation): void { this.router.navigate(['/admin/interest-lists', operation.demand.id, 'view']); }
+  protected editDemand(operation: AdminOperation): void { this.router.navigate(['/admin/interest-lists', operation.demand.id, 'edit']); }
+  protected createDemand(): void { this.router.navigate(['/admin/interest-lists/create']); }
+
+  protected deleteDemand(operation: AdminOperation): void {
     this.confirmDialog.open({
-      title: 'Delete Interest List',
-      message: `Are you sure you want to delete the interest list with reference date ${interestList.referenceDate}? This action cannot be undone.`,
-      confirmLabel: 'Delete',
+      title: 'Delete Demand',
+      message: `Delete demand for ${operation.demand.destination.name} on ${operation.demand.referenceDate}? This action cannot be undone.`,
+      confirmLabel: 'Delete Demand',
       variant: 'danger',
-      action: () => this.deleteInterestList(interestList),
+      action: () => this.interestListService.deleteInterestList(operation.demand.id).subscribe(() => this.fetch()),
     });
   }
 
-  onCreate() {
-    this.router.navigate(['/admin/interest-lists/create']);
-  }
-
-  onView(interestList: InterestList) {
-    this.router.navigate(['/admin/interest-lists', interestList.id, 'view']);
-  }
-
-  private deleteInterestList(interestList: InterestList) {
-    this.interestListService.deleteInterestList(interestList.id).subscribe(() => {
-      this.list.fetch()
+  private updateUrl(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      replaceUrl: true,
+      queryParams: {
+        destination: this.destinationId(),
+        status: this.status() === 'ALL' ? null : this.status(),
+        from: this.dateFrom() || null,
+        to: this.dateTo() || null,
+      },
     });
+  }
+
+  private numberParam(name: string): number | null {
+    const value = this.route.snapshot.queryParamMap.get(name);
+    return value ? Number(value) : null;
   }
 }

@@ -1,28 +1,27 @@
 import { Component, computed, input } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { Icon } from '../icon/icon';
 
 type StatusTone = 'neutral' | 'positive' | 'warning' | 'danger' | 'info';
 
-const STATUS_CONFIG: Record<string, { label: string; tone: StatusTone; icon: string }> = {
-  OPEN: { label: 'Open', tone: 'positive', icon: 'check_circle' },
-  ACTIVE: { label: 'Active', tone: 'positive', icon: 'check_circle' },
-  APPROVED: { label: 'Approved', tone: 'positive', icon: 'check_circle' },
-  COMPLETED: { label: 'Completed', tone: 'positive', icon: 'task_alt' },
-  PROCESSING: { label: 'Planning', tone: 'warning', icon: 'schedule' },
-  PENDING: { label: 'Pending', tone: 'warning', icon: 'schedule' },
-  SCHEDULED: { label: 'Confirmed', tone: 'info', icon: 'event_available' },
-  STARTED: { label: 'In Progress', tone: 'info', icon: 'route' },
-  CLOSED: { label: 'Closed', tone: 'neutral', icon: 'lock' },
-  INACTIVE: { label: 'Inactive', tone: 'neutral', icon: 'pause_circle' },
-  REJECTED: { label: 'Rejected', tone: 'danger', icon: 'cancel' },
-  CANCELLED: { label: 'Cancelled', tone: 'danger', icon: 'cancel' },
+const STATUS_CONFIG: Record<string, { label: string; tone: StatusTone }> = {
+  OPEN: { label: 'Open', tone: 'positive' },
+  ACTIVE: { label: 'Active', tone: 'positive' },
+  APPROVED: { label: 'Approved', tone: 'positive' },
+  COMPLETED: { label: 'Completed', tone: 'positive' },
+  PROCESSING: { label: 'Planning', tone: 'warning' },
+  PENDING: { label: 'Pending', tone: 'warning' },
+  SCHEDULED: { label: 'Confirmed', tone: 'info' },
+  STARTED: { label: 'In Progress', tone: 'info' },
+  CLOSED: { label: 'Closed', tone: 'neutral' },
+  INACTIVE: { label: 'Inactive', tone: 'neutral' },
+  REJECTED: { label: 'Rejected', tone: 'danger' },
+  CANCELLED: { label: 'Cancelled', tone: 'danger' },
 };
 
 @Component({
   selector: 'app-status-chip',
   standalone: true,
-  imports: [NgClass, Icon],
+  imports: [NgClass],
   templateUrl: './status-chip.component.html',
 })
 export class StatusChipComponent {
@@ -34,7 +33,6 @@ export class StatusChipComponent {
     return STATUS_CONFIG[normalized] ?? {
       label: normalized.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase()),
       tone: 'neutral' as StatusTone,
-      icon: 'info',
     };
   });
 
@@ -44,5 +42,13 @@ export class StatusChipComponent {
     warning: 'bg-amber-50 text-amber-800 ring-amber-200',
     danger: 'bg-red-50 text-red-700 ring-red-200',
     info: 'bg-sky-50 text-sky-700 ring-sky-200',
+  })[this.config().tone]);
+
+  protected readonly dotClasses = computed(() => ({
+    neutral: 'bg-slate-400',
+    positive: 'bg-emerald-500',
+    warning: 'bg-amber-500',
+    danger: 'bg-red-500',
+    info: 'bg-sky-500',
   })[this.config().tone]);
 }

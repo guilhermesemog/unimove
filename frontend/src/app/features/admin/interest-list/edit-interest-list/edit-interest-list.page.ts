@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, input, signal } from '@angular/core';
+import { Component, computed, inject, Input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { form, FormField, required } from '@angular/forms/signals';
 
@@ -77,7 +77,7 @@ export class EditInterestListPage {
 
   statusOptions = computed<SelectOption<ListStatus>[]>(() => [
     { value: ListStatus.OPEN, label: 'Open' },
-    { value: ListStatus.PROCESSING, label: 'Processing' },
+    { value: ListStatus.PROCESSING, label: 'Planning' },
     { value: ListStatus.CLOSED, label: 'Closed' },
   ]);
 
@@ -87,7 +87,7 @@ export class EditInterestListPage {
   }
 
   onSubmit() {
-    if (!this.interestListForm().valid) {
+    if (!this.interestListForm().valid()) {
       return;
     }
 

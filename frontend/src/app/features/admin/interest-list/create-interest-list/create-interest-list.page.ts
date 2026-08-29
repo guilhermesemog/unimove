@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { form, FormField, required, minDate } from '@angular/forms/signals';
+import { form, FormField, required } from '@angular/forms/signals';
 import { InterestListService } from '../interest-list.service';
 import { InterestListCreateRequest } from '../../../../shared/types/interest-list.type';
 import { DateFieldComponent } from '../../../../shared/components/forms/date-field/date-field.component';

@@ -1,33 +1,68 @@
-<!-- Header -->
-<app-header title="Trips" description="Manage UNIMOVE system trips..."></app-header>
+<app-header [title]="copy.title" [description]="copy.description" />
 
-
-<!-- Search -->
-<div class="w-full mb-6 justify-between items-center">
-    <app-search-bar [value]="list.searchTerm()" placeholder="Search by conductor (name) or vehicle (plate)..."
-        (valueChange)="list.searchTerm.set($event)" (search)="list.onSearch()" (clear)="list.onClearSearch()" />
+<div class="mb-4 flex justify-end" role="group" aria-label="Schedule view">
+  <div class="inline-flex rounded-xl bg-slate-100 p-1">
+    <button type="button" class="min-h-10 rounded-lg px-4 text-sm font-bold" [class.bg-white]="view() === 'table'" [class.shadow-sm]="view() === 'table'"
+      [class.text-navy-900]="view() === 'table'" [class.text-slate-500]="view() !== 'table'" (click)="setView('table')">Table</button>
+    <button type="button" class="min-h-10 rounded-lg px-4 text-sm font-bold" [class.bg-white]="view() === 'calendar'" [class.shadow-sm]="view() === 'calendar'"
+      [class.text-navy-900]="view() === 'calendar'" [class.text-slate-500]="view() !== 'calendar'" (click)="setView('calendar')">Calendar</button>
+  </div>
 </div>
-<!-- List -->
-<app-data-table [columns]="columns" [data]="list.items()" [loading]="list.loading()" [error]="list.error()" (retry)="list.fetch()" [sortBy]="list.sortBy()"
-    [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
-    <ng-template #rowActions let-trip>
-        <button type="button" class="text-emerald-500 hover:text-emerald-700 cursor-pointer"
-            (click)="onView(trip)">
-            View
-        </button>
-        <button type="button" class="text-sky-500 hover:text-sky-700 cursor-pointer" (click)="onEdit(trip)">
-            Edit
-        </button>
-        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer"
-            (click)="onDeleteClick(trip)">
-            Delete
-        </button>
-    </ng-template>
-</app-data-table>
 
-<app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
-    (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />
+<div class="mb-5 grid gap-3 border-b border-slate-200 pb-5 sm:grid-cols-2 xl:grid-cols-6">
+  <label class="text-sm font-bold text-navy-900 xl:col-span-2">Search
+    <input type="search" class="ui-field mt-2" placeholder="Destination, driver, or plate" [value]="search()" (input)="updateSearch($event)" />
+  </label>
+  <label class="text-sm font-bold text-navy-900">From<input type="date" class="ui-field mt-2" [value]="dateFrom()" (change)="updateFrom($event)" /></label>
+  <label class="text-sm font-bold text-navy-900">To<input type="date" class="ui-field mt-2" [value]="dateTo()" (change)="updateTo($event)" /></label>
+  <label class="text-sm font-bold text-navy-900">Status
+    <select class="ui-field mt-2" [value]="status()" (change)="updateStatus($event)">
+      <option value="ALL">All statuses</option><option value="PROCESSING">Planning</option><option value="SCHEDULED">Confirmed</option><option value="STARTED">In progress</option><option value="COMPLETED">Completed</option>
+    </select>
+  </label>
+  <label class="text-sm font-bold text-navy-900">Assignment
+    <select class="ui-field mt-2" [value]="assignment()" (change)="updateAssignment($event)">
+      <option value="ALL">All trips</option><option value="UNASSIGNED">Needs assignment</option><option value="ASSIGNED">Fully assigned</option>
+    </select>
+  </label>
+  <div class="sm:col-span-2 xl:col-span-6 flex justify-end"><button type="button" class="ui-button ui-button-secondary" (click)="clearFilters()">Clear Filters</button></div>
+</div>
 
-<app-confirm-dialog [open]="confirmDialog.state().open" [title]="confirmDialog.state().title"
-    [message]="confirmDialog.state().message" [confirmLabel]="confirmDialog.state().confirmLabel"
-    [variant]="confirmDialog.state().variant" (confirm)="confirmDialog.confirm()" (cancel)="confirmDialog.cancel()" />
+@if (loading()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (error()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error()!" (retry)="fetch()" /></div>
+} @else if (scheduledOperations().length) {
+  @if (view() === 'table') {
+  <div class="ui-card overflow-x-auto">
+    <table class="w-full min-w-[1050px] text-left text-sm">
+      <thead class="border-b border-slate-200 text-xs font-semibold text-slate-500">
+        <tr><th class="px-5 py-4">Date & Route</th><th class="px-5 py-4">Demand / Capacity</th><th class="px-5 py-4">Assignment</th><th class="px-5 py-4">Status</th><th class="px-5 py-4 text-right">Action</th></tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        @for (operation of scheduledOperations(); track operation.trip!.id) {
+          <tr class="hover:bg-slate-50/70">
+            <td class="px-5 py-4"><strong class="block text-navy-900">{{ operation.demand.referenceDate | dateLabel }} · {{ operation.demand.departureTime | timeLabel }}</strong><small class="mt-1 block text-slate-500">{{ operation.demand.destination.name }}</small></td>
+            <td class="w-64 px-5 py-4"><app-occupancy-meter [used]="operation.bookingCount" [capacity]="operation.trip?.vehicle?.capacity ?? null" [compact]="true" /></td>
+            <td class="px-5 py-4"><strong class="block text-navy-900">{{ operation.trip?.conductor?.user?.firstName ?? 'Driver required' }} {{ operation.trip?.conductor?.user?.lastName ?? '' }}</strong><small class="mt-1 block" [class.text-red-600]="!operation.trip?.vehicle" [class.text-slate-500]="operation.trip?.vehicle">{{ operation.trip?.vehicle?.plate ?? 'Vehicle required' }}</small></td>
+            <td class="px-5 py-4"><div class="flex items-center gap-2"><app-status-chip [status]="operation.trip!.status" /> @if (hasAttention(operation)) { <app-icon iconName="warning" size="sm" class="text-amber-600" /> }</div></td>
+            <td class="px-5 py-4 text-right"><button type="button" class="ui-button ui-button-secondary" (click)="openOperation(operation)">{{ hasAttention(operation) ? 'Resolve' : 'Open' }}</button></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  } @else {
+    <div class="space-y-5">
+      @for (group of calendarGroups(); track group[0]) {
+        <section aria-labelledby="date-{{ group[0] }}">
+          <div class="mb-3 flex items-baseline gap-3 border-b border-slate-200 pb-2">
+            <h2 id="date-{{ group[0] }}" class="font-display text-lg font-extrabold text-navy-900">{{ group[0] | dateLabel:true }}</h2><span class="text-xs font-semibold text-slate-400">{{ group[1].length }} {{ group[1].length === 1 ? 'operation' : 'operations' }}</span></div>
+          <div class="grid gap-4 xl:grid-cols-2">@for (operation of group[1]; track operation.trip!.id) { <app-admin-operation-card [operation]="operation" /> }</div>
+        </section>
+      }
+    </div>
+  }
+} @else {
+  <div class="ui-card overflow-hidden"><app-ui-state title="No trips match these filters" description="Clear filters or generate a trip from Demand & Bookings." /></div>
+}

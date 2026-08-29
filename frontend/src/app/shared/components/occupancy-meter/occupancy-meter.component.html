@@ -1,0 +1,13 @@
+<div [class.space-y-2]="!compact()" [class.space-y-1]="compact()">
+  <div class="flex items-center justify-between gap-3 text-xs">
+    <span class="font-semibold text-slate-600">{{ used() }} bookings</span>
+    <span class="font-bold" [class.text-red-700]="exceeded()" [class.text-slate-500]="!exceeded()">
+      @if (capacity() !== null) { {{ capacity() }} seats } @else { Capacity pending }
+    </span>
+  </div>
+  <div class="h-2 overflow-hidden rounded-full bg-slate-100" role="progressbar" [attr.aria-valuenow]="used()"
+    aria-valuemin="0" [attr.aria-valuemax]="capacity()">
+    <span class="block h-full rounded-full transition-[width]" [style.width.%]="percentage()"
+      [class.bg-red-500]="exceeded()" [class.bg-brand-500]="!exceeded()"></span>
+  </div>
+</div>

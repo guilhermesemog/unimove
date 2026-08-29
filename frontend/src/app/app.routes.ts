@@ -6,10 +6,7 @@ import { MainLayout } from './layout/main-layout/main-layout.component';
 import { AuthLayout } from './layout/auth-layout/auth-layout.component';
 
 import { LoginPage } from './features/auth/login/login.page';
-import { HomePage } from './features/home/home.page';
 import { UnauthorizedPage } from './features/error/unauthorized/unauthorized.page';
-
-import { AdminHomePage } from './features/admin/home/home.page';
 
 import { ListUserPage } from './features/admin/user/list-user/list-user.page';
 import { CreateUserPage } from './features/admin/user/create-user/create-user.page';
@@ -28,22 +25,10 @@ import { ListVehiclePage } from './features/admin/vehicle/list-vehicle/list-vehi
 import { EditVehiclePage } from './features/admin/vehicle/edit-vehicle/edit-vehicle.page';
 import { CreateVehiclePage } from './features/admin/vehicle/create-vehicle/create-vehicle.page';
 
-import { ListTripPage } from './features/admin/trip/list-trip/list-trip.page';
 import { EditTripPage } from './features/admin/trip/edit-trip/edit-trip.page';
 
-import { ListInterestListPage } from './features/admin/interest-list/list-interest-list/list-interest-list.page';
 import { CreateInterestListPage } from './features/admin/interest-list/create-interest-list/create-interest-list.page';
 import { EditInterestListPage } from './features/admin/interest-list/edit-interest-list/edit-interest-list.page';
-
-import { ViewInterestListPage } from './features/admin/interest-list/view-interest-list/view-interest-list.page';
-
-import { ViewTripPage } from './features/admin/trip/view-trip/view-trip.page';
-
-import { BookingsPage } from './features/bookings/bookings.page';
-
-import { InterestListPage } from './features/interest-list/interest-list.page';
-
-import { UserPage } from './features/user/user.page';
 
 import { TripsPage } from './features/trips/trips.page';
 import { TripsDetailPage } from './features/trips/trips-detail/trips-detail.page';
@@ -56,7 +41,7 @@ export const routes: Routes = [
             {
                 path: '',
                 pathMatch: 'full',
-                component: HomePage
+                loadComponent: () => import('./features/home/home.page').then((module) => module.HomePage),
             },
             {
                 path: 'unauthorized',
@@ -66,7 +51,7 @@ export const routes: Routes = [
             {
                 path: 'admin',
                 pathMatch: 'full',
-                component: AdminHomePage,
+                loadComponent: () => import('./features/admin/home/home.page').then((module) => module.AdminHomePage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
@@ -150,7 +135,7 @@ export const routes: Routes = [
             {
                 path: 'admin/trips',
                 pathMatch: 'full',
-                component: ListTripPage,
+                loadComponent: () => import('./features/admin/trip/list-trip/list-trip.page').then((module) => module.ListTripPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
@@ -162,13 +147,13 @@ export const routes: Routes = [
             {
                 path: 'admin/trips/:id/view',
                 pathMatch: 'full',
-                component: ViewTripPage,
+                loadComponent: () => import('./features/admin/trip/view-trip/view-trip.page').then((module) => module.ViewTripPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/interest-lists',
                 pathMatch: 'full',
-                component: ListInterestListPage,
+                loadComponent: () => import('./features/admin/interest-list/list-interest-list/list-interest-list.page').then((module) => module.ListInterestListPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
@@ -186,7 +171,7 @@ export const routes: Routes = [
             {
                 path: 'admin/interest-lists/:id/view',
                 pathMatch: 'full',
-                component: ViewInterestListPage,
+                loadComponent: () => import('./features/admin/interest-list/view-interest-list/view-interest-list.page').then((module) => module.ViewInterestListPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
 
@@ -195,13 +180,24 @@ export const routes: Routes = [
             {
                 path: 'bookings',
                 pathMatch: 'full',
-                component: BookingsPage,
+                loadComponent: () => import('./features/bookings/bookings.page').then((module) => module.BookingsPage),
                 canActivate: [roleGuard([UserRole.Student])],
             }, {
+                path: 'available-trips',
+                pathMatch: 'full',
+                loadComponent: () => import('./features/interest-list/interest-list.page').then((module) => module.InterestListPage),
+                canActivate: [roleGuard([UserRole.Student])],
+            },
+            {
+                path: 'available-trips/:id',
+                pathMatch: 'full',
+                loadComponent: () => import('./features/interest-list/trip-checkout/trip-checkout.page').then((module) => module.TripCheckoutPage),
+                canActivate: [roleGuard([UserRole.Student])],
+            },
+            {
                 path: 'interest-lists',
                 pathMatch: 'full',
-                component: InterestListPage,
-                canActivate: [roleGuard([UserRole.Student])],
+                redirectTo: 'available-trips',
             },
 
             // CONDUCTOR PAGES
@@ -224,7 +220,7 @@ export const routes: Routes = [
             {
                 path: 'user',
                 pathMatch: 'full',
-                component: UserPage,
+                loadComponent: () => import('./features/user/user.page').then((module) => module.UserPage),
             }
         ]
     },

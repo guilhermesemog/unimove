@@ -1,149 +1,47 @@
-<div class="max-w-xl mx-auto">
-    <!-- Header -->
-    <div class="px-2">
-        <app-header title="Interest Lists" description="Manage UNIMOVE interest lists..."></app-header>
-    </div>
+<app-header [title]="copy.title" [description]="copy.description" />
 
-    <!-- List -->
-    <div class="sm:flex flex-row gap-4 justify-center flex-wrap">
-        @for (item of this.list.items(); track $index) {
-        <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-2 sm:min-w-xl"
-            (click)="openDetails(item)">
-            <div class="flex justify-between items-start">
-                <div class="flex flex-col gap-2 items-start">
-                    <p class="text-sm font-semibold">{{ item.destination.name}}</p>
-                    <p class="text-sm text-gray-500">{{ item.referenceDate }}</p>
-                </div>
-                <app-status-chip [status]="item.listStatus" />
-            </div>
-            <div class="flex flex-row justify-between items-start gap-4">
-                <div class="flex flex-col items-start">
-                    <p class="text-xs uppercase">Departure</p>
-                    <p class="text-sm ">{{ item.departureTime }}</p>
-                </div>
-
-                <div class="flex flex-col items-end">
-                    <p class="text-xs uppercase">Return</p>
-                    <p class="text-sm">{{ item.returnDepartureTime }}</p>
-                </div>
-            </div>
-            <div class="pt-1 text-sm font-medium text-blue-600">
-                <p>Click to view details</p>
-            </div>
-        </div>
+@if (loading()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (error()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error()!" (retry)="fetch()" /></div>
+} @else {
+  <section aria-labelledby="date-filter-title">
+    <h2 id="date-filter-title" class="font-display text-lg font-extrabold text-navy-900">{{ copy.question }}</h2>
+    @if (universityOptions().length > 1) {
+      <label for="university-filter" class="mt-4 block text-sm font-bold text-navy-900">University</label>
+      <select id="university-filter" class="ui-field mt-2" [value]="selectedUniversityId()" (change)="selectUniversity($event)">
+        <option value="all">All universities</option>
+        @for (university of universityOptions(); track university.id) {
+          <option [value]="university.id">{{ university.name }}</option>
         }
-    </div>
-
-    <div class="px-2 sm:px-16">
-        <app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
-            (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />
-    </div>
-
-    <!-- Details Modal -->
-    @if (selectedInterestList(); as item) {
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="fixed inset-0 bg-gray-900/50 transition-opacity" (click)="closeDetails()"></div>
-
-        <div class="relative w-full max-w-3xl overflow-hidden rounded-lg p-2 bg-white shadow-xl">
-            <div class="px-4 py-2 sm:px-8">
-                <div class="flex flex-row justify-between items-center gap-4">
-                    <h2 class="mt-2 text-2xl font-semibold text-slate-900">
-                        {{ item.destination.name }}
-                    </h2>
-                    <h3 class="mt-2 text-slate-600 text-lg">
-                        {{ item.referenceDate }}
-                    </h3>
-                </div>
-            </div>
-
-            <div class="p-4 mb-4 flex flex-col gap-4 sm:min-w-xl sm:p-8">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Destination</p>
-                        <p class="mt-2 text-sm font-medium text-slate-900">{{ item.destination.name }}</p>
-                    </div>
-                    <app-status-chip [status]="item.listStatus" />
-                </div>
-
-                <div class="flex flex-row justify-between items-start gap-4">
-                    <div class="flex flex-col items-start">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Departure</p>
-                        <p class="mt-2 text-sm font-medium text-slate-900">{{ item.departureTime }}</p>
-                    </div>
-
-                    <div class="flex flex-col items-end">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Arrival</p>
-                        <p class="mt-2 text-sm font-medium text-slate-900">{{ item.arrivalTime }}</p>
-                    </div>
-                </div>
-
-                <div class="flex flex-row justify-between items-start gap-4">
-                    <div class="flex flex-col items-start">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Return</p>
-                        <p class="mt-2 text-sm font-medium text-slate-900">{{ item.returnDepartureTime }}</p>
-                    </div>
-
-                    <div class="flex flex-col items-end">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Return Arrival</p>
-                        <p class="mt-2 text-sm font-medium text-slate-900">{{ item.returnArrivalTime }}</p>
-                    </div>
-                </div>
-
-                <div class="rounded border-t-2 border-slate-200 bg-white pt-4">
-                    <h2 class="text-lg font-semibold text-slate-900">Make a booking</h2>
-                    <p class="mt-1 text-sm text-slate-600">
-                        Select the type of trip and confirm to create the booking for this list.
-                    </p>
-
-                    <div class="flex flex-row justify-between px-1 my-6">
-                        <button type="button" class="border rounded-lg p-2"
-                            [ngClass]="selectedTripType() === TripType.ROUND_TRIP ? 'border-sky-600 text-sky-700 bg-sky-50' : 'border-slate-500 bg-white text-slate-700 hover:bg-slate-50'"
-                            (click)="updateTripType(TripType.ROUND_TRIP)">
-                            Round
-                        </button>
-                        <button type="button" class="border rounded-lg p-2"
-                            [ngClass]="selectedTripType() === TripType.OUTBOUND ? 'border-sky-600 text-sky-700 bg-sky-50' : 'border-slate-500 bg-white text-slate-700 hover:bg-slate-50'"
-                            (click)="updateTripType(TripType.OUTBOUND)">
-                            Outbound
-                        </button>
-                        <button type="button" class="border rounded-lg p-2"
-                            [ngClass]="selectedTripType() === TripType.INBOUND ? 'border-sky-600 text-sky-700 bg-sky-50' : 'border-slate-500 bg-white text-slate-700 hover:bg-slate-50'"
-                            (click)="updateTripType(TripType.INBOUND)">
-                            Inbound
-                        </button>
-                    </div>
-
-                    @if (item.listStatus !== 'OPEN') {
-                    <p class="mt-4 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                        This interest list is not open for booking. You cannot create a booking for this list.
-                    </p>
-                    }
-
-                    @if (bookingSuccess()) {
-                    <p class="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-                        {{ bookingSuccess() }}
-                    </p>
-                    }
-
-                    <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-end">
-                        <button type="button"
-                            class="rounded border border-slate-300 px-5 py-3 font-medium text-slate-700 hover:bg-slate-200 cursor-pointer"
-                            (click)="closeDetails()" [disabled]="bookingLoading()">
-                            Cancel
-                        </button>
-                        <button type="button"
-                            class="rounded bg-sky-600 px-5 py-3 font-semibold text-white hover:bg-sky-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-                            (click)="createBooking()" [disabled]="bookingLoading() || item.listStatus !== 'OPEN'">
-                            @if (bookingLoading()) {
-                            Making a booking...
-                            } @else {
-                            Confirm Booking
-                            }
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+      </select>
     }
-</div>
+    <div class="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-3 sm:mx-0 sm:px-0" role="group" aria-label="Filter trips by date">
+      <button type="button" class="min-h-11 shrink-0 rounded-xl border px-4 text-sm font-bold transition-colors"
+        [class.border-brand-500]="selectedDate() === 'all'" [class.bg-brand-50]="selectedDate() === 'all'"
+        [class.text-brand-700]="selectedDate() === 'all'" [class.border-slate-200]="selectedDate() !== 'all'"
+        [class.bg-white]="selectedDate() !== 'all'" [class.text-slate-600]="selectedDate() !== 'all'"
+        (click)="selectedDate.set('all')">All Dates</button>
+      @for (date of dateOptions(); track date) {
+        <button type="button" class="min-h-11 shrink-0 rounded-xl border px-4 text-sm font-bold transition-colors"
+          [class.border-brand-500]="selectedDate() === date" [class.bg-brand-50]="selectedDate() === date"
+          [class.text-brand-700]="selectedDate() === date" [class.border-slate-200]="selectedDate() !== date"
+          [class.bg-white]="selectedDate() !== date" [class.text-slate-600]="selectedDate() !== date"
+          (click)="selectedDate.set(date)">{{ dateLabel(date) }}</button>
+      }
+    </div>
+  </section>
+
+  @if (availableTrips().length) {
+    <div class="mt-5 grid gap-4">
+      @for (trip of availableTrips(); track trip.id) {
+        <app-available-trip-card [trip]="trip" [origin]="origin()" [booked]="bookedIds().has(trip.id)"
+          (selected)="openTrip(trip)" />
+      }
+    </div>
+  } @else {
+    <div class="ui-card mt-5 overflow-hidden">
+      <app-ui-state [title]="copy.empty" [description]="copy.emptyDescription" />
+    </div>
+  }
+}

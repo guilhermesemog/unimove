@@ -1,5 +1,109 @@
-<app-header title="Overview" description="Monitor your university mobility operation." />
-<div class="ui-card overflow-hidden">
-    <app-ui-state title="Your operations overview is coming next"
-        description="Use the navigation to manage demand, trips, people, and resources." />
+<div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+  <app-header class="min-w-0 flex-1 [&>header]:mb-0" [title]="copy.title" [description]="copy.description" />
+  <div class="flex shrink-0 items-center gap-2">
+    <a routerLink="/admin/users/create" class="ui-button ui-button-secondary">Add Person</a>
+    <a routerLink="/admin/interest-lists/create" class="ui-button ui-button-primary">
+      <app-icon iconName="add" size="sm" /> Plan Demand
+    </a>
+  </div>
 </div>
+
+@if (loading()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (error()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error()!" (retry)="fetch()" /></div>
+} @else {
+  <section class="ui-card mb-8 grid grid-cols-2 overflow-hidden lg:grid-cols-4" aria-label="Operational summary">
+    @for (metric of [
+      { label: 'Trips today', value: tripsToday() },
+      { label: 'Open bookings', value: openBookings() },
+      { label: 'Planned seats', value: plannedSeats() },
+      { label: 'Needs attention', value: attentionOperations().length, attention: true }
+    ]; track metric.label) {
+      <div class="border-slate-200 px-4 py-4 sm:px-5"
+        [class.border-l]="$index % 2 !== 0" [class.lg:border-l]="$index > 0"
+        [class.border-t]="$index > 1" [class.lg:border-t-0]="$index > 1">
+        <p class="text-sm text-slate-500">{{ metric.label }}</p>
+        <div class="mt-1 flex items-center gap-2">
+          @if (metric.attention && metric.value > 0) { <span class="size-2 rounded-full bg-amber-500"></span> }
+          <strong class="font-display text-2xl font-extrabold text-navy-900">{{ metric.value }}</strong>
+        </div>
+      </div>
+    }
+  </section>
+
+  <div class="grid items-start gap-8 xl:grid-cols-[minmax(0,1.6fr)_minmax(20rem,0.8fr)]">
+    <section aria-labelledby="week-title">
+      <div class="mb-3 flex items-center justify-between gap-4">
+        <div>
+          <h2 id="week-title" class="font-display text-xl font-extrabold text-navy-900">{{ copy.nextSevenDays }}</h2>
+          <p class="mt-1 text-sm text-slate-500">The immediate operating schedule.</p>
+        </div>
+        <a routerLink="/admin/trips" class="text-sm font-bold text-brand-700 hover:text-brand-800">Full schedule</a>
+      </div>
+
+      @if (nextSevenDays().length) {
+        <div class="ui-card divide-y divide-slate-100 overflow-hidden">
+          @for (operation of nextSevenDays(); track operation.demand.id) {
+            <a [routerLink]="['/admin/interest-lists', operation.demand.id, 'view']"
+              class="group grid gap-3 px-4 py-4 transition-colors hover:bg-slate-50 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:items-center sm:px-5">
+              <div>
+                <strong class="block text-sm text-navy-900">{{ operation.demand.referenceDate | dateLabel }}</strong>
+                <span class="mt-0.5 block text-xs text-slate-500">{{ operation.demand.departureTime | timeLabel }}</span>
+              </div>
+              <div class="min-w-0">
+                <strong class="block truncate text-sm text-navy-900">{{ operation.demand.destination.name }}</strong>
+                <span class="mt-0.5 block truncate text-xs text-slate-500">
+                  {{ operation.bookingCount }} bookings · {{ operation.trip?.conductor?.user?.firstName ?? 'Driver pending' }}
+                  · {{ operation.trip?.vehicle?.plate ?? 'Vehicle pending' }}
+                </span>
+              </div>
+              <div class="flex items-center justify-between gap-3 sm:justify-end">
+                <app-status-chip [status]="operation.trip?.status ?? operation.demand.listStatus" [label]="stage(operation)" />
+                <app-icon iconName="arrow_forward" size="sm" class="text-slate-400 group-hover:text-brand-700" />
+              </div>
+            </a>
+          }
+        </div>
+      } @else {
+        <div class="ui-card overflow-hidden"><app-ui-state title="No operations planned" description="Create demand for the next available travel dates." [compact]="true" /></div>
+      }
+    </section>
+
+    <section aria-labelledby="attention-title">
+      <div class="mb-3 flex items-center justify-between gap-4">
+        <div>
+          <h2 id="attention-title" class="font-display text-xl font-extrabold text-navy-900">{{ copy.needsAttention }}</h2>
+          <p class="mt-1 text-sm text-slate-500">Items that require a decision.</p>
+        </div>
+        @if (attentionOperations().length) {
+          <span class="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-800">{{ attentionOperations().length }}</span>
+        }
+      </div>
+
+      @if (attentionOperations().length) {
+        <div class="ui-card divide-y divide-slate-100 overflow-hidden">
+          @for (operation of attentionOperations().slice(0, 5); track operation.demand.id) {
+            <a [routerLink]="['/admin/interest-lists', operation.demand.id, 'view']"
+              class="group flex items-start gap-3 px-4 py-4 transition-colors hover:bg-slate-50">
+              <span class="mt-1.5 size-2 shrink-0 rounded-full bg-amber-500"></span>
+              <span class="min-w-0 flex-1">
+                <strong class="block truncate text-sm text-navy-900">{{ primaryAttention(operation) }}</strong>
+                <span class="mt-1 block truncate text-xs text-slate-500">{{ operation.demand.destination.name }} · {{ operation.demand.referenceDate | dateLabel }}</span>
+              </span>
+              <app-icon iconName="arrow_forward" size="sm" class="mt-0.5 shrink-0 text-slate-400 group-hover:text-brand-700" />
+            </a>
+          }
+          @if (attentionOperations().length > 5) {
+            <a routerLink="/admin/trips" [queryParams]="{ assignment: 'UNASSIGNED' }"
+              class="block px-4 py-3 text-center text-sm font-bold text-brand-700 hover:bg-slate-50">
+              View all {{ attentionOperations().length }} items
+            </a>
+          }
+        </div>
+      } @else {
+        <div class="ui-card overflow-hidden"><app-ui-state [title]="copy.noAttention" [description]="copy.noAttentionDescription" [compact]="true" /></div>
+      }
+    </section>
+  </div>
+}

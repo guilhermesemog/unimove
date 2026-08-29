@@ -1,29 +1,143 @@
-<app-header title="Interest List" description="View details about the interest list with ID {{ interestList()?.id }} ..."
-    [showBack]="true" />
+@if (loading()) {
+<div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (!operation() || error() && !operation()) {
+<div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error() ?? 'Operation not found.'"
+    (retry)="fetch()" /></div>
+} @else if (operation(); as item) {
+<app-header title="{{ item.demand.destination.name }} Operation"
+  [description]="(item.demand.referenceDate | dateLabel) + ' · Departure ' + (item.demand.departureTime | timeLabel)"
+  [showBack]="true" />
 
-<div class="w-full flex flex-row mb-6 gap-2 justify-between items-center">
-    <button type="button" (click)="onGenerateTrip()" [disabled]="this.interestList()?.listStatus != 'OPEN'"
-        class="rounded-md  p-2 text-sm font-semibold border border-gray-300 text-gray-700 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-700">
-        Generate Trip
-    </button>
+@if (feedback()) { <div
+  class="mb-4 rounded-2xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm font-semibold text-brand-800"
+  role="status">{{ feedback() }}</div> }
+@if (error()) { <div
+  class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700" role="alert">{{
+  error() }}</div> }
+
+<div class="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-5">
+  <p class="text-sm text-slate-500">Demand #{{ item.demand.id }} @if (item.trip) { · Trip #{{ item.trip.id }} }</p>
+  <div class="flex flex-wrap items-center gap-3">
+    <app-status-chip [status]="item.trip?.status ?? item.demand.listStatus" [label]="stage()" />
+    @if (!item.trip) {
+      <button type="button" class="ui-button ui-button-primary" (click)="generateTrip()">Generate Trip</button>
+    } @else if (!item.trip.conductor || !item.trip.vehicle) {
+      <button type="button" class="ui-button ui-button-primary" (click)="activeTab.set('assignment')">Complete Assignment</button>
+    }
+  </div>
 </div>
 
-<div>
-    <p class="text-sm text-gray-600 mb-6">
-        Total reservations: {{ list.items()?.length }}
-    </p>
+@if (attention().length) {
+<section class="ui-card mb-5 divide-y divide-slate-100 overflow-hidden" aria-label="Operational alerts">
+  @for (alert of attention(); track alert.title) {
+  <div class="flex items-start gap-3 px-4 py-3.5">
+    <span class="mt-1 size-2 shrink-0 rounded-full" [class.bg-red-500]="alert.kind === 'danger'"
+      [class.bg-amber-500]="alert.kind === 'warning'" [class.bg-sky-500]="alert.kind === 'info'"></span>
+    <div><strong class="text-sm font-semibold text-navy-900">{{ alert.title }}</strong>
+      <p class="mt-0.5 text-xs leading-5 text-slate-500">{{ alert.description }}</p>
+    </div>
+  </div>
+  }
+</section>
+}
+
+<div class="mb-5 flex border-b border-slate-200" role="tablist" aria-label="Operation details">
+  @for (tab of [{ id: 'overview', label: 'Overview' }, { id: 'passengers', label: 'Passengers' }, { id: 'assignment',
+  label: 'Assignment' }]; track tab.id) {
+  <button type="button" role="tab" class="min-h-11 border-b-2 px-4 text-sm font-bold transition"
+    [attr.aria-selected]="activeTab() === tab.id" [class.border-brand-500]="activeTab() === tab.id"
+    [class.border-transparent]="activeTab() !== tab.id" [class.text-navy-900]="activeTab() === tab.id"
+    [class.text-slate-500]="activeTab() !== tab.id" (click)="$any(activeTab).set(tab.id)">{{ tab.label }}</button>
+  }
 </div>
 
+@if (activeTab() === 'overview') {
+<section class="ui-card grid overflow-hidden xl:grid-cols-[1.35fr_0.65fr]" aria-labelledby="route-heading">
+  <div class="p-5 xl:border-r xl:border-slate-100">
+    <h2 id="route-heading" class="font-display text-lg font-extrabold text-navy-900">Route & Schedule</h2>
+    <div class="mt-5"><app-route-timeline origin="Boarding stop network" [destination]="item.demand.destination.name"
+        [departureTime]="item.demand.departureTime" [arrivalTime]="item.demand.arrivalTime"
+        [returnDepartureTime]="item.demand.returnDepartureTime" [returnArrivalTime]="item.demand.returnArrivalTime" />
+    </div>
+  </div>
+  <div class="divide-y divide-slate-100 border-t border-slate-100 xl:border-t-0">
+    <div class="p-5">
+      <h2 class="font-display text-lg font-extrabold text-navy-900">Demand & Capacity</h2>
+      <div class="mt-5"><app-occupancy-meter [used]="item.bookingCount"
+          [capacity]="item.trip?.vehicle?.capacity ?? null" /></div>
+    </div>
+    <div class="p-5">
+      <h2 class="font-display text-lg font-extrabold text-navy-900">Resources</h2>
+      <dl class="mt-4 space-y-3 text-sm">
+        <div class="flex items-center justify-between gap-3"><dt class="text-slate-500">Driver</dt><dd class="font-semibold text-navy-900">{{ item.trip?.conductor?.user?.firstName ?? 'Pending' }}</dd></div>
+        <div class="flex items-center justify-between gap-3"><dt class="text-slate-500">Vehicle</dt><dd class="font-semibold text-navy-900">{{ item.trip?.vehicle?.plate ?? 'Pending' }}</dd></div>
+        <div class="flex items-center justify-between gap-3"><dt class="text-slate-500">Stage</dt><dd class="font-semibold text-navy-900">{{ stage() }}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+} @else if (activeTab() === 'passengers') {
+<div class="ui-card overflow-hidden">
+  <div class="border-b border-slate-200 px-5 py-4">
+    <h2 class="font-display text-lg font-extrabold text-navy-900">Passengers</h2>
+    <p class="mt-1 text-sm text-slate-500">{{ item.bookingCount }} current bookings</p>
+  </div>
 
-<!-- List -->
-<app-data-table [columns]="columns" [data]="list.items()" [loading]="list.loading()" [error]="list.error()" (retry)="list.fetch()" [sortBy]="list.sortBy()"
-    [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
+  <app-data-table [isInnerComponent]="true" [columns]="passengerColumns" [data]="passengerList.items()"
+    [loading]="passengerList.loading()" [error]="passengerList.error()" (retry)="passengerList.fetch()" />
 
-</app-data-table>
+  <div class="px-5 pb-4">
+    <app-pagination [page]="passengerList.page()" [totalPages]="passengerList.totalPages()"
+      [pageSize]="passengerList.pageSize()" (pageChange)="passengerList.onPageChange($event)"
+      (pageSizeChange)="passengerList.onPageSizeChange($event)" />
+  </div>
+</div>
+} @else {
+<section class="ui-card p-5" aria-labelledby="assignment-heading">
+  <h2 id="assignment-heading" class="font-display text-lg font-extrabold text-navy-900">Driver & Vehicle</h2>
+  <p class="mt-1 text-sm text-slate-500">
+    Choose resources for this operation. Existing assignments remain unchanged until you save.
+  </p>
 
-<app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
-    (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />
+  @if (!item.trip) {
+  <div class="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+    Generate the trip before assigning resources.
+  </div>
+  } @else {
+  <div class="mt-5 grid gap-4 sm:grid-cols-2">
+    <label class="text-sm font-bold text-navy-900">Driver
+      <select class="ui-field mt-2" [ngModel]="selectedConductorId()"
+        (ngModelChange)="selectConductor($event)">
+        <option [ngValue]="null">Select a driver</option>
+
+        @for (driver of assignableConductors(); track driver.user.id) {
+        <option [ngValue]="driver.user.id">
+          {{ driver.user.firstName }} {{ driver.user.lastName }}{{ conductorAvailabilityLabel(driver) }}
+        </option>
+        }
+
+      </select>
+    </label>
+    <label class="text-sm font-bold text-navy-900">Vehicle
+      <select class="ui-field mt-2" [ngModel]="selectedVehicleId()" (ngModelChange)="selectVehicle($event)">
+        <option [ngValue]="null">Select a vehicle</option>@for (vehicle of orderedVehicles(); track vehicle.id) { <option
+          [ngValue]="vehicle.id">{{ vehicle.plate }} · {{ vehicle.capacity }} seats{{ vehicle.capacity < item.bookingCount
+            ? ' · Insufficient' : '' }}</option> }
+      </select>
+    </label>
+  </div>
+  @if (capacityExceeded()) {
+  <div class="mt-4 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
+    The selected vehicle does not have enough capacity for current demand.</div>
+  }
+  <div class="mt-5 flex justify-end"><button type="button" class="ui-button ui-button-primary"
+      [disabled]="saving() || selectedConductorId() === null || selectedVehicleId() === null"
+      (click)="saveAssignment()">{{ saving() ? 'Saving...' : 'Save Assignment' }}</button></div>
+  }
+</section>
+}
 
 <app-confirm-dialog [open]="confirmDialog.state().open" [title]="confirmDialog.state().title"
-    [message]="confirmDialog.state().message" [confirmLabel]="confirmDialog.state().confirmLabel"
-    [variant]="confirmDialog.state().variant" (confirm)="confirmDialog.confirm()" (cancel)="confirmDialog.cancel()" />
+  [message]="confirmDialog.state().message" [confirmLabel]="confirmDialog.state().confirmLabel"
+  [variant]="confirmDialog.state().variant" (confirm)="confirmDialog.confirm()" (cancel)="confirmDialog.cancel()" />
+}

@@ -1,0 +1,48 @@
+<div class="space-y-4">
+  @if (showOutbound()) {
+    <div class="grid grid-cols-[2rem_1fr_auto] items-start gap-3">
+      <div class="flex flex-col items-center" aria-hidden="true">
+        <span class="mt-1 size-2.5 rounded-full bg-brand-500 ring-4 ring-brand-50"></span>
+        <span class="h-7 w-px bg-slate-200"></span>
+        <app-icon iconName="school" size="sm" class="text-navy-700" />
+      </div>
+      <div class="min-w-0">
+        <p class="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">Outbound</p>
+        <p class="mt-1 truncate text-sm font-semibold text-navy-900">{{ origin() }}</p>
+        @if (!compact()) {
+          <p class="mt-3 truncate text-sm font-semibold text-navy-900">{{ destination() }}</p>
+        }
+      </div>
+      <div class="text-right">
+        <p class="text-sm font-extrabold tabular-nums text-navy-900">{{ departureTime() | timeLabel }}</p>
+        @if (!compact()) {
+          <p class="mt-3 text-xs font-semibold tabular-nums text-slate-500">Arrives {{ arrivalTime() | timeLabel }}</p>
+        }
+      </div>
+    </div>
+  }
+
+  @if (showReturn()) {
+    <div class="grid grid-cols-[2rem_1fr_auto] items-start gap-3" [class.border-t]="showOutbound()"
+      [class.border-slate-100]="showOutbound()" [class.pt-4]="showOutbound()">
+      <div class="flex flex-col items-center" aria-hidden="true">
+        <app-icon iconName="school" size="sm" class="text-navy-700" />
+        <span class="h-7 w-px bg-slate-200"></span>
+        <span class="size-2.5 rounded-full bg-navy-800 ring-4 ring-slate-100"></span>
+      </div>
+      <div class="min-w-0">
+        <p class="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">Return</p>
+        <p class="mt-1 truncate text-sm font-semibold text-navy-900">{{ destination() }}</p>
+        @if (!compact()) {
+          <p class="mt-3 truncate text-sm font-semibold text-navy-900">{{ origin() }}</p>
+        }
+      </div>
+      <div class="text-right">
+        <p class="text-sm font-extrabold tabular-nums text-navy-900">{{ returnDepartureTime() | timeLabel }}</p>
+        @if (!compact()) {
+          <p class="mt-3 text-xs font-semibold tabular-nums text-slate-500">Arrives {{ returnArrivalTime() | timeLabel }}</p>
+        }
+      </div>
+    </div>
+  }
+</div>

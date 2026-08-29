@@ -1,21 +1,4 @@
-<app-header title="Trip" description="View details about the trip with ID {{ trip()?.id }}..." [showBack]="true" />
-
-<div>
-    <p class="text-sm text-gray-600 mb-6">
-        Total students: {{ list.items()?.length }}
-    </p>
+<div class="ui-card overflow-hidden">
+  @if (error()) { <app-ui-state kind="error" [description]="error()!" /> }
+  @else { <app-ui-state kind="loading" title="Opening operation" description="Loading the unified operational detail." /> }
 </div>
-
-
-<!-- List -->
-<app-data-table [trackBy]="studentTrackBy" [columns]="columns" [data]="list.items()" [loading]="list.loading()" [error]="list.error()" (retry)="list.fetch()" [sortBy]="list.sortBy()"
-    [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
-
-</app-data-table>
-
-<app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
-    (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />
-
-<app-confirm-dialog [open]="confirmDialog.state().open" [title]="confirmDialog.state().title"
-    [message]="confirmDialog.state().message" [confirmLabel]="confirmDialog.state().confirmLabel"
-    [variant]="confirmDialog.state().variant" (confirm)="confirmDialog.confirm()" (cancel)="confirmDialog.cancel()" />

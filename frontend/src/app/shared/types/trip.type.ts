@@ -6,8 +6,8 @@ export interface Trip {
     id: number;
     status: TripStatus;
     interestList: InterestList;
-    conductor: Conductor;
-    vehicle: Vehicle;
+    conductor: Conductor | null;
+    vehicle: Vehicle | null;
 }
 
 export interface TripCreateRequest {

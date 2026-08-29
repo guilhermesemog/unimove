@@ -16,8 +16,8 @@ export interface Booking {
 export interface BookingCreateRequest {
     interestListId: number;
     tripType: TripType;
-    destinationId?: number;
-    boardingLocationId?: number;
+    universityId?: number;
+    boardingStopId?: number;
 }
 
 export enum TripType {

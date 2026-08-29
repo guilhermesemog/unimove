@@ -1,4 +1,56 @@
-<div class="ui-card overflow-hidden">
-    <app-ui-state title="Your journey starts here"
-        description="Your personalized overview will be available in the next product phase." />
-</div>
+@if (loading()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (error()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error()!" (retry)="fetch()" /></div>
+} @else if (isStudent()) {
+  <header class="mb-7">
+    <p class="text-xs font-bold uppercase tracking-[0.16em] text-brand-700">{{ copy.eyebrow }}</p>
+    <h1 class="font-display mt-2 text-3xl font-extrabold tracking-tight text-navy-900">Hi, {{ user()?.firstName }}</h1>
+    <p class="mt-2 text-sm text-slate-500">Everything you need for your next university trip.</p>
+  </header>
+
+  @if (!student()?.preferredBoardingStop) {
+    <a routerLink="/user" class="ui-card mb-5 flex items-start gap-3 p-4">
+      <span class="mt-1.5 size-2 shrink-0 rounded-full bg-amber-500"></span>
+      <span class="min-w-0 flex-1">
+        <strong class="block text-sm text-navy-900">Choose your preferred boarding stop</strong>
+        <span class="mt-1 block text-xs leading-5 text-slate-500">This makes future bookings faster and clearer.</span>
+      </span>
+      <app-icon iconName="arrow_forward" size="sm" class="text-slate-400" />
+    </a>
+  }
+
+  <section aria-labelledby="next-trip-title">
+    <div class="mb-3 flex items-center justify-between">
+      <h2 id="next-trip-title" class="font-display text-xl font-extrabold text-navy-900">{{ copy.nextTrip }}</h2>
+      @if (nextBooking()) { <a routerLink="/bookings" class="text-sm font-bold text-brand-700">View all</a> }
+    </div>
+    @if (nextBooking(); as booking) {
+      <app-journey-card [booking]="booking" [trip]="nextTrip()" />
+    } @else {
+      <div class="ui-card overflow-hidden">
+        <app-ui-state [title]="copy.noTrip" [description]="copy.noTripDescription" [compact]="true" />
+        <div class="px-5 pb-5"><a routerLink="/available-trips" class="ui-button ui-button-primary w-full">{{ copy.bookTrip }}</a></div>
+      </div>
+    }
+  </section>
+
+  <nav class="ui-card mt-6 divide-y divide-slate-100 overflow-hidden" aria-label="Trip shortcuts">
+    <a routerLink="/available-trips" class="group flex min-h-16 items-center gap-3 px-4 py-3 hover:bg-slate-50">
+      <app-icon iconName="add_road" class="text-brand-700" />
+      <span class="min-w-0 flex-1"><strong class="block text-sm text-navy-900">{{ copy.bookTrip }}</strong>
+      <span class="mt-0.5 block text-xs text-slate-500">{{ bookableCount() }} {{ bookableCount() === 1 ? 'trip' : 'trips' }} available</span></span>
+      <app-icon iconName="arrow_forward" size="sm" class="text-slate-400 group-hover:text-brand-700" />
+    </a>
+    <a routerLink="/bookings" class="group flex min-h-16 items-center gap-3 px-4 py-3 hover:bg-slate-50">
+      <app-icon iconName="confirmation_number" class="text-slate-500" />
+      <span class="min-w-0 flex-1"><strong class="block text-sm text-navy-900">{{ copy.viewTrips }}</strong>
+      <span class="mt-0.5 block text-xs text-slate-500">{{ upcomingBookings().length }} upcoming</span></span>
+      <app-icon iconName="arrow_forward" size="sm" class="text-slate-400 group-hover:text-brand-700" />
+    </a>
+  </nav>
+} @else {
+  <div class="ui-card overflow-hidden">
+    <app-ui-state title="Your workspace is ready" description="Your role-specific overview will be available in its dedicated product phase." />
+  </div>
+}

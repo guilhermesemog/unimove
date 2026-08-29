@@ -34,6 +34,10 @@ export class StudentService {
         return this.http.put<void>(`${API_BASE_URL}/students/${userId}`, updatableStudent);
     }
 
+    updatePreferredBoardingStop(boardingStopId: number): Observable<Student> {
+        return this.http.patch<Student>(`${API_BASE_URL}/students/me/preferred-boarding-stop`, { boardingStopId });
+    }
+
     createStudent(student: StudentCreateRequest): Observable<Student> {
         return this.http.post<Student>(`${API_BASE_URL}/students`, student);
     }

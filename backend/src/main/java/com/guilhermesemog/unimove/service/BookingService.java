@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -49,6 +50,10 @@ public class BookingService {
 
         InterestList interestList = interestListRepository.findById(requestBody.interestListId())
                 .orElseThrow(() -> new ResourceNotFoundException("Interest list not found"));
+
+        if (!isBookingOpen(interestList)) {
+            throw new IllegalUpdateException("This interest list is no longer accepting bookings");
+        }
 
         if (bookingRepository.existsByStudent_IdAndInterestList_Id(student.getId(), requestBody.interestListId())) {
             throw new ResourceAlreadyExists("Student already has a booking");
@@ -120,15 +125,17 @@ public class BookingService {
                 .map(booking -> bookingMapper.toResponse(booking, booking.getStudent(), booking.getInterestList(), booking.getDestination(), booking.getBoardingLocation()));
     }
 
+    @Transactional
     public void deleteById(Long id) {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-        if (booking.getInterestList().getListStatus() != ListStatus.OPEN) {
-            throw new IllegalUpdateException("Cannot delete booking for a closed interest list");
+        if (!isBookingOpen(booking.getInterestList())) {
+            throw new IllegalUpdateException("Cannot cancel a booking after the interest list closes");
         }
 
         bookingRepository.delete(booking);
+        bookingRepository.flush();
     }
 
     private Student getStudentByAuthentication(Authentication authentication) {
@@ -139,5 +146,9 @@ public class BookingService {
     private InterestList getInterestList(Long id) {
         return interestListRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Interest list not found"));
+    }
+
+    private boolean isBookingOpen(InterestList interestList) {
+        return interestList.getListStatus() == ListStatus.OPEN;
     }
 }

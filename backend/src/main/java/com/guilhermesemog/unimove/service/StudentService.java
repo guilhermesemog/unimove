@@ -4,6 +4,7 @@ import com.guilhermesemog.unimove.dto.student.StudentCreate;
 import com.guilhermesemog.unimove.dto.student.StudentPatch;
 import com.guilhermesemog.unimove.dto.student.StudentResponse;
 import com.guilhermesemog.unimove.dto.student.StudentUpdate;
+import com.guilhermesemog.unimove.dto.student.StudentPreferredBoardingStopUpdate;
 import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import com.guilhermesemog.unimove.mapper.StudentMapper;
 import com.guilhermesemog.unimove.model.BoardingStop;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 
 @Service
 public class StudentService {
@@ -90,6 +92,13 @@ public class StudentService {
 
         student = studentMapper.update(requestBody, student, university, getBoardingStop(requestBody.preferredBoardingStopId()));
         studentRepository.save(student);
+    }
+
+    public StudentResponse updatePreferredBoardingStop(Authentication authentication, StudentPreferredBoardingStopUpdate requestBody) {
+        Student student = studentRepository.findByUser_Cpf(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+        student.setPreferredBoardingStop(getBoardingStop(requestBody.boardingStopId()));
+        return studentMapper.toResponse(studentRepository.save(student));
     }
 
     private Student getStudent(Long id) {

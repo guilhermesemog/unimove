@@ -24,6 +24,8 @@ export class DataTableComponent<T> {
 
   rowActions = contentChild<TemplateRef<{ $implicit: T }>>('rowActions');
 
+  isInnerComponent = input(false);
+
   onSort(column: TableColumn<T>) {
     if (column.sortable) this.sortChange.emit(column.key);
   }

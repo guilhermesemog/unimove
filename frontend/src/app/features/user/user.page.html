@@ -1,79 +1,67 @@
-<div class="max-w-xl mx-auto">
-    <!-- Header -->
-    <div class="px-2">
-        <app-header title="Profile" description="This is your UNIMOVE profile..."></app-header>
+<app-header [title]="copy.title" [description]="copy.description" />
+
+@if (loading()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (error() && !user()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error()!" (retry)="fetch()" /></div>
+} @else {
+  @if (error()) {
+    <div class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">{{ error() }}</div>
+  }
+  @if (feedback()) {
+    <div class="ui-card mb-4 flex items-center gap-2 px-4 py-3 text-sm text-navy-900" role="status">
+      <span class="size-2 rounded-full bg-brand-500"></span>{{ feedback() }}
     </div>
+  }
 
-    <!-- User Info -->
-    <div class="flex flex-col gap-4 justify-center flex-wrap px-2">
-        <div>
-            <p class="p-1">Personal Information</p>
-            <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-6 sm:min-w-xl">
-
-                <div class="flex justify-between items-start">
-                    <p class="text-lg">{{ user()?.firstName }} {{ user()?.lastName }}</p>
-                    <p class="bg-green-100 text-green-800 px-2 py-1 rounded">{{user()?.role | capitalize}}</p>
-                </div>
-
-                <div class="flex flex-col items-start">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">CPF</p>
-                    <p class="text-sm font-medium text-slate-900">{{ user()?.cpf | cpf }}</p>
-                </div>
-
-                <div class="flex flex-col items-start">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Phone</p>
-                    <p class="text-sm font-medium text-slate-900">{{ user()?.phone | phone }}</p>
-                </div>
-            </div>
+  <div class="space-y-4">
+    <section class="ui-card p-5" aria-labelledby="personal-title">
+      <div class="flex items-center gap-4">
+        <span class="grid size-14 shrink-0 place-items-center rounded-2xl bg-navy-900 font-display text-lg font-extrabold text-white">
+          {{ user()?.firstName?.charAt(0) }}{{ user()?.lastName?.charAt(0) }}
+        </span>
+        <div class="min-w-0">
+          <h2 id="personal-title" class="font-display truncate text-xl font-extrabold text-navy-900">{{ user()?.firstName }} {{ user()?.lastName }}</h2>
+          <p class="mt-1 text-sm font-semibold text-brand-700">{{ user()?.role === 'STUDENT' ? 'Student' : user()?.role === 'CONDUCTOR' ? 'Driver' : 'Administrator' }}</p>
         </div>
+      </div>
+      <dl class="mt-6 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2">
+        <div><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">CPF</dt><dd class="mt-1 text-sm font-semibold text-navy-900">{{ user()?.cpf | cpf }}</dd></div>
+        <div class="sm:text-right"><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Phone</dt><dd class="mt-1 text-sm font-semibold text-navy-900">{{ user()?.phone | phone }}</dd></div>
+      </dl>
+    </section>
 
-        @if (student()){
-        <div>
-            <p class="p-1">Student Information</p>
-            <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-6 sm:min-w-xl">
+    @if (student(); as studentInfo) {
+      <section class="ui-card p-5" aria-labelledby="student-title">
+        <div><h2 id="student-title" class="font-display text-lg font-extrabold text-navy-900">Student Information</h2><p class="mt-1 text-sm text-slate-500">Academic and travel profile</p></div>
+        <dl class="mt-5 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2">
+          <div class="sm:col-span-2"><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">University</dt><dd class="mt-1 text-sm font-semibold text-navy-900">{{ studentInfo.university.name }}</dd></div>
+          <div><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Course</dt><dd class="mt-1 text-sm font-semibold text-navy-900">{{ studentInfo.course }}</dd></div>
+          <div class="sm:text-right"><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Period</dt><dd class="mt-1 text-sm font-semibold text-navy-900">{{ studentInfo.period }}</dd></div>
+          <div class="sm:col-span-2"><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Address</dt><dd class="mt-1 text-sm font-semibold text-navy-900">{{ studentInfo.address }}</dd></div>
+        </dl>
+      </section>
 
-                <div class="flex flex-col items-start">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Address</p>
-                    <p class="text-sm font-medium text-slate-900">{{ student()?.address }}</p>
-                </div>
+      <section class="ui-card p-5" aria-labelledby="boarding-title">
+        <div><h2 id="boarding-title" class="font-display text-lg font-extrabold text-navy-900">{{ copy.preferredStop }}</h2><p class="mt-1 text-sm text-slate-500">Preselected when you book a trip</p></div>
+        <label for="preferred-stop" class="mt-5 block text-sm font-bold text-navy-900">Pickup location</label>
+        <select id="preferred-stop" class="ui-field mt-2" [value]="selectedBoardingStopId() ?? ''" (change)="selectBoardingStop($event)">
+          <option value="" disabled>Select a boarding stop</option>
+          @for (stop of boardingStops(); track stop.id) { <option [value]="stop.id">{{ stop.local }}</option> }
+        </select>
+        <button type="button" class="ui-button ui-button-primary mt-4 w-full" [disabled]="selectedBoardingStopId() === null || saving() || selectedBoardingStopId() === studentInfo.preferredBoardingStop?.id"
+          (click)="saveBoardingStop()">{{ saving() ? 'Saving...' : copy.saveStop }}</button>
+      </section>
+    }
 
-                <div class="flex flex-col items-start">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">University</p>
-                    <p class="text-sm font-medium text-slate-900">{{ student()?.university?.name }}</p>
-                </div>
-
-                <div class="flex flex-row justify-between items-start gap-4">
-
-                    <div class="flex flex-col items-start">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Course</p>
-                        <p class="text-sm font-medium text-slate-900">{{ student()?.course }}</p>
-                    </div>
-
-                    <div class="flex flex-col items-end">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Period</p>
-                        <p class="text-sm font-medium text-slate-900">{{ student()?.period }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        }
-
-        @if (conductor()){
-        <div>
-            <p class="p-1">Conductor Information</p>
-            <div class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-6 sm:min-w-xl">
-
-                <div class="flex flex-col items-start">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">License</p>
-                    <p class="text-sm font-medium text-slate-900">{{ conductor()?.license }}</p>
-                </div>
-
-                <div class="flex flex-col items-start">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">License Expiration Date</p>
-                    <p class="text-sm font-medium text-slate-900">{{ conductor()?.licenseExpirationDate }}</p>
-                </div>
-            </div>
-        </div>
-        }
-    </div>
-</div>
+    @if (conductor(); as driver) {
+      <section class="ui-card p-5" aria-labelledby="driver-title">
+        <h2 id="driver-title" class="font-display text-lg font-extrabold text-navy-900">Driver Information</h2>
+        <dl class="mt-5 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2">
+          <div><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">License</dt><dd class="mt-1 text-sm font-semibold text-navy-900">{{ driver.license }}</dd></div>
+          <div class="sm:text-right"><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Expires</dt><dd class="mt-1 text-sm font-semibold text-navy-900">{{ driver.licenseExpirationDate }}</dd></div>
+        </dl>
+      </section>
+    }
+  </div>
+}

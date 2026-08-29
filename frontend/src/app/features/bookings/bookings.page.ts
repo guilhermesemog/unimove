@@ -1,46 +1,94 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { forkJoin } from 'rxjs';
+
+import { UI_COPY } from '../../core/content/ui-copy';
 import { BookingService } from '../admin/booking/booking.service';
-import { ListState } from '../../shared/utils/list-state';
-import { Booking } from '../../shared/types/booking.type';
-import { PageParameters } from '../../shared/types/page.type';
-import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
-import { Trip } from '../../shared/types/trip.type';
 import { TripService } from '../admin/trip/trip.service';
-import { CommonModule } from '@angular/common';
-import { EnumPipe } from '../../shared/pipes/enum-pipe';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { HeaderComponent } from '../../shared/components/list-header/header.component';
-import { StatusChipComponent } from '../../shared/components/status-chip/status-chip.component';
+import { JourneyCardComponent } from '../../shared/components/journey-card/journey-card.component';
+import { UiStateComponent } from '../../shared/components/ui-state/ui-state.component';
+import { Booking } from '../../shared/types/booking.type';
+import { Trip } from '../../shared/types/trip.type';
+import { isBookingOpen, isUpcomingDate, parseLocalDate } from '../../shared/utils/date-time';
+
+const PAGE_REQUEST = { page: 0, size: 100, sortBy: 'id', sortDirection: 'desc' as const };
 
 @Component({
-  selector: 'app-bookings.page',
-  imports: [PaginationComponent, CommonModule, EnumPipe, HeaderComponent, StatusChipComponent],
+  selector: 'app-bookings-page',
+  imports: [ConfirmDialogComponent, HeaderComponent, JourneyCardComponent, UiStateComponent],
   templateUrl: './bookings.page.html',
 })
 export class BookingsPage {
+  private readonly bookingService = inject(BookingService);
+  private readonly tripService = inject(TripService);
 
-  private bookingService = inject(BookingService);
-  private tripService = inject(TripService);
+  protected readonly copy = UI_COPY.student.journeys;
+  protected readonly loading = signal(true);
+  protected readonly error = signal<string | null>(null);
+  protected readonly feedback = signal<string | null>(null);
+  protected readonly bookings = signal<Booking[]>([]);
+  protected readonly trips = signal<Trip[]>([]);
+  protected readonly activeTab = signal<'upcoming' | 'history'>('upcoming');
+  protected readonly bookingToCancel = signal<Booking | null>(null);
+  protected readonly cancelling = signal(false);
 
-  window = signal<'Trips' | 'Bookings'>('Trips');
+  protected readonly upcoming = computed(() => this.bookings()
+    .filter((booking) => isUpcomingDate(booking.interestList.referenceDate) && this.tripFor(booking)?.status !== 'COMPLETED')
+    .sort((a, b) => parseLocalDate(a.interestList.referenceDate).getTime() - parseLocalDate(b.interestList.referenceDate).getTime()));
+  protected readonly history = computed(() => this.bookings()
+    .filter((booking) => !isUpcomingDate(booking.interestList.referenceDate) || this.tripFor(booking)?.status === 'COMPLETED')
+    .sort((a, b) => parseLocalDate(b.interestList.referenceDate).getTime() - parseLocalDate(a.interestList.referenceDate).getTime()));
+  protected readonly displayedBookings = computed(() => this.activeTab() === 'upcoming' ? this.upcoming() : this.history());
 
-  bokingList = new ListState<Booking>({
-    initialSortBy: 'id',
-    initialSortDirection: 'desc',
-    fetchAll: (q) => this.bookingService.getUserBookings(q),
-    fetchByQuery: (s, q) => this.bookingService.getUserBookings(q)
+  ngOnInit(): void {
+    this.fetch();
   }
-  );
 
-  tripList = new ListState<Trip>({
-    initialSortBy: 'id',
-    initialSortDirection: 'desc',
-    fetchAll: (q) => this.tripService.getTripsByUser(q),
-    fetchByQuery: (s, q) => this.tripService.getTripsByUser(q)
+  protected fetch(): void {
+    this.loading.set(true);
+    this.error.set(null);
+    forkJoin({
+      bookings: this.bookingService.getUserBookings(PAGE_REQUEST),
+      trips: this.tripService.getTripsByUser(PAGE_REQUEST),
+    }).subscribe({
+      next: ({ bookings, trips }) => {
+        this.bookings.set(bookings.content);
+        this.trips.set(trips.content);
+      },
+      error: () => {
+        this.error.set('We could not load your trips. Please try again.');
+        this.loading.set(false);
+      },
+      complete: () => this.loading.set(false),
+    });
   }
-  );
 
-  ngOnInit() {
-    this.bokingList.fetch();
-    this.tripList.fetch();
+  protected tripFor(booking: Booking): Trip | null {
+    return this.trips().find((trip) => trip.interestList.id === booking.interestList.id) ?? null;
+  }
+
+  protected canCancel(booking: Booking): boolean {
+    return isBookingOpen(booking.interestList);
+  }
+
+  protected confirmCancellation(): void {
+    const booking = this.bookingToCancel();
+    if (!booking || this.cancelling()) return;
+
+    this.cancelling.set(true);
+    this.bookingService.deleteBooking(booking.id).subscribe({
+      next: () => {
+        this.bookings.update((items) => items.filter((item) => item.id !== booking.id));
+        this.feedback.set('Your booking has been cancelled.');
+        this.bookingToCancel.set(null);
+      },
+      error: () => {
+        this.error.set('We could not cancel this booking. Please try again.');
+        this.bookingToCancel.set(null);
+        this.cancelling.set(false);
+      },
+      complete: () => this.cancelling.set(false),
+    });
   }
 }

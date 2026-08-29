@@ -21,16 +21,22 @@
         <p class="mt-6 px-3 pb-2 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-slate-400">{{
             copy.navigation.admin.operations }}</p>
 
-        <a routerLink="/admin/interest-lists" routerLinkActive="bg-brand-50 text-brand-700" (click)="onLinkClick()"
+        <a routerLink="/admin/trips" routerLinkActive="bg-brand-50 text-brand-700" [routerLinkActiveOptions]="{ exact: true }" (click)="onLinkClick()"
+            class="mb-1 flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900">
+            <app-icon iconName="schedule" />
+            <span>{{ copy.navigation.admin.schedule }}</span>
+        </a>
+
+        <a routerLink="/admin/interest-lists" routerLinkActive="bg-brand-50 text-brand-700" [routerLinkActiveOptions]="{ exact: true }" (click)="onLinkClick()"
             class="mb-1 flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900">
             <app-icon iconName="monitoring" />
             <span>{{ copy.navigation.admin.demand }}</span>
         </a>
 
-        <a routerLink="/admin/trips" routerLinkActive="bg-brand-50 text-brand-700" (click)="onLinkClick()"
+        <a routerLink="/admin/trips" [queryParams]="{ assignment: 'UNASSIGNED' }" routerLinkActive="bg-brand-50 text-brand-700" [routerLinkActiveOptions]="{ exact: true }" (click)="onLinkClick()"
             class="mb-1 flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900">
-            <app-icon iconName="schedule" />
-            <span>{{ copy.navigation.admin.schedule }}</span>
+            <app-icon iconName="warning" />
+            <span>{{ copy.navigation.admin.issues }}</span>
         </a>
 
         <p class="mt-6 px-3 pb-2 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-slate-400">{{

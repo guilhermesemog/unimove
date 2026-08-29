@@ -1,0 +1,104 @@
+@if (loading()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (!trip() || error() && !trip()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error() ?? 'This trip is unavailable.'" (retry)="fetch()" /></div>
+} @else if (success()) {
+  <section class="ui-card overflow-hidden px-6 py-14 text-center">
+    <span class="mx-auto grid size-16 place-items-center rounded-2xl bg-brand-50 text-brand-700">
+      <app-icon iconName="task_alt" size="lg" />
+    </span>
+    <p class="mt-5 text-xs font-bold uppercase tracking-[0.16em] text-brand-700">Booking confirmed</p>
+    <h1 class="font-display mt-2 text-2xl font-extrabold text-navy-900">{{ copy.success }}</h1>
+    <p class="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500">You can find the latest schedule and trip status in My Trips.</p>
+    <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
+      <a routerLink="/bookings" class="ui-button ui-button-primary">View My Trips</a>
+      <a routerLink="/available-trips" class="ui-button ui-button-secondary">Book Another Trip</a>
+    </div>
+  </section>
+} @else if (trip(); as item) {
+  <app-header [title]="copy.title" [description]="(item.referenceDate | dateLabel) + ' · ' + item.destination.name" [showBack]="true" />
+
+  @if (error()) {
+    <div class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">{{ error() }}</div>
+  }
+
+  <div class="space-y-4">
+    <section class="ui-card p-5" aria-labelledby="route-title">
+      <div class="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold text-slate-500">{{ item.referenceDate | dateLabel:true }}</p>
+          <h2 id="route-title" class="font-display mt-1 text-xl font-extrabold text-navy-900">{{ item.destination.name }}</h2>
+          <p class="mt-1 text-xs text-slate-500">Bookings close at {{ item.closingTime | timeLabel }}</p>
+        </div>
+        <app-status-chip [status]="alreadyBooked() ? 'SCHEDULED' : item.listStatus" [label]="alreadyBooked() ? 'Booked' : undefined" />
+      </div>
+      <app-route-timeline [origin]="selectedStop()?.local ?? 'Select a boarding stop'" [destination]="item.destination.name"
+        [departureTime]="item.departureTime" [arrivalTime]="item.arrivalTime"
+        [returnDepartureTime]="item.returnDepartureTime" [returnArrivalTime]="item.returnArrivalTime"
+        [tripType]="selectedTripType()" />
+    </section>
+
+    <section class="ui-card overflow-hidden" aria-label="Booking details">
+    <div class="p-5" aria-labelledby="trip-type-title">
+      <h2 id="trip-type-title" class="font-display text-lg font-extrabold text-navy-900">{{ copy.tripType }}</h2>
+      <p class="mt-1 text-sm text-slate-500">Select the part of the journey you need.</p>
+      <div class="mt-4 grid gap-3 sm:grid-cols-3" role="radiogroup" aria-label="Trip type">
+        @for (option of [
+          { value: TripType.ROUND_TRIP, label: 'Round Trip', icon: 'sync_alt' },
+          { value: TripType.OUTBOUND, label: 'Outbound Only', icon: 'east' },
+          { value: TripType.INBOUND, label: 'Return Only', icon: 'west' }
+        ]; track option.value) {
+          <button type="button" role="radio" [attr.aria-checked]="selectedTripType() === option.value"
+            class="flex min-h-14 items-center gap-3 rounded-xl border px-4 text-left text-sm font-bold transition-colors"
+            [class.border-brand-500]="selectedTripType() === option.value" [class.bg-brand-50]="selectedTripType() === option.value"
+            [class.text-brand-700]="selectedTripType() === option.value" [class.border-slate-200]="selectedTripType() !== option.value"
+            [class.bg-white]="selectedTripType() !== option.value" [class.text-slate-600]="selectedTripType() !== option.value"
+            (click)="selectedTripType.set(option.value)">
+            <app-icon [iconName]="option.icon" /> {{ option.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="border-t border-slate-100 p-5" aria-labelledby="boarding-title">
+      <h2 id="boarding-title" class="font-display text-lg font-extrabold text-navy-900">{{ copy.boardingStop }}</h2>
+      <p class="mt-1 text-sm text-slate-500">Your preferred stop is selected automatically. You can change it for this booking.</p>
+      <label for="boarding-stop" class="mt-4 block text-sm font-bold text-navy-900">Pickup location</label>
+      <select id="boarding-stop" class="ui-field mt-2" [value]="selectedBoardingStopId() ?? ''" (change)="selectBoardingStop($event)">
+        <option value="" disabled>Select a boarding stop</option>
+        @for (stop of stops(); track stop.id) {
+          <option [value]="stop.id">{{ stop.local }}</option>
+        }
+      </select>
+    </div>
+
+    @if (alreadyBooked()) {
+      <div class="flex items-start gap-3 border-t border-slate-100 px-5 py-4 text-sm text-slate-600">
+        <span class="mt-1.5 size-2 shrink-0 rounded-full bg-sky-500"></span>
+        <span>You already have a booking for this trip. Open My Trips to review it.</span>
+      </div>
+    } @else if (!canBook()) {
+      <div class="flex items-start gap-3 border-t border-slate-100 px-5 py-4 text-sm text-slate-600">
+        <span class="mt-1.5 size-2 shrink-0 rounded-full bg-amber-500"></span>
+        <span>This trip is no longer accepting bookings.</span>
+      </div>
+    }
+
+    <div class="border-t border-slate-100 p-5" aria-labelledby="review-title">
+      <h2 id="review-title" class="font-display text-lg font-extrabold text-navy-900">{{ copy.review }}</h2>
+      <dl class="mt-4 grid grid-cols-2 gap-4 text-sm">
+        <div><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Date</dt><dd class="mt-1 font-semibold text-navy-900">{{ item.referenceDate | dateLabel }}</dd></div>
+        <div class="text-right"><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Trip</dt><dd class="mt-1 font-semibold text-navy-900">{{ selectedTripType() === TripType.ROUND_TRIP ? 'Round Trip' : selectedTripType() === TripType.OUTBOUND ? 'Outbound Only' : 'Return Only' }}</dd></div>
+        <div class="col-span-2"><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Boarding stop</dt><dd class="mt-1 font-semibold text-navy-900">{{ selectedStop()?.local ?? 'Not selected' }}</dd></div>
+      </dl>
+    </div>
+    </section>
+
+    <div class="sticky bottom-24 z-10 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-md backdrop-blur-lg">
+      <button type="button" class="ui-button ui-button-primary w-full" [disabled]="!canBook() || submitting()" (click)="createBooking()">
+        @if (submitting()) { <span class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span> }
+        {{ submitting() ? copy.confirming : copy.confirm }}
+      </button>
+    </div>
+  </div>
+}

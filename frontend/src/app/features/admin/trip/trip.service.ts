@@ -71,6 +71,10 @@ export class TripService {
         return this.http.patch<Trip>(`${API_BASE_URL}/trips/${id}/vehicle`, trip);
     }
 
+    updateTripAssignment(id: number, conductorId: number, vehicleId: number): Observable<Trip> {
+        return this.http.patch<Trip>(`${API_BASE_URL}/trips/${id}/assignment`, { conductorId, vehicleId });
+    }
+
     updateTrip(id: number, trip: TripUpdateRequest): Observable<Trip> {
         const requests: Observable<Trip | null>[] = [];
 

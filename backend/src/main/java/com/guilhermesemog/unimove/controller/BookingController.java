@@ -29,7 +29,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(#id, authentication)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isBookingOwner(#id, authentication)")
     public ResponseEntity<BookingResponse> getById(@PathVariable Long id) {
         BookingResponse response = bookingService.getById(id);
         return ResponseEntity.ok(response);
@@ -62,7 +62,7 @@ public class BookingController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@userSecurity.isOwner(#id, authentication) or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isBookingOwner(#id, authentication)")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         bookingService.deleteById(id);
         return ResponseEntity.noContent().build();

@@ -1,63 +1,107 @@
 import { Component, inject, signal } from '@angular/core';
-import { UserService } from '../admin/user/user.service';
+import { forkJoin } from 'rxjs';
+
 import { AuthService } from '../../core/auth/auth.service';
-import { User, UserRole } from '../../shared/types/user.type';
-import { HeaderComponent } from '../../shared/components/list-header/header.component';
-import { CpfPipe } from '../../shared/pipes/cpf-pipe';
-import { PhonePipe } from '../../shared/pipes/phone-pipe';
-import { EnumPipe } from '../../shared/pipes/enum-pipe';
-import { CapitalizePipe } from '../../shared/pipes/capitalize-pipe';
-import { Student } from '../../shared/types/student.type';
-import { Conductor } from '../../shared/types/conductor.type';
+import { UI_COPY } from '../../core/content/ui-copy';
+import { BoardingStopService } from '../admin/boarding-stop/boarding-stop.service';
 import { ConductorService } from '../admin/conductor/conductor.service';
 import { StudentService } from '../admin/student/student.service';
+import { HeaderComponent } from '../../shared/components/list-header/header.component';
+import { UiStateComponent } from '../../shared/components/ui-state/ui-state.component';
+import { CpfPipe } from '../../shared/pipes/cpf-pipe';
+import { PhonePipe } from '../../shared/pipes/phone-pipe';
+import { BoardingStop } from '../../shared/types/boarding-stop.type';
+import { Conductor } from '../../shared/types/conductor.type';
+import { Student } from '../../shared/types/student.type';
+import { User, UserRole } from '../../shared/types/user.type';
 
 @Component({
-  selector: 'app-user.page',
-  imports: [HeaderComponent, CpfPipe, PhonePipe, CapitalizePipe],
+  selector: 'app-user-page',
+  imports: [CpfPipe, HeaderComponent, PhonePipe, UiStateComponent],
   templateUrl: './user.page.html',
 })
 export class UserPage {
-  private authService = inject(AuthService);
-  private userService = inject(UserService);
-  private studentService = inject(StudentService);
-  private conductorService = inject(ConductorService);
+  private readonly authService = inject(AuthService);
+  private readonly boardingStopService = inject(BoardingStopService);
+  private readonly conductorService = inject(ConductorService);
+  private readonly studentService = inject(StudentService);
 
-  user = signal<User | null>(null);
+  protected readonly copy = UI_COPY.student.profile;
+  protected readonly loading = signal(true);
+  protected readonly saving = signal(false);
+  protected readonly error = signal<string | null>(null);
+  protected readonly feedback = signal<string | null>(null);
+  protected readonly user = signal<User | null>(null);
+  protected readonly student = signal<Student | null>(null);
+  protected readonly conductor = signal<Conductor | null>(null);
+  protected readonly boardingStops = signal<BoardingStop[]>([]);
+  protected readonly selectedBoardingStopId = signal<number | null>(null);
 
-  student = signal<Student | null>(null);
-  conductor = signal<Conductor | null>(null);
-
-  ngOnInit() {
-    this.fetchUser();
+  ngOnInit(): void {
+    this.fetch();
   }
 
-  fetchUser() {
-    this.authService.identify()
-      .subscribe((user) => {
+  protected fetch(): void {
+    this.loading.set(true);
+    this.error.set(null);
+    this.authService.identify().subscribe({
+      next: (user) => {
         this.user.set(user);
-
-        if (this.user()!.role === UserRole.Student) {
-          this.fetchStudent();
-        }
-
-        if (this.user()!.role === UserRole.Conductor) {
-          this.fetchConductor();
-        }
-      });
+        if (user.role === UserRole.Student) this.fetchStudent(user.id);
+        else if (user.role === UserRole.Conductor) this.fetchConductor(user.id);
+        else this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('We could not load your profile. Please try again.');
+        this.loading.set(false);
+      },
+    });
   }
 
-  fetchStudent() {
-    this.studentService.getStudentById(this.user()!.id)
-      .subscribe((student) => {
+  private fetchStudent(id: number): void {
+    forkJoin({
+      student: this.studentService.getStudentById(id),
+      stops: this.boardingStopService.getBoardingStopsAsList(),
+    }).subscribe({
+      next: ({ student, stops }) => {
         this.student.set(student);
-      });
+        this.boardingStops.set(stops);
+        this.selectedBoardingStopId.set(student.preferredBoardingStop?.id ?? null);
+      },
+      error: () => this.error.set('We could not load your student information.'),
+      complete: () => this.loading.set(false),
+    });
   }
 
-  fetchConductor() {
-    this.conductorService.getConductorById(this.user()!.id)
-      .subscribe((conductor) => {
-        this.conductor.set(conductor);
-      });
+  private fetchConductor(id: number): void {
+    this.conductorService.getConductorById(id).subscribe({
+      next: (conductor) => this.conductor.set(conductor),
+      error: () => this.error.set('We could not load your driver information.'),
+      complete: () => this.loading.set(false),
+    });
+  }
+
+  protected selectBoardingStop(event: Event): void {
+    this.selectedBoardingStopId.set(Number((event.target as HTMLSelectElement).value));
+    this.feedback.set(null);
+  }
+
+  protected saveBoardingStop(): void {
+    const id = this.selectedBoardingStopId();
+    if (id === null || this.saving()) return;
+
+    this.saving.set(true);
+    this.error.set(null);
+    this.studentService.updatePreferredBoardingStop(id).subscribe({
+      next: (student) => {
+        this.student.set(student);
+        this.feedback.set(this.copy.saved);
+      },
+      error: () => {
+        this.error.set('We could not update your boarding stop. Please try again.');
+        this.saving.set(false);
+      },
+      complete: () => this.saving.set(false),
+    });
   }
 }
