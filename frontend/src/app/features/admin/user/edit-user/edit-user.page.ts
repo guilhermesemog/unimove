@@ -1,6 +1,5 @@
 import { Component, inject, Input, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { form, FormField, minLength, maxLength, required } from '@angular/forms/signals';
 
 import { User } from '../../../../shared/types/user.type';
@@ -12,10 +11,11 @@ import { HeaderComponent } from '../../../../shared/components/list-header/heade
 import { AuthService } from '../../../../core/auth/auth.service';
 import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
 import { CpfPipe } from '../../../../shared/pipes/cpf-pipe';
+import { AccountSummaryComponent } from '../../../../shared/components/account-summary/account-summary.component';
 
 @Component({
   selector: 'app-edit-user',
-  imports: [CommonModule, FormField, TextFieldComponent, ConfirmDialogComponent, HeaderComponent, PhonePipe, CpfPipe],
+  imports: [FormField, TextFieldComponent, ConfirmDialogComponent, HeaderComponent, PhonePipe, CpfPipe, AccountSummaryComponent],
   templateUrl: './edit-user.page.html',
 })
 export class EditUserPage {
@@ -108,7 +108,7 @@ export class EditUserPage {
       title: `${this.user()?.active ? 'Deactivate' : 'Activate'} user`,
       message: `Are you sure you want to ${this.user()?.active ? 'deactivate' : 'activate'} ${this.user()?.firstName} ${this.user()?.lastName}? They will ${this.user()?.active ? 'lose' : 'gain'} access to the system.`,
       confirmLabel: `${this.user()?.active ? 'Deactivate' : 'Activate'}`,
-      variant: 'danger',
+      variant: this.user()?.active ? 'danger' : 'default',
       action: () => this.toggleUserStatus(this.user()!),
     });
   }

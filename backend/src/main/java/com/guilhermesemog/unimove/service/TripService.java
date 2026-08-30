@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.guilhermesemog.unimove.dto.student.StudentResponse;
+import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponse;
+import com.guilhermesemog.unimove.dto.driver.DriverManifestPassengerResponse;
+import com.guilhermesemog.unimove.dto.driver.DriverOperationResponse;
 import com.guilhermesemog.unimove.dto.trip.TripAssignmentUpdate;
 import com.guilhermesemog.unimove.dto.trip.TripCreate;
 import com.guilhermesemog.unimove.dto.trip.TripPatch;
@@ -28,6 +31,7 @@ import com.guilhermesemog.unimove.model.Trip;
 import com.guilhermesemog.unimove.model.TripStudent;
 import com.guilhermesemog.unimove.model.Vehicle;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
+import com.guilhermesemog.unimove.model.enums.BookingStatus;
 import com.guilhermesemog.unimove.repository.BookingRepository;
 import com.guilhermesemog.unimove.repository.ConductorRepository;
 import com.guilhermesemog.unimove.repository.InterestListRepository;
@@ -118,6 +122,35 @@ public class TripService {
 
         return tripRepository.findAllByConductor_Id(conductor.getId(), pageable)
                 .map(tripMapper::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public DriverOperationResponse getDriverOperation(Authentication authentication, Long tripId) {
+        Conductor conductor = getConductorByAuthentication(authentication);
+        Trip trip = tripRepository.findByIdAndConductor_Id(tripId, conductor.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Trip not found"));
+
+        List<DriverManifestPassengerResponse> passengers = bookingRepository
+                .findAllByInterestList_IdAndBookingStatus(trip.getInterestList().getId(), BookingStatus.APPROVED)
+                .stream()
+                .map(booking -> new DriverManifestPassengerResponse(
+                        booking.getId(),
+                        booking.getStudent().getUser().getFirstName(),
+                        booking.getStudent().getUser().getLastName(),
+                        booking.getStudent().getUser().getPhone(),
+                        new BoardingStopResponse(
+                                booking.getBoardingLocation().getId(),
+                                booking.getBoardingLocation().getLocal()
+                        ),
+                        booking.getTripType()
+                ))
+                .sorted(java.util.Comparator
+                        .comparing((DriverManifestPassengerResponse passenger) -> passenger.boardingStop().local(), String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(DriverManifestPassengerResponse::firstName, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(DriverManifestPassengerResponse::lastName, String.CASE_INSENSITIVE_ORDER))
+                .toList();
+
+        return new DriverOperationResponse(tripMapper.toResponse(trip), passengers);
     }
 
     public Page<TripResponse> getAll(int page, int size, String sortBy, String sortDirection) {

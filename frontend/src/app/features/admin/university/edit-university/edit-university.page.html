@@ -1,25 +1,21 @@
-<app-header title="Universities" description="Edit the university {{ university()?.name }} information below."
+<app-header title="Edit University" description="Update {{ university()?.name || 'this university' }}."
     [showBack]="true" />
 
-<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm p-8">
-    <form>
+<form class="ui-card max-w-3xl p-6" (submit)="$event.preventDefault(); onSubmit()">
+    <div class="mb-6 border-b border-slate-200 pb-4">
+        <h2 class="font-display text-lg font-bold text-navy-900">University Details</h2>
+        <p class="mt-1 text-sm text-slate-600">Changes are reflected anywhere this destination is shown.</p>
+    </div>
+    <div class="grid gap-x-5 md:grid-cols-2">
         <app-text-field [formField]="universityForm.name" label="Name" placeholder="Enter the university name" />
-        <app-text-field [formField]="universityForm.address" label="Address"
-            placeholder="Enter the university address" />
-
-        <div class="flex flex-row justify-between mb-4">
-            <button type="button"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                [disabled]="universityForm().invalid() || !universityForm().dirty()" (click)="onSubmit()">
-                Save Changes
-            </button>
-            <button type="button" class="bg-gray-500 none hover:bg-gray-700 text-white font-bold py-2 px-4 rounded cursor-pointer
-        disabled:hidden" (click)="onDeleteClick()">
-                Delete
-            </button>
-        </div>
-    </form>
-</div>
+        <app-text-field [formField]="universityForm.address" label="Address" placeholder="Enter the university address" />
+    </div>
+    <div class="mt-2 flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <button type="button" class="ui-button ui-button-secondary text-red-700" (click)="onDeleteClick()">Delete University</button>
+        <button type="submit" class="ui-button ui-button-primary"
+            [disabled]="universityForm().invalid() || !universityForm().dirty()">Save Changes</button>
+    </div>
+</form>
 
 <app-confirm-dialog [open]="confirmDialog().open" [title]="confirmDialog().title" [message]="confirmDialog().message"
     [confirmLabel]="confirmDialog().confirmLabel" [variant]="confirmDialog().variant"

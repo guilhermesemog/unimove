@@ -102,6 +102,30 @@ export const UI_COPY = {
       saved: 'Your preferred boarding stop has been updated.',
     },
   },
+  driver: {
+    today: {
+      title: 'Today',
+      description: 'Your next assigned operation and today’s schedule.',
+      nextOperation: 'Next Operation',
+      noOperation: 'No operation scheduled',
+      noOperationDescription: 'There are no assigned trips waiting for you today.',
+      viewOperation: 'View Operation',
+    },
+    schedule: {
+      title: 'Schedule',
+      description: 'Review your assigned operations and trip history.',
+      upcoming: 'Upcoming',
+      history: 'History',
+      emptyUpcoming: 'No upcoming operations',
+      emptyHistory: 'No completed operations yet',
+    },
+    operation: {
+      title: 'Trip Operation',
+      manifest: 'Passenger Manifest',
+      outbound: 'Outbound',
+      return: 'Return',
+    },
+  },
   admin: {
     overview: {
       title: 'Operations Overview',

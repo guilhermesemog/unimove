@@ -1,5 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 
 import { UserService } from '../user.service';
 import { User, UserRole } from '../../../../shared/types/user.type';
@@ -7,10 +6,9 @@ import { CpfPipe } from '../../../../shared/pipes/cpf-pipe';
 import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { AuthService } from '../../../../core/auth/auth.service';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
-import { SearchBarComponent } from '../../../../shared/components/search-bar/search-bar.component';
+import { AdminListToolbarComponent } from '../../../../shared/components/admin-list-toolbar/admin-list-toolbar.component';
 import { ListState } from '../../../../shared/utils/list-state';
 import { ConfirmDialogController } from '../../../../shared/utils/confirm-dialog.controller';
 import { TableColumn } from '../../../../shared/components/data-table/table-column.type';
@@ -18,13 +16,12 @@ import { DataTableComponent } from '../../../../shared/components/data-table/dat
 
 @Component({
   selector: 'app-list-user',
-  imports: [DataTableComponent, HeaderComponent, SearchBarComponent, CommonModule, PaginationComponent, ConfirmDialogComponent],
+  imports: [DataTableComponent, HeaderComponent, AdminListToolbarComponent, PaginationComponent, ConfirmDialogComponent],
   templateUrl: './list-user.page.html',
   providers: [CpfPipe, PhonePipe],
 })
 export class ListUserPage {
 
-  authService = inject(AuthService);
   userService = inject(UserService);
   router = inject(Router);
 
@@ -43,8 +40,8 @@ export class ListUserPage {
     { key: 'lastName', label: 'Last Name', sortable: true },
     { key: 'cpf', label: 'CPF', sortable: true, format: (user) => this.cpfPipe.transform(user.cpf) as string },
     { key: 'phone', label: 'Phone', sortable: true, format: (user) => this.phonePipe.transform(user.phone) as string },
-    { key: 'role', label: 'Role', sortable: true },
-    { key: 'active', label: 'Active', sortable: true, format: (user) => user.active ? 'Yes' : 'No' },
+    { key: 'role', label: 'Role', sortable: true, format: (user) => user.role === UserRole.Conductor ? 'Driver' : user.role.toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase()) },
+    { key: 'active', label: 'Access', sortable: true, format: (user) => user.active ? 'Active' : 'Inactive' },
   ]
 
   ngOnInit() {

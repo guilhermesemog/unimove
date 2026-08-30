@@ -1,36 +1,27 @@
-<!-- Header -->
-<app-header title="Users" description="Manage UNIMOVE system users..."></app-header>
+<app-header title="Users & Access" description="Manage people, roles, and access to UNIMOVE." />
 
-<!-- Search -->
-<div class="w-full flex flex-row mb-6 gap-2 justify-between items-center">
-    <app-search-bar [value]="list.searchTerm()" placeholder="Search by name..."
-        (valueChange)="list.searchTerm.set($event)" (search)="list.onSearch()" (clear)="list.onClearSearch()" />
-
-    <button type="button"
-        class="rounded-md  p-2 text-sm font-semibold border border-gray-300 text-gray-700 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors"
-        (click)="onCreate()">
-        Create User
-    </button>
-</div>
+<app-admin-list-toolbar [value]="list.searchTerm()" placeholder="Search people by name"
+    createLabel="Add User" (valueChange)="list.searchTerm.set($event)" (search)="list.onSearch()"
+    (clear)="list.onClearSearch()" (create)="onCreate()" />
 
 <!-- List -->
 <app-data-table [columns]="columns" [data]="list.items()" [loading]="list.loading()" [error]="list.error()" (retry)="list.fetch()" [sortBy]="list.sortBy()"
     [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
     <ng-template #rowActions let-user>
         @if (user.active) {
-        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer" (click)="onDeactivateClick(user)">
+        <button type="button" class="min-h-11 px-2 font-semibold text-red-700 hover:text-red-800" (click)="onDeactivateClick(user)">
             Deactivate
         </button>
         } @else {
-        <button type="button" class="text-green-500 hover:text-green-700 cursor-pointer"
+        <button type="button" class="min-h-11 px-2 font-semibold text-navy-700 hover:text-navy-900"
             (click)="onActivateClick(user)">
             Activate
         </button>
-        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer" (click)="onDeleteClick(user)">
+        <button type="button" class="min-h-11 px-2 font-semibold text-red-700 hover:text-red-800" (click)="onDeleteClick(user)">
             Delete
         </button>
         }
-        <button type="button" class="text-sky-500 hover:text-sky-700 cursor-pointer" (click)="onEdit(user)">
+        <button type="button" class="min-h-11 px-2 font-semibold text-navy-700 hover:text-navy-900" (click)="onEdit(user)">
             Edit
         </button>
     </ng-template>

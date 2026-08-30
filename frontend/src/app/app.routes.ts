@@ -8,31 +8,6 @@ import { AuthLayout } from './layout/auth-layout/auth-layout.component';
 import { LoginPage } from './features/auth/login/login.page';
 import { UnauthorizedPage } from './features/error/unauthorized/unauthorized.page';
 
-import { ListUserPage } from './features/admin/user/list-user/list-user.page';
-import { CreateUserPage } from './features/admin/user/create-user/create-user.page';
-import { EditUserPage } from './features/admin/user/edit-user/edit-user.page';
-import { EditStudentPage } from './features/admin/student/edit-student/edit-student.page';
-import { EditConductorPage } from './features/admin/conductor/edit-conductor/edit-conductor.page';
-
-import { ListUniversityPage } from './features/admin/university/list-university/list-university.page';
-import { CreateUniversityPage } from './features/admin/university/create-university/create-university.page';
-import { EditUniversityPage } from './features/admin/university/edit-university/edit-university.page';
-
-import { ListBoardingStopPage } from './features/admin/boarding-stop/list-boarding-stop/list-boarding-stop.page';
-import { CreateBoardingStop } from './features/admin/boarding-stop/create-boarding-stop/create-boarding-stop.page';
-
-import { ListVehiclePage } from './features/admin/vehicle/list-vehicle/list-vehicle.page';
-import { EditVehiclePage } from './features/admin/vehicle/edit-vehicle/edit-vehicle.page';
-import { CreateVehiclePage } from './features/admin/vehicle/create-vehicle/create-vehicle.page';
-
-import { EditTripPage } from './features/admin/trip/edit-trip/edit-trip.page';
-
-import { CreateInterestListPage } from './features/admin/interest-list/create-interest-list/create-interest-list.page';
-import { EditInterestListPage } from './features/admin/interest-list/edit-interest-list/edit-interest-list.page';
-
-import { TripsPage } from './features/trips/trips.page';
-import { TripsDetailPage } from './features/trips/trips-detail/trips-detail.page';
-
 export const routes: Routes = [
     {
         path: '',
@@ -57,79 +32,79 @@ export const routes: Routes = [
             {
                 path: 'admin/users',
                 pathMatch: 'full',
-                component: ListUserPage,
+                loadComponent: () => import('./features/admin/user/list-user/list-user.page').then((module) => module.ListUserPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/users/create',
                 pathMatch: 'full',
-                component: CreateUserPage,
+                loadComponent: () => import('./features/admin/user/create-user/create-user.page').then((module) => module.CreateUserPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/users/:id/edit',
                 pathMatch: 'full',
-                component: EditUserPage,
+                loadComponent: () => import('./features/admin/user/edit-user/edit-user.page').then((module) => module.EditUserPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/students/:id/edit',
                 pathMatch: 'full',
-                component: EditStudentPage,
+                loadComponent: () => import('./features/admin/student/edit-student/edit-student.page').then((module) => module.EditStudentPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/conductors/:id/edit',
                 pathMatch: 'full',
-                component: EditConductorPage,
+                loadComponent: () => import('./features/admin/conductor/edit-conductor/edit-conductor.page').then((module) => module.EditConductorPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/universities',
                 pathMatch: 'full',
-                component: ListUniversityPage,
+                loadComponent: () => import('./features/admin/university/list-university/list-university.page').then((module) => module.ListUniversityPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/universities/create',
                 pathMatch: 'full',
-                component: CreateUniversityPage,
+                loadComponent: () => import('./features/admin/university/create-university/create-university.page').then((module) => module.CreateUniversityPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/universities/:id/edit',
                 pathMatch: 'full',
-                component: EditUniversityPage,
+                loadComponent: () => import('./features/admin/university/edit-university/edit-university.page').then((module) => module.EditUniversityPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/boarding-stops',
                 pathMatch: 'full',
-                component: ListBoardingStopPage,
+                loadComponent: () => import('./features/admin/boarding-stop/list-boarding-stop/list-boarding-stop.page').then((module) => module.ListBoardingStopPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/boarding-stops/create',
                 pathMatch: 'full',
-                component: CreateBoardingStop,
+                loadComponent: () => import('./features/admin/boarding-stop/create-boarding-stop/create-boarding-stop.page').then((module) => module.CreateBoardingStop),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/vehicles',
                 pathMatch: 'full',
-                component: ListVehiclePage,
+                loadComponent: () => import('./features/admin/vehicle/list-vehicle/list-vehicle.page').then((module) => module.ListVehiclePage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/vehicles/:id/edit',
                 pathMatch: 'full',
-                component: EditVehiclePage,
+                loadComponent: () => import('./features/admin/vehicle/edit-vehicle/edit-vehicle.page').then((module) => module.EditVehiclePage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/vehicles/create',
                 pathMatch: 'full',
-                component: CreateVehiclePage,
+                loadComponent: () => import('./features/admin/vehicle/create-vehicle/create-vehicle.page').then((module) => module.CreateVehiclePage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
@@ -141,8 +116,7 @@ export const routes: Routes = [
             {
                 path: 'admin/trips/:id/edit',
                 pathMatch: 'full',
-                component: EditTripPage,
-                canActivate: [roleGuard([UserRole.Admin])],
+                redirectTo: 'admin/trips/:id/view',
             },
             {
                 path: 'admin/trips/:id/view',
@@ -159,13 +133,13 @@ export const routes: Routes = [
             {
                 path: 'admin/interest-lists/create',
                 pathMatch: 'full',
-                component: CreateInterestListPage,
+                loadComponent: () => import('./features/admin/interest-list/create-interest-list/create-interest-list.page').then((module) => module.CreateInterestListPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
                 path: 'admin/interest-lists/:id/edit',
                 pathMatch: 'full',
-                component: EditInterestListPage,
+                loadComponent: () => import('./features/admin/interest-list/edit-interest-list/edit-interest-list.page').then((module) => module.EditInterestListPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
             {
@@ -205,13 +179,13 @@ export const routes: Routes = [
             {
                 path: 'trips',
                 pathMatch: 'full',
-                component: TripsPage,
+                loadComponent: () => import('./features/trips/trips.page').then((module) => module.TripsPage),
                 canActivate: [roleGuard([UserRole.Conductor])],
             },
             {
                 path: 'trips/:id',
                 pathMatch: 'full',
-                component: TripsDetailPage,
+                loadComponent: () => import('./features/trips/trips-detail/trips-detail.page').then((module) => module.TripsDetailPage),
                 canActivate: [roleGuard([UserRole.Conductor])],
             },
 

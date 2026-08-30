@@ -1,50 +1,69 @@
-<div class="max-w-xl mx-auto">
-    <!-- Trip List -->
-    <div class="px-2">
-        <app-header title="Trips" description="Check your schedule and history." />
-    </div>
+<app-header [title]="copy.title" [description]="copy.description" />
 
-    <!-- List -->
-    <div class="sm:flex flex-row gap-4 justify-center flex-wrap">
-        @for (item of this.list.items(); track $index) {
-        <div (click)="onViewTrip(item)" class="border border-gray-300 rounded p-4 mb-4 flex flex-col gap-2 sm:min-w-xl">
-            <div class="flex justify-between items-center">
-                <p class="text-sm font-semibold">{{ item.interestList.destination.name}}</p>
-                <app-status-chip [status]="item.status" />
-            </div>
-            <div class="flex flex-row justify-between items-start gap-4">
-                <div class="flex flex-col items-start">
-                    <p class="text-xs uppercase">Departure</p>
-                    <p class="text-sm ">{{ item.interestList.departureTime }}</p>
-                </div>
-
-                <div class="flex flex-col items-end">
-                    <p class="text-xs uppercase">Return Departure</p>
-                    <p class="text-sm">{{ item.interestList.returnDepartureTime }}</p>
-                </div>
-            </div>
-            <div class="flex flex-row justify-between items-start gap-4">
-                <div class="flex flex-col items-start">
-                    <p class="text-xs uppercase">Arrival</p>
-                    <p class="text-sm ">{{ item.interestList.arrivalTime }}</p>
-                </div>
-
-                <div class="flex flex-col items-end">
-                    <p class="text-xs uppercase">Return Arrival</p>
-                    <p class="text-sm">{{ item.interestList.returnArrivalTime }}</p>
-                </div>
-            </div>
-
-            <div class="flex flex-col items-start">
-                <p class="text-xs uppercase font-">Vehicle</p>
-                <p class="text-sm">{{ item.vehicle ? item.vehicle.plate : 'To be assigned' }}</p>
-            </div>
-        </div>
-        }
-    </div>
-
-    <div class="px-2 sm:px-16">
-        <app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
-            (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />
-    </div>
+<div class="mb-5 flex border-b border-slate-200" role="tablist" aria-label="Driver schedule">
+  <button type="button" role="tab" class="min-h-11 flex-1 border-b-2 text-sm font-bold transition-colors"
+    [attr.aria-selected]="activeTab() === 'upcoming'" [class.border-brand-500]="activeTab() === 'upcoming'"
+    [class.border-transparent]="activeTab() !== 'upcoming'" [class.text-navy-900]="activeTab() === 'upcoming'"
+    [class.text-slate-500]="activeTab() !== 'upcoming'" (click)="activeTab.set('upcoming')">
+    {{ copy.upcoming }} <span class="ml-1 text-xs">{{ upcoming().length }}</span>
+  </button>
+  <button type="button" role="tab" class="min-h-11 flex-1 border-b-2 text-sm font-bold transition-colors"
+    [attr.aria-selected]="activeTab() === 'history'" [class.border-brand-500]="activeTab() === 'history'"
+    [class.border-transparent]="activeTab() !== 'history'" [class.text-navy-900]="activeTab() === 'history'"
+    [class.text-slate-500]="activeTab() !== 'history'" (click)="activeTab.set('history')">
+    {{ copy.history }} <span class="ml-1 text-xs">{{ history().length }}</span>
+  </button>
 </div>
+
+@if (loading()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (error()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error()!" (retry)="fetch()" /></div>
+} @else if (dateGroups().length) {
+  <div class="space-y-6">
+    @for (group of dateGroups(); track group[0]) {
+      <section aria-labelledby="schedule-date-{{ group[0] }}">
+        <div class="mb-2 flex items-baseline justify-between gap-3">
+          <h2 id="schedule-date-{{ group[0] }}" class="font-display text-lg font-extrabold text-navy-900">{{ group[0] | dateLabel:true }}</h2>
+          <span class="text-xs text-slate-500">{{ group[1].length }} {{ group[1].length === 1 ? 'trip' : 'trips' }}</span>
+        </div>
+
+        <div class="space-y-3">
+          @for (trip of group[1]; track trip.id) {
+            <article class="ui-card p-5">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="text-xs font-semibold text-slate-500">Departure {{ trip.interestList.departureTime | timeLabel }}</p>
+                  <h3 class="mt-1 truncate text-base font-bold text-navy-900">{{ trip.interestList.destination.name }}</h3>
+                </div>
+                <app-status-chip [status]="trip.status" />
+              </div>
+
+              <div class="mt-4">
+                <app-route-timeline origin="Boarding stop route" [destination]="trip.interestList.destination.name"
+                  [departureTime]="trip.interestList.departureTime" [arrivalTime]="trip.interestList.arrivalTime"
+                  [returnDepartureTime]="trip.interestList.returnDepartureTime"
+                  [returnArrivalTime]="trip.interestList.returnArrivalTime" [compact]="true" />
+              </div>
+
+              <div class="mt-4 flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+                <span class="flex min-w-0 items-center gap-2 text-xs text-slate-500">
+                  @if (!trip.vehicle) { <span class="size-2 shrink-0 rounded-full bg-amber-500"></span> }
+                  <span class="truncate">{{ trip.vehicle?.plate ?? 'Vehicle not assigned' }}</span>
+                </span>
+                <a [routerLink]="['/trips', trip.id]" class="flex min-h-11 shrink-0 items-center gap-1 px-1 text-sm font-bold text-brand-700">
+                  Open <app-icon iconName="arrow_forward" size="sm" />
+                </a>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    }
+  </div>
+} @else {
+  <div class="ui-card overflow-hidden">
+    <app-ui-state [title]="activeTab() === 'upcoming' ? copy.emptyUpcoming : copy.emptyHistory"
+      [description]="activeTab() === 'upcoming' ? 'New assigned trips will appear here.' : 'Past and completed trips will appear here.'" />
+  </div>
+}

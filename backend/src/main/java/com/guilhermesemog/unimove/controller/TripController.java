@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.guilhermesemog.unimove.dto.student.StudentResponse;
+import com.guilhermesemog.unimove.dto.driver.DriverOperationResponse;
 import com.guilhermesemog.unimove.dto.trip.TripAssignmentUpdate;
 import com.guilhermesemog.unimove.dto.trip.TripCreate;
 import com.guilhermesemog.unimove.dto.trip.TripPatch;
@@ -39,6 +40,7 @@ public class TripController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<TripResponse>> getAllTrips(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -48,6 +50,7 @@ public class TripController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TripResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(tripService.getById(id));
     }
@@ -63,7 +66,16 @@ public class TripController {
         return ResponseEntity.ok(tripService.getAllByUser(authentication, page, size, sortBy, sortDirection));
     }
 
+    @GetMapping("/me/{id}/operation")
+    @PreAuthorize("hasRole('CONDUCTOR')")
+    public ResponseEntity<DriverOperationResponse> getDriverOperation(
+            Authentication authentication,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(tripService.getDriverOperation(authentication, id));
+    }
+
     @GetMapping("/{id}/students")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<StudentResponse>> getAllTripStudents(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,

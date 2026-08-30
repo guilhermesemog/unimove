@@ -49,6 +49,67 @@
       <app-icon iconName="arrow_forward" size="sm" class="text-slate-400 group-hover:text-brand-700" />
     </a>
   </nav>
+} @else if (isConductor()) {
+  <header class="mb-7">
+    <p class="text-sm font-semibold text-slate-500">{{ driverCopy.title }}</p>
+    <h1 class="font-display mt-1 text-3xl font-extrabold tracking-tight text-navy-900">Ready, {{ user()?.firstName }}?</h1>
+    <p class="mt-2 text-sm text-slate-500">{{ driverCopy.description }}</p>
+  </header>
+
+  @if (driverOperation(); as operation) {
+    <section aria-labelledby="next-operation-title">
+      <div class="mb-3 flex items-center justify-between gap-3">
+        <h2 id="next-operation-title" class="font-display text-xl font-extrabold text-navy-900">{{ driverCopy.nextOperation }}</h2>
+        <app-status-chip [status]="operation.trip.status" />
+      </div>
+
+      <article class="ui-card overflow-hidden">
+        <div class="p-5">
+          <p class="text-sm font-semibold text-slate-500">{{ operation.trip.interestList.referenceDate | dateLabel:true }}</p>
+          <div class="mt-1 flex items-baseline justify-between gap-4">
+            <h3 class="font-display text-xl font-extrabold text-navy-900">{{ operation.trip.interestList.destination.name }}</h3>
+            <strong class="text-lg tabular-nums text-navy-900">{{ operation.trip.interestList.departureTime | timeLabel }}</strong>
+          </div>
+
+          <div class="mt-5">
+            <app-route-timeline origin="Boarding stop route" [destination]="operation.trip.interestList.destination.name"
+              [departureTime]="operation.trip.interestList.departureTime" [arrivalTime]="operation.trip.interestList.arrivalTime"
+              [returnDepartureTime]="operation.trip.interestList.returnDepartureTime"
+              [returnArrivalTime]="operation.trip.interestList.returnArrivalTime" />
+          </div>
+        </div>
+
+        <dl class="grid grid-cols-2 divide-x divide-slate-100 border-t border-slate-100">
+          <div class="px-5 py-4"><dt class="text-xs text-slate-500">Vehicle</dt><dd class="mt-1 text-sm font-bold text-navy-900">{{ operation.trip.vehicle?.plate ?? 'Not assigned' }}</dd></div>
+          <div class="px-5 py-4"><dt class="text-xs text-slate-500">Passengers</dt><dd class="mt-1 text-sm font-bold text-navy-900">{{ operation.passengers.length }}</dd></div>
+        </dl>
+
+        <div class="border-t border-slate-100 p-4">
+          <a [routerLink]="['/trips', operation.trip.id]" class="ui-button ui-button-primary w-full">{{ driverCopy.viewOperation }}</a>
+        </div>
+      </article>
+    </section>
+
+    @if (remainingTodayTrips().length) {
+      <section class="mt-7" aria-labelledby="later-today-title">
+        <h2 id="later-today-title" class="font-display mb-3 text-lg font-extrabold text-navy-900">Later Today</h2>
+        <div class="ui-card divide-y divide-slate-100 overflow-hidden">
+          @for (trip of remainingTodayTrips(); track trip.id) {
+            <a [routerLink]="['/trips', trip.id]" class="group flex items-center gap-4 px-4 py-4 hover:bg-slate-50">
+              <strong class="w-20 shrink-0 tabular-nums text-navy-900">{{ trip.interestList.departureTime | timeLabel }}</strong>
+              <span class="min-w-0 flex-1"><strong class="block truncate text-sm text-navy-900">{{ trip.interestList.destination.name }}</strong><small class="mt-0.5 block text-slate-500">{{ trip.vehicle?.plate ?? 'Vehicle pending' }}</small></span>
+              <app-icon iconName="arrow_forward" size="sm" class="text-slate-400 group-hover:text-brand-700" />
+            </a>
+          }
+        </div>
+      </section>
+    }
+  } @else {
+    <div class="ui-card overflow-hidden">
+      <app-ui-state [title]="driverCopy.noOperation" [description]="driverCopy.noOperationDescription" [compact]="true" />
+      <div class="border-t border-slate-100 p-4"><a routerLink="/trips" class="ui-button ui-button-secondary w-full">View Schedule</a></div>
+    </div>
+  }
 } @else {
   <div class="ui-card overflow-hidden">
     <app-ui-state title="Your workspace is ready" description="Your role-specific overview will be available in its dedicated product phase." />

@@ -1,23 +1,14 @@
-<!-- Header -->
-<app-header title="Boarding Stops" description="Manage UNIMOVE system boarding stops..."></app-header>
+<app-header title="Boarding Stops" description="Maintain pickup and drop-off locations used by students." />
 
-<!-- Search -->
-<div class="w-full flex flex-row mb-6 gap-2 justify-between items-center">
-    <app-search-bar [value]="list.searchTerm()" placeholder="Search by name..."
-        (valueChange)="list.searchTerm.set($event)" (search)="list.onSearch()" (clear)="list.onClearSearch()" />
-
-    <button type="button"
-        class="rounded-md  p-2 text-sm font-semibold border border-gray-300 text-gray-700 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors"
-        (click)="onCreate()">
-        Create Boarding Stop
-    </button>
-</div>
+<app-admin-list-toolbar [value]="list.searchTerm()" placeholder="Search boarding stops by location"
+    createLabel="Add Boarding Stop" (valueChange)="list.searchTerm.set($event)" (search)="list.onSearch()"
+    (clear)="list.onClearSearch()" (create)="onCreate()" />
 
 <!-- List -->
 <app-data-table [columns]="columns" [data]="list.items()" [loading]="list.loading()" [error]="list.error()" (retry)="list.fetch()" [sortBy]="list.sortBy()"
     [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
     <ng-template #rowActions let-boardingStop>
-        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer"
+        <button type="button" class="min-h-11 px-2 font-semibold text-red-700 hover:text-red-800"
             (click)="onDeleteClick(boardingStop)">
             Delete
         </button>

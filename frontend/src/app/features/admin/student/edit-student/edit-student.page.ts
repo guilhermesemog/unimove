@@ -1,6 +1,5 @@
 import { Component, computed, inject, Input, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { form, FormField, minLength, maxLength, required, min } from '@angular/forms/signals';
 
 import { User } from '../../../../shared/types/user.type';
@@ -17,10 +16,11 @@ import { UniversityService } from '../../university/university.service';
 import { University } from '../../../../shared/types/university.type';
 import { CpfPipe } from '../../../../shared/pipes/cpf-pipe';
 import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
+import { AccountSummaryComponent } from '../../../../shared/components/account-summary/account-summary.component';
 
 @Component({
     selector: 'app-edit-student',
-    imports: [CommonModule, FormField, TextFieldComponent, NumberFieldComponent, SelectFieldComponent, ConfirmDialogComponent, HeaderComponent, CpfPipe, PhonePipe],
+    imports: [FormField, TextFieldComponent, NumberFieldComponent, SelectFieldComponent, ConfirmDialogComponent, HeaderComponent, CpfPipe, PhonePipe, AccountSummaryComponent],
     templateUrl: './edit-student.page.html',
 })
 export class EditStudentPage {
@@ -146,7 +146,7 @@ export class EditStudentPage {
             title: `${this.student()?.user.active ? 'Deactivate' : 'Activate'} student`,
             message: `Are you sure you want to ${this.student()?.user.active ? 'deactivate' : 'activate'} ${this.student()?.user.firstName} ${this.student()?.user.lastName}? They will ${this.student()?.user.active ? 'lose' : 'gain'} access to the system.`,
             confirmLabel: `${this.student()?.user.active ? 'Deactivate' : 'Activate'}`,
-            variant: 'danger',
+            variant: this.student()?.user.active ? 'danger' : 'default',
             action: () => this.toggleUserStatus(this.student()?.user!),
         });
     }

@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { Student } from '../../../shared/types/student.type';
+import { DriverOperation } from '../../../shared/types/driver-operation.type';
 const API_BASE_URL = environment.apiUrl;
 
 @Service()
@@ -61,6 +62,10 @@ export class TripService {
                 sortDirection: params.sortDirection
             }
         });
+    }
+
+    getDriverOperation(id: number): Observable<DriverOperation> {
+        return this.http.get<DriverOperation>(`${API_BASE_URL}/trips/me/${id}/operation`);
     }
 
     updateTripConductor(id: number, trip: TripUpdateRequest): Observable<Trip> {

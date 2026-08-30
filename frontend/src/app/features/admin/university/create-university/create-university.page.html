@@ -1,15 +1,16 @@
-<app-header title="University" description="Create a new university to access the system." [showBack]="true" />
+<app-header title="Add University" description="Add a destination used in trip planning and bookings." [showBack]="true" />
 
-<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm p-8">
-    <form>
+<form class="ui-card max-w-3xl p-6" (submit)="$event.preventDefault(); onSubmit()">
+    <div class="mb-6 border-b border-slate-200 pb-4">
+        <h2 class="font-display text-lg font-bold text-navy-900">University Details</h2>
+        <p class="mt-1 text-sm text-slate-600">Use the official name and address shown to students.</p>
+    </div>
+    <div class="grid gap-x-5 md:grid-cols-2">
         <app-text-field [formField]="universityForm.name" label="Name" placeholder="Enter the university name" />
-        <app-text-field [formField]="universityForm.address" label="Address"
-            placeholder="Enter the university address" />
-
-        <button type="button"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            [disabled]="(universityForm().invalid() || !universityForm().dirty())" (click)="onSubmit()">
-            Save Changes
-        </button>
-    </form>
-</div>
+        <app-text-field [formField]="universityForm.address" label="Address" placeholder="Enter the university address" />
+    </div>
+    <div class="mt-2 flex justify-end border-t border-slate-200 pt-5">
+        <button type="submit" class="ui-button ui-button-primary"
+            [disabled]="universityForm().invalid() || !universityForm().dirty()">Add University</button>
+    </div>
+</form>

@@ -37,7 +37,8 @@ export class CreateVehiclePage {
       return;
     }
 
-    this.vehicleService.createVehicle(this.vehicleFormModel());
-    this.router.navigate(['/admin/vehicles']);
+    this.vehicleService.createVehicle(this.vehicleFormModel()).subscribe(() => {
+      this.router.navigate(['/admin/vehicles']);
+    });
   }
 }

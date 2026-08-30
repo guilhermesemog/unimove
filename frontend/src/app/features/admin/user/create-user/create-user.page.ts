@@ -50,7 +50,7 @@ export class CreateUserPage {
     roleOptions = [
         { value: UserRole.Admin, label: 'Admin' },
         { value: UserRole.Student, label: 'Student' },
-        { value: UserRole.Conductor, label: 'Conductor' },
+        { value: UserRole.Conductor, label: 'Driver' },
     ];
 
     roleFormModel = signal<UserRole | null>(null);
@@ -219,7 +219,7 @@ export class CreateUserPage {
             invalid = this.studentForm().invalid() || !this.studentForm().dirty();
         }
 
-        return this.userForm().invalid() || !this.userForm().dirty() || invalid;
+        return this.roleForm().invalid() || this.userForm().invalid() || !this.userForm().dirty() || invalid;
 
     });
 }

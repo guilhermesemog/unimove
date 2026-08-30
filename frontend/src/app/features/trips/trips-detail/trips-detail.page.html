@@ -1,16 +1,106 @@
-<div class="max-w-xl mx-auto">
+@if (loading()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (error() || !operation()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error() ?? 'Operation not found.'" (retry)="fetch()" /></div>
+} @else if (operation(); as item) {
+  <app-header [title]="item.trip.interestList.destination.name"
+    [description]="(item.trip.interestList.referenceDate | dateLabel) + ' · ' + copy.title" [showBack]="true" />
 
-    <!-- Header -->
-    <div class="px-2">
-        <app-header title="Trip Details" description="Check the trip details and confirmed passengers." />
+  <div class="mb-5 flex items-center justify-between gap-3 border-b border-slate-200 pb-5">
+    <span class="text-sm text-slate-500">Trip #{{ item.trip.id }}</span>
+    <app-status-chip [status]="item.trip.status" />
+  </div>
+
+  @if (!item.trip.vehicle) {
+    <div class="ui-card mb-4 flex items-start gap-3 px-4 py-3 text-sm text-slate-600">
+      <span class="mt-1.5 size-2 shrink-0 rounded-full bg-amber-500"></span>
+      <span>A vehicle has not been assigned to this operation. Contact the organizer before departure.</span>
+    </div>
+  }
+  @if (capacityExceeded()) {
+    <div class="ui-card mb-4 flex items-start gap-3 px-4 py-3 text-sm text-slate-600">
+      <span class="mt-1.5 size-2 shrink-0 rounded-full bg-red-500"></span>
+      <span>Passenger demand exceeds vehicle capacity for at least one leg. Contact the organizer before departure.</span>
+    </div>
+  }
+
+  <section class="ui-card overflow-hidden" aria-labelledby="route-summary-title">
+    <div class="p-5">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-semibold text-slate-500">{{ item.trip.interestList.referenceDate | dateLabel:true }}</p>
+          <h2 id="route-summary-title" class="font-display mt-1 text-xl font-extrabold text-navy-900">Route & Schedule</h2>
+        </div>
+        <span class="text-sm font-bold text-navy-900">{{ item.trip.vehicle?.plate ?? 'Vehicle pending' }}</span>
+      </div>
+
+      <div class="mt-5">
+        <app-route-timeline origin="Boarding stop route" [destination]="item.trip.interestList.destination.name"
+          [departureTime]="item.trip.interestList.departureTime" [arrivalTime]="item.trip.interestList.arrivalTime"
+          [returnDepartureTime]="item.trip.interestList.returnDepartureTime"
+          [returnArrivalTime]="item.trip.interestList.returnArrivalTime"
+          [tripType]="activeLeg() === 'outbound' ? TripType.OUTBOUND : TripType.INBOUND" />
+      </div>
     </div>
 
-    <!-- List -->
-    <app-data-table [columns]="columns" [data]="list.items()" [loading]="list.loading()" [error]="list.error()" (retry)="list.fetch()" [sortBy]="list.sortBy()"
-        [sortDirection]="list.sortDirection()" (sortChange)="list.onSort($event)">
-    </app-data-table>
+    <dl class="grid grid-cols-3 divide-x divide-slate-100 border-t border-slate-100 text-center">
+      <div class="px-2 py-4"><dt class="text-xs text-slate-500">Outbound</dt><dd class="mt-1 text-sm font-bold text-navy-900">{{ outboundCount() }}</dd></div>
+      <div class="px-2 py-4"><dt class="text-xs text-slate-500">Return</dt><dd class="mt-1 text-sm font-bold text-navy-900">{{ returnCount() }}</dd></div>
+      <div class="px-2 py-4"><dt class="text-xs text-slate-500">Capacity</dt><dd class="mt-1 text-sm font-bold text-navy-900">{{ item.trip.vehicle?.capacity ?? '—' }}</dd></div>
+    </dl>
+  </section>
 
-    <app-pagination [page]="list.page()" [totalPages]="list.totalPages()" [pageSize]="list.pageSize()"
-        (pageChange)="list.onPageChange($event)" (pageSizeChange)="list.onPageSizeChange($event)" />
+  <section class="mt-7" aria-labelledby="manifest-title">
+    <div class="mb-3">
+      <h2 id="manifest-title" class="font-display text-xl font-extrabold text-navy-900">{{ copy.manifest }}</h2>
+      <p class="mt-1 text-sm text-slate-500">Passengers grouped by boarding stop.</p>
+    </div>
 
-</div>
+    <div class="mb-5 flex border-b border-slate-200" role="tablist" aria-label="Manifest leg">
+      <button type="button" role="tab" class="min-h-11 flex-1 border-b-2 text-sm font-bold transition-colors"
+        [attr.aria-selected]="activeLeg() === 'outbound'" [class.border-brand-500]="activeLeg() === 'outbound'"
+        [class.border-transparent]="activeLeg() !== 'outbound'" [class.text-navy-900]="activeLeg() === 'outbound'"
+        [class.text-slate-500]="activeLeg() !== 'outbound'" (click)="activeLeg.set('outbound')">
+        {{ copy.outbound }} <span class="ml-1 text-xs">{{ outboundCount() }}</span>
+      </button>
+      <button type="button" role="tab" class="min-h-11 flex-1 border-b-2 text-sm font-bold transition-colors"
+        [attr.aria-selected]="activeLeg() === 'return'" [class.border-brand-500]="activeLeg() === 'return'"
+        [class.border-transparent]="activeLeg() !== 'return'" [class.text-navy-900]="activeLeg() === 'return'"
+        [class.text-slate-500]="activeLeg() !== 'return'" (click)="activeLeg.set('return')">
+        {{ copy.return }} <span class="ml-1 text-xs">{{ returnCount() }}</span>
+      </button>
+    </div>
+
+    @if (manifestGroups().length) {
+      <div class="space-y-4">
+        @for (group of manifestGroups(); track group.stop.id) {
+          <section class="ui-card overflow-hidden" aria-labelledby="stop-{{ group.stop.id }}">
+            <div class="flex items-center gap-3 border-b border-slate-100 px-4 py-3">
+              <app-icon iconName="pin_drop" class="text-slate-500" />
+              <h3 id="stop-{{ group.stop.id }}" class="min-w-0 flex-1 truncate text-sm font-bold text-navy-900">{{ group.stop.local }}</h3>
+              <span class="text-xs text-slate-500">{{ group.passengers.length }}</span>
+            </div>
+
+            <div class="divide-y divide-slate-100">
+              @for (passenger of group.passengers; track passenger.bookingId) {
+                <div class="flex min-h-16 items-center gap-3 px-4 py-3">
+                  <div class="min-w-0 flex-1">
+                    <strong class="block truncate text-sm text-navy-900">{{ passenger.firstName }} {{ passenger.lastName }}</strong>
+                    <span class="mt-0.5 block text-xs text-slate-500">{{ tripTypeLabel(passenger) }}</span>
+                  </div>
+                  @if (passenger.phone) {
+                    <a [href]="'tel:' + passenger.phone" class="ui-button ui-button-secondary min-h-10 px-3" [attr.aria-label]="'Call ' + passenger.firstName">
+                      <app-icon iconName="call" size="sm" /> Call
+                    </a>
+                  }
+                </div>
+              }
+            </div>
+          </section>
+        }
+      </div>
+    } @else {
+      <div class="ui-card overflow-hidden"><app-ui-state title="No passengers for this leg" description="Confirmed passengers will appear here grouped by boarding stop." [compact]="true" /></div>
+    }
+  </section>
+}

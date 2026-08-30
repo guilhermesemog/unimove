@@ -31,7 +31,8 @@ export class CreateBoardingStop {
       return;
     }
 
-    this.boardingStopService.createBoardingStop(this.boardingStopFormModel())
-    this.router.navigate(['/admin/boarding-stops']);
+    this.boardingStopService.createBoardingStop(this.boardingStopFormModel()).subscribe(() => {
+      this.router.navigate(['/admin/boarding-stops']);
+    });
   }
 }

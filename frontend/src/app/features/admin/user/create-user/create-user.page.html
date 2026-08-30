@@ -1,51 +1,57 @@
-<app-header title="Users" description="Create a new user to access the system." [showBack]="true" />
+<app-header title="Add User" description="Create access for an administrator, student, or driver." [showBack]="true" />
 
-<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm p-8">
-    <form>
-        <app-text-field [formField]="userForm.firstName" label="First Name" placeholder="Enter your first name" />
-        <app-text-field [formField]="userForm.lastName" label="Last Name" placeholder="Enter your last name" />
-        <app-text-field [formField]="userForm.cpf" label="CPF" placeholder="Enter your CPF" />
+<form class="ui-card p-6" (submit)="$event.preventDefault(); onSubmit()">
+    <section>
+        <div class="mb-5 border-b border-slate-200 pb-4">
+            <h2 class="font-display text-lg font-bold text-navy-900">Account Details</h2>
+            <p class="mt-1 text-sm text-slate-600">Identity, contact information, and access level.</p>
+        </div>
+        <div class="grid gap-x-5 md:grid-cols-2">
+            <app-text-field [formField]="userForm.firstName" label="First Name" placeholder="Enter the first name" />
+            <app-text-field [formField]="userForm.lastName" label="Last Name" placeholder="Enter the last name" />
+            <div>
+                <app-text-field [formField]="userForm.cpf" label="CPF" placeholder="Enter the CPF" />
+                @if (userFormModel().cpf) {
+                <p class="-mt-3 mb-4 text-xs text-slate-500">Formatted: {{ userFormModel().cpf | cpf }}</p>
+                }
+            </div>
+            <div>
+                <app-text-field [formField]="userForm.phone" label="Phone" placeholder="Enter the phone number" />
+                @if (userFormModel().phone) {
+                <p class="-mt-3 mb-4 text-xs text-slate-500">Formatted: {{ userFormModel().phone | phone }}</p>
+                }
+            </div>
+            <app-text-field [formField]="userForm.password" label="Temporary Password" placeholder="Enter a temporary password" type="password" />
+            <app-select-field [formField]="roleForm" label="Role" [options]="roleOptions" />
+        </div>
+    </section>
 
-        @if (userFormModel().cpf) {
-        <p class="text-xs text-gray-500 -mt-3 mb-4">
-            Formatted: {{ userFormModel().cpf | cpf }}
-        </p>
-        }
+    @if (roleForm().value() === 'CONDUCTOR') {
+    <section class="mt-2 border-t border-slate-200 pt-5">
+        <h2 class="font-display mb-1 text-lg font-bold text-navy-900">Driver Details</h2>
+        <p class="mb-5 text-sm text-slate-600">License information required for trip assignments.</p>
+        <div class="grid gap-x-5 md:grid-cols-2">
+            <app-text-field [formField]="conductorForm.license" label="License Number" placeholder="Enter the license number" />
+            <app-date-field [formField]="conductorForm.licenseExpirationDate" label="License Expiration Date" />
+        </div>
+    </section>
+    }
 
-        <app-text-field [formField]="userForm.phone" label="Phone" placeholder="Enter your phone number" />
+    @if (roleForm().value() === 'STUDENT') {
+    <section class="mt-2 border-t border-slate-200 pt-5">
+        <h2 class="font-display mb-1 text-lg font-bold text-navy-900">Student Details</h2>
+        <p class="mb-5 text-sm text-slate-600">Academic and preferred travel information.</p>
+        <div class="grid gap-x-5 md:grid-cols-2">
+            <app-select-field [formField]="studentForm.universityId" label="University" [options]="universityOptions()" />
+            <app-select-field [formField]="studentForm.preferredBoardingStopId" label="Preferred Boarding Stop" [options]="boardingStopOptions()" />
+            <app-text-field [formField]="studentForm.address" label="Address" placeholder="Enter the address" />
+            <app-text-field [formField]="studentForm.course" label="Course" placeholder="Enter the course" />
+            <app-number-field [formField]="studentForm.period" label="Period" placeholder="Enter the current period" />
+        </div>
+    </section>
+    }
 
-        @if (userFormModel().phone) {
-        <p class="text-xs text-gray-500 -mt-3 mb-4">
-            Formatted: {{ userFormModel().phone | phone }}
-        </p>
-        }
-
-        <app-text-field [formField]="userForm.password" label="Password" placeholder="Enter your password"
-            type="password" />
-
-        <app-select-field [formField]="roleForm" label="Role" [options]="roleOptions" />
-
-        <!-- Conductor Form -->
-        @if (roleForm().value() === 'CONDUCTOR') {
-        <app-text-field [formField]="conductorForm.license" label="License Number"
-            placeholder="Enter your license number" />
-        <app-date-field [formField]="conductorForm.licenseExpirationDate" label="License Expiration Date"
-            placeholder="Enter your license expiration date" />
-        }
-
-        @if (roleForm().value() === 'STUDENT') {
-        <app-select-field [formField]="studentForm.universityId" label="University" [options]="universityOptions()" />
-        <app-select-field [formField]="studentForm.preferredBoardingStopId" label="Boarding Stop"
-            [options]="boardingStopOptions()" />
-        <app-text-field [formField]="studentForm.address" label="Address" placeholder="Enter your address" />
-        <app-text-field [formField]="studentForm.course" label="Course" placeholder="Enter your course" />
-        <app-number-field [formField]="studentForm.period" label="Period" placeholder="Enter your period" />
-        }
-
-        <button type="button"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            [disabled]="isFormInvalid()" (click)="onSubmit()">
-            Save Changes
-        </button>
-    </form>
-</div>
+    <div class="mt-2 flex justify-end border-t border-slate-200 pt-5">
+        <button type="submit" class="ui-button ui-button-primary" [disabled]="isFormInvalid()">Add User</button>
+    </div>
+</form>

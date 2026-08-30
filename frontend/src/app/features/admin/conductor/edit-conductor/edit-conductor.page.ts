@@ -1,6 +1,5 @@
 import { Component, computed, inject, Input, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { form, FormField, minLength, maxLength, required, min } from '@angular/forms/signals';
 
 import { User } from '../../../../shared/types/user.type';
@@ -14,10 +13,11 @@ import { Conductor } from '../../../../shared/types/conductor.type';
 import { DateFieldComponent } from '../../../../shared/components/forms/date-field/date-field.component';
 import { CpfPipe } from '../../../../shared/pipes/cpf-pipe';
 import { PhonePipe } from '../../../../shared/pipes/phone-pipe';
+import { AccountSummaryComponent } from '../../../../shared/components/account-summary/account-summary.component';
 
 @Component({
     selector: 'app-edit-conductor',
-    imports: [CommonModule, FormField, TextFieldComponent, DateFieldComponent, ConfirmDialogComponent, HeaderComponent, CpfPipe, PhonePipe],
+    imports: [FormField, TextFieldComponent, DateFieldComponent, ConfirmDialogComponent, HeaderComponent, CpfPipe, PhonePipe, AccountSummaryComponent],
     templateUrl: './edit-conductor.page.html',
 })
 export class EditConductorPage {
@@ -107,7 +107,7 @@ export class EditConductorPage {
     onDeleteClick() {
         this.confirmDialog.set({
             open: true,
-            title: 'Delete conductor',
+            title: 'Delete driver',
             message: `Are you sure you want to delete ${this.conductor()?.user.firstName} ${this.conductor()?.user.lastName}? This action cannot be undone.`,
             confirmLabel: 'Delete',
             variant: 'danger',
@@ -119,10 +119,10 @@ export class EditConductorPage {
     onToggleUserStatusClick() {
         this.confirmDialog.set({
             open: true,
-            title: `${this.conductor()?.user.active ? 'Deactivate' : 'Activate'} conductor`,
+            title: `${this.conductor()?.user.active ? 'Deactivate' : 'Activate'} driver`,
             message: `Are you sure you want to ${this.conductor()?.user.active ? 'deactivate' : 'activate'} ${this.conductor()?.user.firstName} ${this.conductor()?.user.lastName}? They will ${this.conductor()?.user.active ? 'lose' : 'gain'} access to the system.`,
             confirmLabel: `${this.conductor()?.user.active ? 'Deactivate' : 'Activate'}`,
-            variant: 'danger',
+            variant: this.conductor()?.user.active ? 'danger' : 'default',
             action: () => this.toggleUserStatus(this.conductor()?.user!),
         });
     }

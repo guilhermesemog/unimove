@@ -1,0 +1,9 @@
+<div class="mb-5 flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <app-search-bar class="min-w-0 flex-1" [value]="value()" [placeholder]="placeholder()"
+        (valueChange)="valueChange.emit($event)" (search)="search.emit()" (clear)="clear.emit()" />
+
+    <button type="button" class="ui-button ui-button-primary shrink-0" (click)="create.emit()">
+        <app-icon iconName="add" size="sm" />
+        {{ createLabel() }}
+    </button>
+</div>

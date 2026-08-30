@@ -9,11 +9,11 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 import { DataTableComponent } from '../../../../shared/components/data-table/data-table.component';
 import { HeaderComponent } from '../../../../shared/components/list-header/header.component';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
-import { SearchBarComponent } from '../../../../shared/components/search-bar/search-bar.component';
+import { AdminListToolbarComponent } from '../../../../shared/components/admin-list-toolbar/admin-list-toolbar.component';
 
 @Component({
   selector: 'app-list-boarding-stop',
-  imports: [PaginationComponent, ConfirmDialogComponent, DataTableComponent, HeaderComponent, SearchBarComponent],
+  imports: [PaginationComponent, ConfirmDialogComponent, DataTableComponent, HeaderComponent, AdminListToolbarComponent],
   templateUrl: './list-boarding-stop.page.html',
 })
 export class ListBoardingStopPage {
@@ -29,15 +29,11 @@ export class ListBoardingStopPage {
   confirmDialog = new ConfirmDialogController();
 
   columns: TableColumn<BoardingStop>[] = [
-    { key: 'local', label: 'Local', sortable: true },
+    { key: 'local', label: 'Location', sortable: true },
   ];
 
   ngOnInit() {
     this.list.fetch();
-  }
-
-  onEdit(boardingStop: BoardingStop) {
-    this.router.navigate(['/admin/boarding-stops', boardingStop.id, 'edit']);
   }
 
   onDeleteClick(boardingStop: BoardingStop) {

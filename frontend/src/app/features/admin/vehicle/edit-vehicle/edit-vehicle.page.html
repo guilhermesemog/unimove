@@ -1,23 +1,20 @@
-<app-header title="Vehicles" description="Edit the vehicle {{ vehicle()?.plate }} information below." [showBack]="true" />
+<app-header title="Edit Vehicle" description="Update {{ vehicle()?.plate || 'this vehicle' }} and its capacity." [showBack]="true" />
 
-<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm p-8">
-    <form>
+<form class="ui-card max-w-3xl p-6" (submit)="$event.preventDefault(); onSubmit()">
+    <div class="mb-6 border-b border-slate-200 pb-4">
+        <h2 class="font-display text-lg font-bold text-navy-900">Vehicle Details</h2>
+        <p class="mt-1 text-sm text-slate-600">Keep the plate and passenger capacity accurate for assignments.</p>
+    </div>
+    <div class="grid gap-x-5 md:grid-cols-2">
         <app-text-field [formField]="vehicleForm.plate" label="Plate" placeholder="Enter the vehicle plate" />
         <app-number-field [formField]="vehicleForm.capacity" label="Capacity" placeholder="Enter the vehicle capacity" />
-
-        <div class="flex flex-row justify-between mb-4">
-            <button type="button"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                [disabled]="vehicleForm().invalid() || !vehicleForm().dirty()" (click)="onSubmit()">
-                Save Changes
-            </button>
-            <button type="button" class="bg-gray-500 none hover:bg-gray-700 text-white font-bold py-2 px-4 rounded cursor-pointer
-        disabled:hidden" (click)="onDeleteClick()">
-                Delete
-            </button>
-        </div>
-    </form>
-</div>
+    </div>
+    <div class="mt-2 flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <button type="button" class="ui-button ui-button-secondary text-red-700" (click)="onDeleteClick()">Delete Vehicle</button>
+        <button type="submit" class="ui-button ui-button-primary"
+            [disabled]="vehicleForm().invalid() || !vehicleForm().dirty()">Save Changes</button>
+    </div>
+</form>
 
 <app-confirm-dialog [open]="confirmDialog().open" [title]="confirmDialog().title" [message]="confirmDialog().message"
     [confirmLabel]="confirmDialog().confirmLabel" [variant]="confirmDialog().variant"
