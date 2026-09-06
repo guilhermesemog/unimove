@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.dto.interestlist;
 
+import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -12,6 +13,6 @@ public record InterestListCreate(
         @NotNull(message = "Arrival time is required") LocalTime arrivalTime,
         @NotNull(message = "Return departure time is required") LocalTime returnDepartureTime,
         @NotNull(message = "Return arrival time is required") LocalTime returnArrivalTime,
-        @NotNull(message = "Destination ID is required") Long destinationId
+        @NotNull(message = "Destination ID is required") UUID destinationId
 ) {
 }

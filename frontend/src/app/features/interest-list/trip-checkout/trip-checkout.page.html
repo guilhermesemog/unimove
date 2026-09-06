@@ -53,7 +53,7 @@
             [class.border-brand-500]="selectedTripType() === option.value" [class.bg-brand-50]="selectedTripType() === option.value"
             [class.text-brand-700]="selectedTripType() === option.value" [class.border-slate-200]="selectedTripType() !== option.value"
             [class.bg-white]="selectedTripType() !== option.value" [class.text-slate-600]="selectedTripType() !== option.value"
-            (click)="selectedTripType.set(option.value)">
+            (click)="selectTripType(option.value)">
             <app-icon [iconName]="option.icon" /> {{ option.label }}
           </button>
         }

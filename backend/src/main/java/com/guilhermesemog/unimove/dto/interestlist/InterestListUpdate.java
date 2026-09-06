@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.dto.interestlist;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,7 +14,7 @@ public record InterestListUpdate(
         @NotNull(message = "Arrival time is required") LocalTime arrivalTime,
         @NotNull(message = "Return departure time is required") LocalTime returnDepartureTime,
         @NotNull(message = "Return arrival time is required") LocalTime returnArrivalTime,
-        @NotNull(message = "Destination ID is required") Long destinationId,
+        @NotNull(message = "Destination ID is required") UUID destinationId,
         @NotNull(message = "List status is required") ListStatus listStatus
 ) {
 }

@@ -1,7 +1,8 @@
 package com.guilhermesemog.unimove.dto.trip;
 
+import java.util.UUID;
 public record TripPatch(
-        Long conductorId,
-        Long vehicleId
+        UUID conductorId,
+        UUID vehicleId
 ) {
 }

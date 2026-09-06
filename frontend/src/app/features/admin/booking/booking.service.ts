@@ -16,12 +16,12 @@ export class BookingService {
         return this.http.post<void>(`${API_BASE_URL}/bookings`, booking);
     }
 
-    deleteBooking(id: number): Observable<void> {
+    deleteBooking(id: string): Observable<void> {
         return this.http.delete<void>(`${API_BASE_URL}/bookings/${id}`);
     }
 
 
-    getBookingsByInterestListId(interestListId: number, params: PageParameters): Observable<PageResponse<Booking>> {
+    getBookingsByInterestListId(interestListId: string, params: PageParameters): Observable<PageResponse<Booking>> {
         return this.http.get<PageResponse<Booking>>(`${API_BASE_URL}/bookings/interest-list/${interestListId}`, {
             params: {
                 page: params.page.toString(),

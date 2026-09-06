@@ -2,24 +2,54 @@ spring:
   application:
     name: unimove
   datasource:
-    url: jdbc:postgresql://localhost:5432/unimove
-    username: postgres
-    password: postgres
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/unimove}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
+
+  flyway:
+    baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:false}
+    baseline-version: 1
+    baseline-description: Existing UNIMOVE schema
 
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: validate
+    show-sql: ${JPA_SHOW_SQL:false}
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 jwt:
-  secret: frXtqQ70gJHD12opc47kUT1kBwxhddftEiM3Ky4h/vsCwbHWouddtoHL/JihWhgI3oeVbgXxoHNzSf/Z2zS1Gw==
-  expiration: 3600000
-  refresh-expiration: 604800000
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:3600000}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
 
 logging:
   level:
-    web: debug
+    web: ${WEB_LOG_LEVEL:info}
+
+unimove:
+  business-time-zone: ${BUSINESS_TIME_ZONE:America/Sao_Paulo}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+  phase-five:
+    recurrence:
+      enabled: ${RECURRENCE_ENABLED:false}
+      automatic-generation-enabled: ${RECURRENCE_AUTOMATIC_GENERATION_ENABLED:false}
+      default-horizon-weeks: ${RECURRENCE_DEFAULT_HORIZON_WEEKS:8}
+      generation-cron: ${RECURRENCE_GENERATION_CRON:0 15 1 * * *}
+    notifications:
+      processor-enabled: ${NOTIFICATION_PROCESSOR_ENABLED:false}
+      reminders-enabled: ${NOTIFICATION_REMINDERS_ENABLED:false}
+      processing-interval-ms: ${NOTIFICATION_PROCESSING_INTERVAL_MS:15000}
+      batch-size: ${NOTIFICATION_BATCH_SIZE:50}
+      max-attempts: ${NOTIFICATION_MAX_ATTEMPTS:5}
+      initial-backoff: ${NOTIFICATION_INITIAL_BACKOFF:PT30S}
+      lock-timeout: ${NOTIFICATION_LOCK_TIMEOUT:PT5M}
+      reminder-cron: ${NOTIFICATION_REMINDER_CRON:0 0 8 * * *}
+    telemetry:
+      enabled: ${TELEMETRY_ENABLED:false}
+      max-events-per-minute: ${TELEMETRY_MAX_EVENTS_PER_MINUTE:120}
+      retention-days: ${TELEMETRY_RETENTION_DAYS:180}
+      retention-cron: ${TELEMETRY_RETENTION_CRON:0 30 2 * * *}

@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 
 import { UI_COPY } from '../../core/content/ui-copy';
+import { TelemetryService } from '../../core/telemetry/telemetry.service';
 import { BookingService } from '../admin/booking/booking.service';
 import { TripService } from '../admin/trip/trip.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -22,6 +23,7 @@ const PAGE_REQUEST = { page: 0, size: 100, sortBy: 'id', sortDirection: 'desc' a
 export class BookingsPage {
   private readonly bookingService = inject(BookingService);
   private readonly tripService = inject(TripService);
+  private readonly telemetry = inject(TelemetryService);
 
   protected readonly copy = UI_COPY.student.journeys;
   protected readonly loading = signal(true);
@@ -81,6 +83,7 @@ export class BookingsPage {
       next: () => {
         this.bookings.update((items) => items.filter((item) => item.id !== booking.id));
         this.feedback.set('Your booking has been cancelled.');
+        this.telemetry.track('booking_cancelled', { screen: 'my_trips', result: 'success' });
         this.bookingToCancel.set(null);
       },
       error: () => {

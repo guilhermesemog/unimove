@@ -1,6 +1,7 @@
 import { Component, computed, inject, Input, signal } from '@angular/core';
 
 import { UI_COPY } from '../../../core/content/ui-copy';
+import { TelemetryService } from '../../../core/telemetry/telemetry.service';
 import { HeaderComponent } from '../../../shared/components/list-header/header.component';
 import { Icon } from '../../../shared/components/icon/icon';
 import { RouteTimelineComponent } from '../../../shared/components/route-timeline/route-timeline.component';
@@ -17,9 +18,10 @@ import { TripService } from '../../admin/trip/trip.service';
   templateUrl: './trips-detail.page.html',
 })
 export class TripsDetailPage {
-  @Input() id!: number;
+  @Input() id!: string;
 
   private readonly tripService = inject(TripService);
+  private readonly telemetry = inject(TelemetryService);
 
   protected readonly copy = UI_COPY.driver.operation;
   protected readonly TripType = TripType;
@@ -41,7 +43,7 @@ export class TripsDetailPage {
     return capacity !== undefined && capacity !== null && Math.max(this.outboundCount(), this.returnCount()) > capacity;
   });
   protected readonly manifestGroups = computed<DriverManifestGroup[]>(() => {
-    const groups = new Map<number, DriverManifestGroup>();
+    const groups = new Map<string, DriverManifestGroup>();
     for (const passenger of this.legPassengers()) {
       const group = groups.get(passenger.boardingStop.id);
       if (group) group.passengers.push(passenger);
@@ -57,11 +59,17 @@ export class TripsDetailPage {
   protected fetch(): void {
     this.loading.set(true);
     this.error.set(null);
-    this.tripService.getDriverOperation(Number(this.id)).subscribe({
-      next: (operation) => this.operation.set(operation),
+    this.tripService.getDriverOperation(this.id).subscribe({
+      next: (operation) => {
+        this.operation.set(operation);
+        this.telemetry.track('operation_opened', { screen: 'operation_detail',
+          durationMs: this.telemetry.elapsed('driver_operation', true) });
+        this.telemetry.track('manifest_viewed', { screen: 'operation_detail', step: 'manifest' });
+      },
       error: () => {
         this.error.set('We could not load this operation. Confirm that it is assigned to you and try again.');
         this.loading.set(false);
+        this.telemetry.track('operation_load_failed', { screen: 'operation_detail', errorCategory: 'server' });
       },
       complete: () => this.loading.set(false),
     });

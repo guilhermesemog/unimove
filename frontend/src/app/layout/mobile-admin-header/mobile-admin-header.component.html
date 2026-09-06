@@ -9,9 +9,10 @@
 
         <app-brand />
 
-        <button type="button" (click)="logout()" [attr.aria-label]="copy.actions.signOut"
-            class="ui-icon-button -mr-2 cursor-pointer">
-            <app-icon iconName="logout" />
-        </button>
+        <div class="-mr-2 flex items-center gap-1">
+            <app-notification-bell />
+            <button type="button" (click)="logout()" [attr.aria-label]="copy.actions.signOut"
+                class="ui-icon-button cursor-pointer"><app-icon iconName="logout" /></button>
+        </div>
     </div>
 </header>

@@ -74,14 +74,8 @@ public class StudentMapper {
             student.setUniversity(university);
         }
 
-        Long bsId = newStudent.preferredBoardingStopId();
-
-        if (bsId != null) {
-            if (bsId == -1) {
-                student.setPreferredBoardingStop(null);
-            } else {
-                student.setPreferredBoardingStop(boardingStop);
-            }
+        if (newStudent.preferredBoardingStopId() != null) {
+            student.setPreferredBoardingStop(boardingStop);
         }
 
         return student;

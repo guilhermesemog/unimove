@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.controller;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopCreate;
 import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponse;
 import com.guilhermesemog.unimove.service.BoardingStopService;
@@ -28,7 +29,7 @@ public class BoardingStopController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardingStopResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<BoardingStopResponse> getById(@PathVariable UUID id) {
         BoardingStopResponse responseBody = boardingStopService.getById(id);
         return ResponseEntity.ok(responseBody);
     }
@@ -64,7 +65,7 @@ public class BoardingStopController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         boardingStopService.delete(id);
         return ResponseEntity.noContent().build();
     }

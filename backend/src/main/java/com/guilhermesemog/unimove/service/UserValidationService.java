@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.service;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
 import com.guilhermesemog.unimove.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ public class UserValidationService {
         this.userRepository = userRepository;
     }
 
-    public void validateCpf(Long userId, String cpf) {
+    public void validateCpf(UUID userId, String cpf) {
         if (cpf == null || cpf.isBlank()) {
             return;
         }

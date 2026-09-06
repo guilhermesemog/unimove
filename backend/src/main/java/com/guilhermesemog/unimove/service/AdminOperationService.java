@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.service;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.admin.AdminOperationResponse;
 import com.guilhermesemog.unimove.mapper.InterestListMapper;
 import com.guilhermesemog.unimove.mapper.TripMapper;
@@ -42,9 +43,9 @@ public class AdminOperationService {
 
     @Transactional(readOnly = true)
     public List<AdminOperationResponse> getAll() {
-        Map<Long, Long> bookingCounts = bookingRepository.countBookingsByInterestList().stream()
+        Map<UUID, Long> bookingCounts = bookingRepository.countBookingsByInterestList().stream()
                 .collect(Collectors.toMap(BookingCountView::getInterestListId, BookingCountView::getBookingCount));
-        Map<Long, Trip> tripsByDemand = tripRepository.findAll().stream()
+        Map<UUID, Trip> tripsByDemand = tripRepository.findAll().stream()
                 .collect(Collectors.toMap(
                         trip -> trip.getInterestList().getId(),
                         Function.identity(),

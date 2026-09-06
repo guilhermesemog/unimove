@@ -40,7 +40,7 @@ export class BoardingStopService {
         });
     }
 
-    deleteBoardingStop(id: number): Observable<void> {
+    deleteBoardingStop(id: string): Observable<void> {
         return this.http.delete<void>(`${API_BASE_URL}/boarding-stops/${id}`);
     }
 

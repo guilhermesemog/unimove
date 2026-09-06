@@ -35,7 +35,7 @@ export class UserPage {
   protected readonly student = signal<Student | null>(null);
   protected readonly conductor = signal<Conductor | null>(null);
   protected readonly boardingStops = signal<BoardingStop[]>([]);
-  protected readonly selectedBoardingStopId = signal<number | null>(null);
+  protected readonly selectedBoardingStopId = signal<string | null>(null);
 
   ngOnInit(): void {
     this.fetch();
@@ -58,7 +58,7 @@ export class UserPage {
     });
   }
 
-  private fetchStudent(id: number): void {
+  private fetchStudent(id: string): void {
     forkJoin({
       student: this.studentService.getStudentById(id),
       stops: this.boardingStopService.getBoardingStopsAsList(),
@@ -73,7 +73,7 @@ export class UserPage {
     });
   }
 
-  private fetchConductor(id: number): void {
+  private fetchConductor(id: string): void {
     this.conductorService.getConductorById(id).subscribe({
       next: (conductor) => this.conductor.set(conductor),
       error: () => this.error.set('We could not load your driver information.'),
@@ -82,7 +82,7 @@ export class UserPage {
   }
 
   protected selectBoardingStop(event: Event): void {
-    this.selectedBoardingStopId.set(Number((event.target as HTMLSelectElement).value));
+    this.selectedBoardingStopId.set((event.target as HTMLSelectElement).value || null);
     this.feedback.set(null);
   }
 

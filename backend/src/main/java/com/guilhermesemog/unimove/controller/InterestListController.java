@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.controller;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.interestlist.*;
 import com.guilhermesemog.unimove.service.InterestListService;
 import jakarta.validation.Valid;
@@ -26,7 +27,7 @@ public class InterestListController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InterestListResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<InterestListResponse> getById(@PathVariable UUID id) {
         InterestListResponse responseBody = interestListService.getById(id);
         return ResponseEntity.ok(responseBody);
     }
@@ -44,28 +45,28 @@ public class InterestListController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         interestListService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody InterestListUpdate requestBody) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody InterestListUpdate requestBody) {
         interestListService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody InterestListPatch requestBody) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody InterestListPatch requestBody) {
         interestListService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> toggleStatus(@RequestParam Long id, @Valid @RequestBody InterestListToggleStatus requestBody) {
+    public ResponseEntity<Void> toggleStatus(@RequestParam UUID id, @Valid @RequestBody InterestListToggleStatus requestBody) {
         interestListService.toggleStatus(id, requestBody);
         return ResponseEntity.ok().build();
     }

@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.controller;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.university.UniversityCreate;
 import com.guilhermesemog.unimove.dto.university.UniversityPatch;
 import com.guilhermesemog.unimove.dto.university.UniversityResponse;
@@ -33,7 +34,7 @@ public class UniversityController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UniversityResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<UniversityResponse> getById(@PathVariable UUID id) {
         UniversityResponse responseBody = universityService.getById(id);
         return ResponseEntity.ok(responseBody);
     }
@@ -80,21 +81,21 @@ public class UniversityController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         universityService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UniversityUpdate requestBody) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody UniversityUpdate requestBody) {
         universityService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UniversityPatch requestBody) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody UniversityPatch requestBody) {
         universityService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }

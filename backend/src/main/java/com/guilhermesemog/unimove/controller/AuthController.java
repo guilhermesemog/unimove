@@ -1,6 +1,7 @@
 package com.guilhermesemog.unimove.controller;
 
 import com.guilhermesemog.unimove.dto.auth.*;
+import com.guilhermesemog.unimove.dto.common.CommonUserCreate;
 import com.guilhermesemog.unimove.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -21,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody CommonUserCreate registerRequest) {
         LoginResponse loginResponse = authService.register(registerRequest);
         return getAuthResponseResponseEntity(loginResponse);
     }

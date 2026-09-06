@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.model.embeddable;
 
+import java.util.UUID;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Embeddable
 public class TripBoardingPointId {
-    private Long tripId;
-    private Long boardingStopId;
+    private UUID tripId;
+    private UUID boardingStopId;
 }

@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.security;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.repository.BookingRepository;
 import com.guilhermesemog.unimove.repository.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -16,13 +17,13 @@ public class UserSecurity {
         this.bookingRepository = bookingRepository;
     }
 
-    public boolean isOwner(Long id, Authentication authentication) {
+    public boolean isOwner(UUID id, Authentication authentication) {
         return userRepository.findByCpf(authentication.getName())
                 .map(user -> user.getId().equals(id))
                 .orElse(false);
     }
 
-    public boolean isBookingOwner(Long bookingId, Authentication authentication) {
+    public boolean isBookingOwner(UUID bookingId, Authentication authentication) {
         return bookingRepository.findById(bookingId)
                 .map(booking -> booking.getStudent().getUser().getCpf().equals(authentication.getName()))
                 .orElse(false);

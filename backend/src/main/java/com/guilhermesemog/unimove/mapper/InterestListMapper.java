@@ -43,7 +43,9 @@ public class InterestListMapper {
                 interestList.getReturnDepartureTime(),
                 interestList.getReturnArrivalTime(),
                 destinationResponse,
-                interestList.getListStatus()
+                interestList.getListStatus(),
+                interestList.getRecurrencePlan() == null ? null : interestList.getRecurrencePlan().getId(),
+                interestList.getOccurrenceDate()
         );
     }
 

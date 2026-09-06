@@ -40,15 +40,15 @@ export class UniversityService {
         });
     }
 
-    getUniversityById(id: number): Observable<University> {
+    getUniversityById(id: string): Observable<University> {
         return this.http.get<University>(`${API_BASE_URL}/universities/${id}`);
     }
 
-    updateUniversity(id: number, university: UniversityUpdateRequest): Observable<University> {
+    updateUniversity(id: string, university: UniversityUpdateRequest): Observable<University> {
         return this.http.put<University>(`${API_BASE_URL}/universities/${id}`, university);
     }
 
-    deleteUniversity(id: number): Observable<void> {
+    deleteUniversity(id: string): Observable<void> {
         return this.http.delete<void>(`${API_BASE_URL}/universities/${id}`);
     }
 

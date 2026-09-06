@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.model;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -11,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(unique = true, nullable = false)
     private String cpf;

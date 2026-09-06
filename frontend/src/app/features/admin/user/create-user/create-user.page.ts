@@ -37,13 +37,13 @@ export class CreateUserPage {
 
     universityService = inject(UniversityService);
     universities = signal<Array<University>>([]);
-    universityOptions = computed<SelectOption<number>[]>(() =>
+    universityOptions = computed<SelectOption<string>[]>(() =>
         this.universities().map((u) => ({ value: u.id, label: u.name }))
     );
 
     boardingStopService = inject(BoardingStopService);
     boardingStops = signal<Array<BoardingStop>>([]);
-    boardingStopOptions = computed<SelectOption<number>[]>(() =>
+    boardingStopOptions = computed<SelectOption<string>[]>(() =>
         this.boardingStops().map((bs) => ({ value: bs.id, label: bs.local }))
     );
 

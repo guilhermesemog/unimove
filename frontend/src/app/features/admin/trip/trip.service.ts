@@ -26,7 +26,7 @@ export class TripService {
         });
     }
 
-    getTripById(id: number): Observable<Trip> {
+    getTripById(id: string): Observable<Trip> {
         return this.http.get<Trip>(`${API_BASE_URL}/trips/${id}`);
     }
 
@@ -42,7 +42,7 @@ export class TripService {
         });
     }
 
-    getStudentsByTripId(id: number, params: PageParameters): Observable<PageResponse<Student>> {
+    getStudentsByTripId(id: string, params: PageParameters): Observable<PageResponse<Student>> {
         return this.http.get<PageResponse<Student>>(`${API_BASE_URL}/trips/${id}/students`, {
             params: {
                 page: params.page.toString(),
@@ -64,23 +64,23 @@ export class TripService {
         });
     }
 
-    getDriverOperation(id: number): Observable<DriverOperation> {
+    getDriverOperation(id: string): Observable<DriverOperation> {
         return this.http.get<DriverOperation>(`${API_BASE_URL}/trips/me/${id}/operation`);
     }
 
-    updateTripConductor(id: number, trip: TripUpdateRequest): Observable<Trip> {
+    updateTripConductor(id: string, trip: TripUpdateRequest): Observable<Trip> {
         return this.http.patch<Trip>(`${API_BASE_URL}/trips/${id}/conductor`, trip);
     }
 
-    updateTripVehicle(id: number, trip: TripUpdateRequest): Observable<Trip> {
+    updateTripVehicle(id: string, trip: TripUpdateRequest): Observable<Trip> {
         return this.http.patch<Trip>(`${API_BASE_URL}/trips/${id}/vehicle`, trip);
     }
 
-    updateTripAssignment(id: number, conductorId: number, vehicleId: number): Observable<Trip> {
+    updateTripAssignment(id: string, conductorId: string, vehicleId: string): Observable<Trip> {
         return this.http.patch<Trip>(`${API_BASE_URL}/trips/${id}/assignment`, { conductorId, vehicleId });
     }
 
-    updateTrip(id: number, trip: TripUpdateRequest): Observable<Trip> {
+    updateTrip(id: string, trip: TripUpdateRequest): Observable<Trip> {
         const requests: Observable<Trip | null>[] = [];
 
         if (trip.conductorId !== undefined) {
@@ -102,7 +102,7 @@ export class TripService {
         return this.http.post<Trip>(`${API_BASE_URL}/trips`, trip);
     }
 
-    deleteTrip(id: number): Observable<void> {
+    deleteTrip(id: string): Observable<void> {
         return this.http.delete<void>(`${API_BASE_URL}/trips/${id}`);
     }
 }

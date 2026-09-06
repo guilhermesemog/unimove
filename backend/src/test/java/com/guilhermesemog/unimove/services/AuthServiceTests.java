@@ -3,18 +3,21 @@ package com.guilhermesemog.unimove.services;
 import com.guilhermesemog.unimove.dto.auth.LoginRequest;
 import com.guilhermesemog.unimove.dto.auth.LoginResponse;
 import com.guilhermesemog.unimove.dto.auth.RefreshRequest;
+import com.guilhermesemog.unimove.dto.common.CommonUserCreate;
 import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
 import com.guilhermesemog.unimove.model.User;
 import com.guilhermesemog.unimove.model.enums.Role;
 import com.guilhermesemog.unimove.repository.UserRepository;
 import com.guilhermesemog.unimove.security.JwtService;
 import com.guilhermesemog.unimove.service.AuthService;
+import com.guilhermesemog.unimove.service.AdminBootstrapGuard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.InOrder;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -55,6 +59,9 @@ public class AuthServiceTests {
     @Mock
     private JwtService jwtService;
 
+    @Mock
+    private AdminBootstrapGuard adminBootstrapGuard;
+
     private AuthService authService;
 
     private static String CPF = "12345678900";
@@ -70,8 +77,48 @@ public class AuthServiceTests {
                 passwordEncoder,
                 authenticationManager,
                 jwtService,
-                userDetailsService
+                userDetailsService,
+                adminBootstrapGuard
         );
+    }
+
+    @Nested
+    @DisplayName("administrator bootstrap")
+    class AdministratorBootstrapTests {
+
+        @Test
+        @DisplayName("should claim the one-time bootstrap before creating the first administrator")
+        void shouldClaimBootstrapBeforeRegisteringAdministrator() {
+            CommonUserCreate request = new CommonUserCreate(
+                    CPF, "First", "Admin", RAW_PASSWORD, "11999999999", true);
+            given(userRepository.existsByCpf(CPF)).willReturn(false);
+            given(passwordEncoder.encode(RAW_PASSWORD)).willReturn(ENCODED_PASSWORD);
+            given(userDetailsService.loadUserByUsername(CPF)).willReturn(userDetails);
+            given(jwtService.generateAccessToken(userDetails)).willReturn(ACCESS_TOKEN);
+            given(jwtService.generateRefreshToken(userDetails)).willReturn(REFRESH_TOKEN);
+
+            LoginResponse response = authService.register(request);
+
+            InOrder order = inOrder(adminBootstrapGuard, userRepository);
+            order.verify(adminBootstrapGuard).claim();
+            order.verify(userRepository).existsByCpf(CPF);
+            verify(userRepository).save(argThat(user -> user.getRole() == Role.ADMIN));
+            assertThat(response.accessToken()).isEqualTo(ACCESS_TOKEN);
+        }
+
+        @Test
+        @DisplayName("should not create another administrator after bootstrap is claimed")
+        void shouldRejectRegistrationAfterBootstrap() {
+            CommonUserCreate request = new CommonUserCreate(
+                    CPF, "Another", "Admin", RAW_PASSWORD, "11999999999", true);
+            doThrow(new ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN,
+                    "Administrator bootstrap registration is no longer available"))
+                    .when(adminBootstrapGuard).claim();
+
+            assertThatThrownBy(() -> authService.register(request))
+                    .isInstanceOf(ResponseStatusException.class);
+            verify(userRepository, never()).save(any());
+        }
     }
 
     @Nested

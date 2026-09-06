@@ -1,7 +1,8 @@
 package com.guilhermesemog.unimove.repository;
 
+import java.util.UUID;
 public interface BookingCountView {
-    Long getInterestListId();
+    UUID getInterestListId();
 
     Long getBookingCount();
 }

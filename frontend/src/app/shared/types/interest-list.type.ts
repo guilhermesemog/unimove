@@ -7,7 +7,7 @@ export enum ListStatus {
 }
 
 export interface InterestList {
-    id: number;
+    id: string;
     referenceDate: string;
     closingTime: string;
     departureTime: string;
@@ -16,6 +16,8 @@ export interface InterestList {
     returnArrivalTime: string;
     destination: University;
     listStatus: ListStatus;
+    recurrencePlanId?: string | null;
+    occurrenceDate?: string | null;
 }
 
 export interface InterestListCreateRequest {
@@ -25,7 +27,7 @@ export interface InterestListCreateRequest {
     arrivalTime: string;
     returnDepartureTime: string;
     returnArrivalTime: string;
-    destinationId: number;
+    destinationId: string;
 }
 
 export interface InterestListUpdateRequest {
@@ -35,6 +37,6 @@ export interface InterestListUpdateRequest {
     arrivalTime: string;
     returnDepartureTime: string;
     returnArrivalTime: string;
-    destinationId: number;
+    destinationId: string;
     listStatus: ListStatus;
 }

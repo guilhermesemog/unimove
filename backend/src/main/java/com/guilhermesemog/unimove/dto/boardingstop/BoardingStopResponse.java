@@ -1,7 +1,8 @@
 package com.guilhermesemog.unimove.dto.boardingstop;
 
+import java.util.UUID;
 public record BoardingStopResponse(
-        Long id,
+        UUID id,
         String local
 ) {
 }

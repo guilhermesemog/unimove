@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.services;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.student.StudentPreferredBoardingStopUpdate;
 import com.guilhermesemog.unimove.dto.student.StudentResponse;
 import com.guilhermesemog.unimove.mapper.StudentMapper;
@@ -57,17 +58,17 @@ class StudentServiceTests {
     void shouldUpdateAuthenticatedStudentPreferredBoardingStop() {
         Student student = new Student();
         BoardingStop boardingStop = new BoardingStop();
-        boardingStop.setId(5L);
+        boardingStop.setId(UUID.fromString("00000000-0000-4000-8000-000000000005"));
 
         given(authentication.getName()).willReturn("12345678900");
         given(studentRepository.findByUser_Cpf("12345678900")).willReturn(Optional.of(student));
-        given(boardingStopRepository.findById(5L)).willReturn(Optional.of(boardingStop));
+        given(boardingStopRepository.findById(UUID.fromString("00000000-0000-4000-8000-000000000005"))).willReturn(Optional.of(boardingStop));
         given(studentRepository.save(student)).willReturn(student);
         given(studentMapper.toResponse(student)).willReturn(studentResponse);
 
         StudentResponse response = studentService.updatePreferredBoardingStop(
                 authentication,
-                new StudentPreferredBoardingStopUpdate(5L)
+                new StudentPreferredBoardingStopUpdate(UUID.fromString("00000000-0000-4000-8000-000000000005"))
         );
 
         assertThat(student.getPreferredBoardingStop()).isSameAs(boardingStop);

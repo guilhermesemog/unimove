@@ -31,7 +31,7 @@ export class ListInterestListPage {
   protected readonly loading = signal(true);
   protected readonly error = signal<string | null>(null);
   protected readonly operations = signal<AdminOperation[]>([]);
-  protected readonly destinationId = signal(this.numberParam('destination'));
+  protected readonly destinationId = signal(this.route.snapshot.queryParamMap.get('destination'));
   protected readonly status = signal(this.route.snapshot.queryParamMap.get('status') ?? 'ALL');
   protected readonly dateFrom = signal(this.route.snapshot.queryParamMap.get('from') ?? '');
   protected readonly dateTo = signal(this.route.snapshot.queryParamMap.get('to') ?? '');
@@ -61,7 +61,7 @@ export class ListInterestListPage {
 
   protected selectDestination(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
-    this.destinationId.set(value ? Number(value) : null);
+    this.destinationId.set(value || null);
     this.updateUrl();
   }
 
@@ -104,8 +104,4 @@ export class ListInterestListPage {
     });
   }
 
-  private numberParam(name: string): number | null {
-    const value = this.route.snapshot.queryParamMap.get(name);
-    return value ? Number(value) : null;
-  }
 }

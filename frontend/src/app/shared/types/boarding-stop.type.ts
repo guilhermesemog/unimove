@@ -1,5 +1,5 @@
 export interface BoardingStop {
-    id: number;
+    id: string;
     local: string;
 }
 

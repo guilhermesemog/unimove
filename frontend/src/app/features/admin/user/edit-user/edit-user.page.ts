@@ -25,7 +25,7 @@ export class EditUserPage {
   authService = inject(AuthService);
   router = inject(Router);
 
-  @Input() id!: number;
+  @Input() id!: string;
 
   user = signal<User | null>(null);
 

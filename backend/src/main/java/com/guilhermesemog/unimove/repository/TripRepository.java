@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.repository;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.model.Trip;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,11 +9,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.time.LocalDate;
+import java.util.List;
 
-public interface TripRepository extends JpaRepository<Trip, Long> {
-    Page<Trip> findAllByConductor_Id(Long id, Pageable pageable);
+public interface TripRepository extends JpaRepository<Trip, UUID> {
+    Page<Trip> findAllByConductor_Id(UUID id, Pageable pageable);
 
-    Optional<Trip> findByIdAndConductor_Id(Long id, Long conductorId);
+    Optional<Trip> findByIdAndConductor_Id(UUID id, UUID conductorId);
 
     @Query("""
                 SELECT t
@@ -29,6 +32,10 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
             Pageable pageable
     );
 
-    boolean existsByInterestList_Id(Long id);
+    boolean existsByInterestList_Id(UUID id);
+
+    Optional<Trip> findByInterestList_Id(UUID interestListId);
+
+    List<Trip> findAllByInterestList_ReferenceDateBetween(LocalDate from, LocalDate to);
 
 }

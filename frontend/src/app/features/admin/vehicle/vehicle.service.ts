@@ -39,15 +39,15 @@ export class VehicleService {
         return this.http.get<Array<Vehicle>>(`${API_BASE_URL}/vehicles/list`);
     }
 
-    getVehicleById(id: number): Observable<Vehicle> {
+    getVehicleById(id: string): Observable<Vehicle> {
         return this.http.get<Vehicle>(`${API_BASE_URL}/vehicles/${id}`);
     }
 
-    updateVehicle(id: number, vehicle: VehicleUpdateRequest): Observable<Vehicle> {
+    updateVehicle(id: string, vehicle: VehicleUpdateRequest): Observable<Vehicle> {
         return this.http.put<Vehicle>(`${API_BASE_URL}/vehicles/${id}`, vehicle);
     }
 
-    deleteVehicle(id: number): Observable<void> {
+    deleteVehicle(id: string): Observable<void> {
         return this.http.delete<void>(`${API_BASE_URL}/vehicles/${id}`);
     }
 

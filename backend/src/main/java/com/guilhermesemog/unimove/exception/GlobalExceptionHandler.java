@@ -7,6 +7,7 @@ import com.guilhermesemog.unimove.exception.type.ResourceNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -23,11 +24,22 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorDetails> handleResponseStatusException(ResponseStatusException ex) {
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .message(ex.getReason() == null ? "Request could not be processed" : ex.getReason())
+                .details(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(ex.getStatusCode()).body(errorDetails);
+    }
+
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorDetails> handleExpiredJwtException(ExpiredJwtException e) {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .message("JWT token has expired")
-                .details(e.getMessage())
+                .details("Sign in again to continue")
                 .timestamp(LocalDateTime.now())
                 .build();
 
@@ -57,7 +69,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .message("Data integrity validation failed")
-                .details(ex.getMessage())
+                .details("The request conflicts with stored data")
                 .timestamp(LocalDateTime.now())
                 .build();
 
@@ -79,7 +91,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handleMessageNotReadableException(HttpMessageNotReadableException ex) {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .message("Message not readable")
-                .details(ex.getMessage())
+                .details("The request body is invalid")
                 .timestamp(LocalDateTime.now())
                 .build();
 
@@ -156,7 +168,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception ex) {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .message("An unexpected error occurred")
-                .details(ex.getMessage())
+                .details("No additional details are available")
                 .timestamp(LocalDateTime.now())
                 .build();
 

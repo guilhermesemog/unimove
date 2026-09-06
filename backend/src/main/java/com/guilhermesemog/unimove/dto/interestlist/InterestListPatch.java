@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.dto.interestlist;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
 
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public record InterestListPatch(
         LocalTime arrivalTime,
         LocalTime returnDepartureTime,
         LocalTime returnArrivalTime,
-        Long destinationId,
+        UUID destinationId,
         ListStatus listStatus
 ) {
 }

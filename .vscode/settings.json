@@ -12,5 +12,6 @@
     "\\.git",
     "frontend"
   ],
-  "maven.executable.preferMavenWrapper": true
+  "maven.executable.preferMavenWrapper": true,
+  "java.compile.nullAnalysis.mode": "automatic"
 }

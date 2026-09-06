@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.dto.interestlist;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.university.UniversityResponse;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
 
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record InterestListResponse(
-        Long id,
+        UUID id,
         LocalDate referenceDate,
         LocalTime closingTime,
         LocalTime departureTime,
@@ -16,6 +17,8 @@ public record InterestListResponse(
         LocalTime returnDepartureTime,
         LocalTime returnArrivalTime,
         UniversityResponse destination,
-        ListStatus listStatus
+        ListStatus listStatus,
+        UUID recurrencePlanId,
+        LocalDate occurrenceDate
 ) {
 }

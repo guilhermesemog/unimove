@@ -34,12 +34,12 @@ export class CreateInterestListPage {
     arrivalTime: this.defaultArrivalTime,
     returnDepartureTime: this.defaultReturnDepartureTime,
     returnArrivalTime: this.defaultReturnArrivalTime,
-    destinationId: 0,
+    destinationId: '',
   });
 
   universityService = inject(UniversityService);
   universities = signal<Array<University>>([]);
-  universityOptions = computed<SelectOption<number>[]>(() =>
+  universityOptions = computed<SelectOption<string>[]>(() =>
     this.universities().map((u) => ({ value: u.id, label: u.name }))
   );
 

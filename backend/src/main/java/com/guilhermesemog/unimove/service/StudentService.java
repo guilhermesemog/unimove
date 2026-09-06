@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.service;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.student.StudentCreate;
 import com.guilhermesemog.unimove.dto.student.StudentPatch;
 import com.guilhermesemog.unimove.dto.student.StudentResponse;
@@ -55,7 +56,7 @@ public class StudentService {
         return studentMapper.toResponse(studentRepository.save(student));
     }
 
-    public StudentResponse getById(Long id) {
+    public StudentResponse getById(UUID id) {
         return studentMapper.toResponse(getStudent(id));
     }
 
@@ -70,11 +71,11 @@ public class StudentService {
     }
 
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         studentRepository.delete(getStudent(id));
     }
 
-    public void update(Long id, StudentUpdate requestBody) {
+    public void update(UUID id, StudentUpdate requestBody) {
         Student student = getStudent(id);
         University university = getUniversity(requestBody.universityId());
 
@@ -84,7 +85,7 @@ public class StudentService {
         studentRepository.save(student);
     }
 
-    public void update(Long id, StudentPatch requestBody) {
+    public void update(UUID id, StudentPatch requestBody) {
         Student student = getStudent(id);
         University university = getUniversity(requestBody.universityId());
 
@@ -101,15 +102,15 @@ public class StudentService {
         return studentMapper.toResponse(studentRepository.save(student));
     }
 
-    private Student getStudent(Long id) {
+    private Student getStudent(UUID id) {
         return studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found"));
     }
 
-    private University getUniversity(Long id) {
+    private University getUniversity(UUID id) {
         return universityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("University not found"));
     }
 
-    private BoardingStop getBoardingStop(Long id) {
+    private BoardingStop getBoardingStop(UUID id) {
         if (id == null) {
             return null;
         }

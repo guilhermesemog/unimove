@@ -1,0 +1,79 @@
+<app-header [title]="id ? 'Edit Recurring Plan' : 'Create Recurring Plan'" description="Review every date before publishing demand." [showBack]="true" />
+
+<ol class="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Plan creation steps">
+  @for (label of ['Route & Destination', 'Recurrence', 'Schedule', 'Review']; track label; let index = $index) {
+  <li class="rounded-xl border px-3 py-2 text-xs font-bold" [class.border-brand-300]="step() === index + 1"
+    [class.bg-brand-50]="step() === index + 1" [class.text-brand-800]="step() === index + 1"
+    [class.border-slate-200]="step() !== index + 1" [class.text-slate-500]="step() !== index + 1">
+    {{ index + 1 }}. {{ label }}
+  </li>
+  }
+</ol>
+
+@if (error()) { <div class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700" role="alert">{{ error() }}</div> }
+@if (loading()) { <div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div> }
+
+<form [formGroup]="form" (ngSubmit)="$event.preventDefault()" [class.hidden]="loading()">
+  @if (step() === 1) {
+  <section class="ui-card p-6">
+    <h2 class="font-display text-lg font-extrabold text-navy-900">Route & Destination</h2>
+    <p class="mt-1 text-sm text-slate-500">Give the routine a clear name and choose its destination.</p>
+    <div class="mt-5 grid gap-4 sm:grid-cols-2">
+      <label class="text-sm font-semibold text-navy-900">Plan name<input class="ui-field mt-1.5" formControlName="name" /></label>
+      <label class="text-sm font-semibold text-navy-900">University<select class="ui-field mt-1.5" formControlName="destinationId">
+        <option value="">Select a university</option>@for (university of universities(); track university.id) { <option [value]="university.id">{{ university.name }}</option> }
+      </select></label>
+    </div>
+  </section>
+  } @else if (step() === 2) {
+  <section class="ui-card p-6">
+    <h2 class="font-display text-lg font-extrabold text-navy-900">Weekly Recurrence</h2>
+    <p class="mt-1 text-sm text-slate-500">Choose one or more weekdays and the period in which the plan is valid.</p>
+    <fieldset class="mt-5"><legend class="text-sm font-semibold text-navy-900">Days of the week</legend>
+      <div class="mt-2 flex flex-wrap gap-2">@for (day of days; track day.value) {
+        <button type="button" class="min-h-11 rounded-xl border px-4 text-sm font-bold"
+          [class.border-brand-400]="selectedDays().includes(day.value)" [class.bg-brand-50]="selectedDays().includes(day.value)"
+          [class.text-brand-800]="selectedDays().includes(day.value)" [attr.aria-pressed]="selectedDays().includes(day.value)"
+          (click)="toggleDay(day.value)">{{ day.label }}</button>
+      }</div>
+    </fieldset>
+    <div class="mt-5 grid gap-4 sm:grid-cols-3">
+      <label class="text-sm font-semibold text-navy-900">Starts<input type="date" class="ui-field mt-1.5" formControlName="startDate" /></label>
+      <label class="text-sm font-semibold text-navy-900">Ends<input type="date" class="ui-field mt-1.5" formControlName="endDate" /></label>
+      <label class="text-sm font-semibold text-navy-900">Generation horizon (weeks)<input type="number" min="1" max="52" class="ui-field mt-1.5" formControlName="horizonWeeks" /></label>
+    </div>
+  </section>
+  } @else if (step() === 3) {
+  <section class="ui-card p-6">
+    <h2 class="font-display text-lg font-extrabold text-navy-900">Schedule & Booking Window</h2>
+    <p class="mt-1 text-sm text-slate-500">These times are copied to each newly published demand.</p>
+    <div class="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <label class="text-sm font-semibold text-navy-900">Bookings close<input type="time" class="ui-field mt-1.5" formControlName="closingTime" /></label>
+      <label class="text-sm font-semibold text-navy-900">Outbound departure<input type="time" class="ui-field mt-1.5" formControlName="departureTime" /></label>
+      <label class="text-sm font-semibold text-navy-900">Outbound arrival<input type="time" class="ui-field mt-1.5" formControlName="arrivalTime" /></label>
+      <label class="text-sm font-semibold text-navy-900">Return departure<input type="time" class="ui-field mt-1.5" formControlName="returnDepartureTime" /></label>
+      <label class="text-sm font-semibold text-navy-900">Return arrival<input type="time" class="ui-field mt-1.5" formControlName="returnArrivalTime" /></label>
+    </div>
+  </section>
+  } @else if (preview(); as result) {
+  <section class="ui-card overflow-hidden">
+    <div class="border-b border-slate-200 p-5"><h2 class="font-display text-lg font-extrabold text-navy-900">Review Generated Dates</h2>
+      <p class="mt-1 text-sm text-slate-500">The server will check these dates again when you publish.</p></div>
+    <div class="grid grid-cols-3 divide-x divide-slate-200 border-b border-slate-200 text-center">
+      <div class="p-4"><strong class="text-xl text-brand-700">{{ result.createCount }}</strong><p class="text-xs text-slate-500">To create</p></div>
+      <div class="p-4"><strong class="text-xl text-slate-700">{{ result.skipCount }}</strong><p class="text-xs text-slate-500">Skipped</p></div>
+      <div class="p-4"><strong class="text-xl text-amber-700">{{ result.conflictCount }}</strong><p class="text-xs text-slate-500">Conflicts</p></div>
+    </div>
+    <ul class="max-h-96 divide-y divide-slate-100 overflow-y-auto">@for (item of result.occurrences; track item.date) {
+      <li class="flex items-center justify-between gap-3 px-5 py-3"><div><p class="text-sm font-semibold text-navy-900">{{ item.date }}</p><p class="text-xs text-slate-500">{{ item.reason ?? form.controls.destinationId.value }}</p></div>
+        <span class="rounded-full px-2.5 py-1 text-xs font-bold" [class]="actionClass(item.action)">{{ item.action }}</span></li>
+    }</ul>
+  </section>
+  }
+
+  <div class="mt-5 flex justify-between border-t border-slate-200 pt-4">
+    <button type="button" class="ui-button ui-button-secondary" [disabled]="step() === 1 || saving()" (click)="back()">Back</button>
+    @if (step() < 4) { <button type="button" class="ui-button ui-button-primary" (click)="next()">{{ step() === 3 ? 'Review Dates' : 'Continue' }}</button> }
+    @else { <button type="button" class="ui-button ui-button-primary" [disabled]="saving()" (click)="publish()">{{ saving() ? 'Publishing...' : (id ? 'Save & Generate' : 'Publish Plan') }}</button> }
+  </div>
+</form>

@@ -4,14 +4,14 @@ import { InterestList, ListStatus } from '../types/interest-list.type';
 import { isBookingOpen, parseLocalDate, relativeDateLabel } from './date-time';
 
 const trip: InterestList = {
-  id: 1,
+  id: '00000000-0000-4000-8000-000000000001',
   referenceDate: '2026-08-27',
   closingTime: '16:00:00',
   departureTime: '17:30:00',
   arrivalTime: '19:00:00',
   returnDepartureTime: '23:00:00',
   returnArrivalTime: '00:30:00',
-  destination: { id: 1, name: 'University', address: 'Campus' },
+  destination: { id: '00000000-0000-4000-8000-000000000002', name: 'University', address: 'Campus' },
   listStatus: ListStatus.OPEN,
 };
 

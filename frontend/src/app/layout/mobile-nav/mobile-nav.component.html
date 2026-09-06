@@ -27,6 +27,14 @@
         <app-icon iconName="calendar_month" size="lg" />
         <span class="text-[0.6875rem] font-bold">{{ copy.navigation.driver.schedule }}</span>
     </a>
+    <a routerLink="/notifications" routerLinkActive="bg-brand-50 text-brand-700"
+        class="relative flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-slate-400 transition-colors active:bg-slate-50">
+        <app-icon iconName="notifications" size="lg" />
+        @if (notifications.unreadCount() > 0) {
+        <span class="absolute right-3 top-1 size-2 rounded-full bg-red-600"></span>
+        }
+        <span class="text-[0.6875rem] font-bold">Alerts</span>
+    </a>
     }
 
     <a routerLink="/user" routerLinkActive="bg-brand-50 text-brand-700"

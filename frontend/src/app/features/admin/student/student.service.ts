@@ -12,11 +12,11 @@ const API_BASE_URL = environment.apiUrl;
 export class StudentService {
     private http = inject(HttpClient);
 
-    getStudentById(userId: number): Observable<Student> {
+    getStudentById(userId: string): Observable<Student> {
         return this.http.get<Student>(`${API_BASE_URL}/students/${userId}`);
     }
 
-    updateStudent(userId: number, student: StudentUpdateRequest): Observable<void> {
+    updateStudent(userId: string, student: StudentUpdateRequest): Observable<void> {
         const updatableStudent: StudentUpdateRequest = {
             user: {
                 cpf: student.user.cpf,
@@ -34,7 +34,7 @@ export class StudentService {
         return this.http.put<void>(`${API_BASE_URL}/students/${userId}`, updatableStudent);
     }
 
-    updatePreferredBoardingStop(boardingStopId: number): Observable<Student> {
+    updatePreferredBoardingStop(boardingStopId: string): Observable<Student> {
         return this.http.patch<Student>(`${API_BASE_URL}/students/me/preferred-boarding-stop`, { boardingStopId });
     }
 

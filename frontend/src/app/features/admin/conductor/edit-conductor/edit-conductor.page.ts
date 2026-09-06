@@ -28,7 +28,7 @@ export class EditConductorPage {
 
     router = inject(Router);
 
-    @Input() id!: number;
+    @Input() id!: string;
 
     conductor = signal<Conductor | null>(null);
 

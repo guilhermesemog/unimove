@@ -23,7 +23,7 @@ export class EditVehiclePage {
 
   vehicleService = inject(VehicleService);
 
-  @Input() id!: number;
+  @Input() id!: string;
 
   vehicle = signal<Vehicle | null>(null);
 

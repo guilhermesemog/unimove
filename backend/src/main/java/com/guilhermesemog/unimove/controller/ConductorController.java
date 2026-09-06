@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.controller;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.boardingstop.BoardingStopResponse;
 import com.guilhermesemog.unimove.dto.conductor.ConductorCreate;
 import com.guilhermesemog.unimove.dto.conductor.ConductorPatch;
@@ -33,7 +34,7 @@ public class ConductorController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(#id, authentication)")
-    public ResponseEntity<ConductorResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<ConductorResponse> getById(@PathVariable UUID id) {
         ConductorResponse responseBody = conductorService.getById(id);
         return ResponseEntity.ok(responseBody);
     }
@@ -51,6 +52,7 @@ public class ConductorController {
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ConductorResponse>> getAll() {
         List<ConductorResponse> responseBody = conductorService.getAll();
         return ResponseEntity.ok(responseBody);
@@ -58,21 +60,21 @@ public class ConductorController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         conductorService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody ConductorUpdate requestBody) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody ConductorUpdate requestBody) {
         conductorService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody ConductorPatch requestBody) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody ConductorPatch requestBody) {
         conductorService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }

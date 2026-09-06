@@ -19,7 +19,7 @@ import { UniversityService } from '../../university/university.service';
   templateUrl: './edit-interest-list.page.html',
 })
 export class EditInterestListPage {
-  @Input() id!: number;
+  @Input() id!: string;
 
   private router = inject(Router);
   private interestListService = inject(InterestListService);
@@ -34,7 +34,7 @@ export class EditInterestListPage {
     arrivalTime: '',
     returnDepartureTime: '',
     returnArrivalTime: '',
-    destinationId: 0,
+    destinationId: '',
     listStatus: ListStatus.PROCESSING,
   });
   interestListForm = form(this.interestListFormModel, (schema) => {
@@ -65,7 +65,7 @@ export class EditInterestListPage {
 
   universityService = inject(UniversityService);
   universities = signal<Array<University>>([]);
-  universityOptions = computed<SelectOption<number>[]>(() =>
+  universityOptions = computed<SelectOption<string>[]>(() =>
     this.universities().map((u) => ({ value: u.id, label: u.name }))
   );
 

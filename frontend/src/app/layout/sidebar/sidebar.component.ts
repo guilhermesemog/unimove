@@ -4,6 +4,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { BrandComponent } from '../../shared/components/brand/brand.component';
 import { UI_COPY } from '../../core/content/ui-copy';
 import { Icon } from '../../shared/components/icon/icon';
+import { NotificationService } from '../../core/notifications/notification.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,6 +12,7 @@ import { Icon } from '../../shared/components/icon/icon';
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent {
+  protected readonly notifications = inject(NotificationService);
   private authService = inject(AuthService);
   protected readonly copy = UI_COPY;
 

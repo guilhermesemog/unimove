@@ -18,6 +18,15 @@
             <span>{{ copy.navigation.admin.overview }}</span>
         </a>
 
+        <a routerLink="/notifications" routerLinkActive="bg-brand-50 text-brand-700" (click)="onLinkClick()"
+            class="group mb-1 flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900">
+            <app-icon iconName="notifications" />
+            <span class="flex-1">Notifications</span>
+            @if (notifications.unreadCount() > 0) {
+            <span class="rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white">{{ notifications.unreadCount() > 99 ? '99+' : notifications.unreadCount() }}</span>
+            }
+        </a>
+
         <p class="mt-6 px-3 pb-2 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-slate-400">{{
             copy.navigation.admin.operations }}</p>
 
@@ -31,6 +40,24 @@
             class="mb-1 flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900">
             <app-icon iconName="monitoring" />
             <span>{{ copy.navigation.admin.demand }}</span>
+        </a>
+
+        <a routerLink="/admin/recurrence-plans" routerLinkActive="bg-brand-50 text-brand-700" (click)="onLinkClick()"
+            class="mb-1 flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900">
+            <app-icon iconName="event_repeat" />
+            <span>{{ copy.navigation.admin.recurringPlans }}</span>
+        </a>
+
+        <a routerLink="/admin/audit-log" routerLinkActive="bg-brand-50 text-brand-700" (click)="onLinkClick()"
+            class="mb-1 flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900">
+            <app-icon iconName="history" />
+            <span>{{ copy.navigation.admin.auditLog }}</span>
+        </a>
+
+        <a routerLink="/admin/analytics" routerLinkActive="bg-brand-50 text-brand-700" (click)="onLinkClick()"
+            class="mb-1 flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900">
+            <app-icon iconName="query_stats" />
+            <span>{{ copy.navigation.admin.analytics }}</span>
         </a>
 
         <a routerLink="/admin/trips" [queryParams]="{ assignment: 'UNASSIGNED' }" routerLinkActive="bg-brand-50 text-brand-700" [routerLinkActiveOptions]="{ exact: true }" (click)="onLinkClick()"

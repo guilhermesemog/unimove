@@ -11,7 +11,7 @@ const API_BASE_URL = environment.apiUrl;
 export class ConductorService {
     private http = inject(HttpClient);
 
-    getConductorById(userId: number): Observable<Conductor> {
+    getConductorById(userId: string): Observable<Conductor> {
         return this.http.get<Conductor>(`${API_BASE_URL}/conductors/${userId}`);
     }
 
@@ -19,7 +19,7 @@ export class ConductorService {
         return this.http.get<Array<Conductor>>(`${API_BASE_URL}/conductors/list`);
     }
 
-    updateConductor(userId: number, conductor: Conductor): Observable<void> {
+    updateConductor(userId: string, conductor: Conductor): Observable<void> {
         const updatableConductor: ConductorUpdateRequest = {
             user: {
                 cpf: conductor.user.cpf,

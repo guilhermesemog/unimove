@@ -1,0 +1,140 @@
+<div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+  <app-header class="min-w-0 flex-1 [&>header]:mb-0" title="Operational Analytics"
+    description="Track demand, capacity, planning speed, and recurring operations over time." />
+  <div class="ui-card flex flex-wrap items-end gap-2 p-2" aria-label="Analytics period">
+    @for (days of [7, 30, 90]; track days) {
+      <button type="button" (click)="selectPreset($any(days))" class="min-h-10 rounded-lg px-3 text-sm font-bold transition-colors"
+        [class.bg-navy-900]="selectedPreset() === days" [class.text-white]="selectedPreset() === days"
+        [class.text-slate-600]="selectedPreset() !== days" [class.hover:bg-slate-100]="selectedPreset() !== days">{{ days }} days</button>
+    }
+    <span class="mx-1 hidden h-8 w-px bg-slate-200 sm:block"></span>
+    <label class="grid gap-1 text-xs font-semibold text-slate-500">From
+      <input type="date" [(ngModel)]="fromDate" class="ui-input min-h-10 py-1.5" />
+    </label>
+    <label class="grid gap-1 text-xs font-semibold text-slate-500">To
+      <input type="date" [(ngModel)]="toDate" class="ui-input min-h-10 py-1.5" />
+    </label>
+    <button type="button" class="ui-button ui-button-secondary min-h-10" (click)="applyCustomPeriod()">Apply</button>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (error()) {
+  <div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error()!" (retry)="retry()" /></div>
+} @else if (data(); as report) {
+  <div class="mb-5 flex flex-wrap items-center justify-between gap-2 text-sm text-slate-500">
+    <span>{{ report.period.from | date:'mediumDate':'UTC' }} – {{ report.period.to | date:'mediumDate':'UTC' }}</span>
+    <span>Calendar days in {{ report.period.timezone }}</span>
+  </div>
+
+  @if (!report.period.complete) {
+    <div class="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="status">
+      <strong>Partial historical data.</strong> Events are complete only from
+      {{ report.period.completeSince ? (report.period.completeSince | date:'medium') : 'an unknown date' }}.
+    </div>
+  }
+
+  <section class="ui-card mb-8 grid overflow-hidden sm:grid-cols-2 xl:grid-cols-3" aria-label="Period summary">
+    @for (card of summaryCards(); track card.label) {
+      <article class="border-b border-slate-200 px-5 py-5 sm:border-r xl:[&:nth-child(3n)]:border-r-0 xl:[&:nth-last-child(-n+3)]:border-b-0">
+        <div class="flex items-start justify-between gap-3">
+          <p class="text-sm font-semibold text-slate-600">{{ card.label }}</p>
+          <span class="cursor-help rounded-full border border-slate-200 px-1.5 text-xs font-bold text-slate-400"
+            [title]="card.metric.definition" [attr.aria-label]="card.metric.definition">?</span>
+        </div>
+        <strong class="mt-2 block font-display text-3xl font-extrabold text-navy-900">{{ metricValue(card.metric) }}</strong>
+        <span class="mt-1 block text-xs font-semibold" [class]="changeClass(card.metric)">{{ changeLabel(card.metric) }}</span>
+      </article>
+    }
+  </section>
+
+  @if (!hasActivity()) {
+    <div class="ui-card mb-8 overflow-hidden"><app-ui-state title="No activity in this period"
+      description="Choose a longer period or return after new bookings and trips are created." /></div>
+  } @else {
+    <section class="ui-card mb-8 p-5 sm:p-6" aria-labelledby="trend-title">
+      <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
+        <div><h2 id="trend-title" class="font-display text-xl font-extrabold text-navy-900">Daily trend</h2>
+          <p class="mt-1 text-sm text-slate-500">Creation and cancellation events by local calendar day.</p></div>
+        <div class="flex flex-wrap gap-4 text-xs font-semibold text-slate-600" aria-label="Chart legend">
+          <span class="flex items-center gap-1.5"><span class="size-2.5 rounded-sm bg-brand-600"></span>Bookings</span>
+          <span class="flex items-center gap-1.5"><span class="size-2.5 rounded-sm bg-red-400"></span>Cancellations</span>
+          <span class="flex items-center gap-1.5"><span class="size-2.5 rounded-sm bg-navy-800"></span>Trips</span>
+        </div>
+      </div>
+      <div class="overflow-x-auto pb-7">
+        <div class="flex h-64 min-w-[42rem] items-end gap-1 border-b border-slate-200" role="img" aria-label="Daily booking, cancellation, and trip counts">
+          @for (point of report.trend; track point.date; let index = $index) {
+            <div class="group relative flex h-full min-w-1 flex-1 items-end justify-center gap-px" [title]="pointTitle(point)">
+              <span class="w-1/3 max-w-3 rounded-t bg-brand-600 group-hover:opacity-75" [style.height.%]="chartHeight(point.bookingsCreated)"></span>
+              <span class="w-1/3 max-w-3 rounded-t bg-red-400 group-hover:opacity-75" [style.height.%]="chartHeight(point.bookingsCancelled)"></span>
+              <span class="w-1/3 max-w-3 rounded-t bg-navy-800 group-hover:opacity-75" [style.height.%]="chartHeight(point.tripsCreated)"></span>
+              @if (showDateLabel(index, report.trend.length)) {
+                <span class="absolute -bottom-6 whitespace-nowrap text-[0.65rem] text-slate-400">{{ point.date | date:'MMM d':'UTC' }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <div class="grid items-start gap-8 xl:grid-cols-2">
+    <section aria-labelledby="university-title">
+      <div class="mb-3"><h2 id="university-title" class="font-display text-xl font-extrabold text-navy-900">By university</h2>
+        <p class="mt-1 text-sm text-slate-500">Exact booking and trip volumes created in the period.</p></div>
+      <div class="ui-card overflow-x-auto">
+        @if (report.universities.length) {
+          <table class="w-full text-left text-sm">
+            <thead class="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+              <tr><th class="px-5 py-3">University</th><th class="px-5 py-3 text-right">Bookings</th><th class="px-5 py-3 text-right">Trips</th></tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              @for (university of report.universities; track university.universityId) {
+                <tr><td class="px-5 py-4 font-semibold text-navy-900">{{ university.universityName }}</td>
+                  <td class="px-5 py-4 text-right text-slate-700">{{ university.bookings | number }}</td>
+                  <td class="px-5 py-4 text-right text-slate-700">{{ university.trips | number }}</td></tr>
+              }
+            </tbody>
+          </table>
+        } @else { <app-ui-state title="No university activity" description="No bookings or trips were created in this period." [compact]="true" /> }
+      </div>
+    </section>
+
+    <div class="grid gap-8">
+      <section aria-labelledby="recurrence-title">
+        <div class="mb-3"><h2 id="recurrence-title" class="font-display text-xl font-extrabold text-navy-900">Recurring operations</h2>
+          <p class="mt-1 text-sm text-slate-500">Adoption and generation results.</p></div>
+        <div class="ui-card grid grid-cols-2 overflow-hidden">
+          @for (item of [
+            { label: 'Active plans', value: report.recurrence.activePlans, definition: 'Recurring plans currently active.' },
+            { label: 'Generated occurrences', value: metricValue(report.recurrence.generatedOccurrences), definition: report.recurrence.generatedOccurrences.definition },
+            { label: 'Coverage', value: metricValue(report.recurrence.coverage), definition: report.recurrence.coverage.definition },
+            { label: 'Conflicts avoided', value: metricValue(report.recurrence.conflictsAvoided), definition: report.recurrence.conflictsAvoided.definition }
+          ]; track item.label) {
+            <div class="border-b border-r border-slate-200 p-4" [title]="item.definition">
+              <span class="block text-xs font-semibold text-slate-500">{{ item.label }}</span>
+              <strong class="mt-1 block text-xl text-navy-900">{{ item.value }}</strong>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section aria-labelledby="exceptions-title">
+        <div class="mb-3"><h2 id="exceptions-title" class="font-display text-xl font-extrabold text-navy-900">Operational exceptions</h2>
+          <p class="mt-1 text-sm text-slate-500">Upcoming trips in the selected operational dates.</p></div>
+        <div class="ui-card divide-y divide-slate-100">
+          @for (exception of [
+            { label: 'Missing driver', value: report.exceptions.missingDriver },
+            { label: 'Missing vehicle', value: report.exceptions.missingVehicle },
+            { label: 'Insufficient capacity', value: report.exceptions.insufficientCapacity }
+          ]; track exception.label) {
+            <div class="flex items-center justify-between px-5 py-4"><span class="text-sm font-semibold text-slate-600">{{ exception.label }}</span>
+              <strong class="text-lg text-navy-900">{{ exception.value }}</strong></div>
+          }
+        </div>
+      </section>
+    </div>
+  </div>
+}

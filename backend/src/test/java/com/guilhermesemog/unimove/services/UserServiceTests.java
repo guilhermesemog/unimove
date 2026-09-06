@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.services;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.common.CommonUserCreate;
 import com.guilhermesemog.unimove.dto.user.UserCreate;
 import com.guilhermesemog.unimove.dto.user.UserPatch;
@@ -8,10 +9,12 @@ import com.guilhermesemog.unimove.dto.user.UserUpdate;
 import com.guilhermesemog.unimove.mapper.UserMapper;
 import com.guilhermesemog.unimove.model.User;
 import com.guilhermesemog.unimove.model.enums.Role;
+import com.guilhermesemog.unimove.model.enums.AuditAction;
 import com.guilhermesemog.unimove.repository.ConductorRepository;
 import com.guilhermesemog.unimove.repository.StudentRepository;
 import com.guilhermesemog.unimove.repository.UserRepository;
 import com.guilhermesemog.unimove.service.AuthService;
+import com.guilhermesemog.unimove.service.AuditService;
 import com.guilhermesemog.unimove.service.UserService;
 import com.guilhermesemog.unimove.service.UserValidationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,10 +65,12 @@ public class UserServiceTests {
 
     @Mock
     private UserValidationService userValidationService;
+    @Mock
+    private AuditService auditService;
 
     private UserService userService;
 
-    private static final Long USER_ID = 1L;
+    private static final UUID USER_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
     private static final String CPF = "12345678900";
     private static final String PASSWORD = "password123";
     private static final String FIRST_NAME = "John";
@@ -74,7 +79,7 @@ public class UserServiceTests {
 
     @BeforeEach
     void setup() {
-        userService = new UserService(userRepository, studentRepository, conductorRepository, userMapper, authService, userValidationService);
+        userService = new UserService(userRepository, studentRepository, conductorRepository, userMapper, authService, userValidationService, auditService);
     }
 
     @Nested
@@ -166,5 +171,28 @@ public class UserServiceTests {
 
             verify(userRepository, times(1)).save(createdUser);
         }
+    }
+
+    @Test
+    @DisplayName("should audit user deactivation without personal data")
+    void shouldAuditUserDeactivation() {
+        User user = new User(CPF, PASSWORD, Role.STUDENT);
+        user.setId(USER_ID);
+        user.setActive(true);
+
+        given(userRepository.findById(USER_ID)).willReturn(java.util.Optional.of(user));
+        given(userRepository.save(user)).willReturn(user);
+
+        userService.toggleStatus(USER_ID);
+
+        assertThat(user.getActive()).isFalse();
+        verify(auditService).record(
+                eq(AuditAction.USER_DEACTIVATED),
+                eq("User"),
+                eq(USER_ID),
+                eq(java.util.Map.of("active", true, "role", "STUDENT")),
+                eq(java.util.Map.of("active", false, "role", "STUDENT")),
+                eq(java.util.Map.of())
+        );
     }
 }

@@ -2,10 +2,9 @@ import { Routes } from '@angular/router';
 import { roleGuard } from './core/guards/role-guard';
 import { UserRole } from './shared/types/user.type';
 
-import { MainLayout } from './layout/main-layout/main-layout.component';
 import { AuthLayout } from './layout/auth-layout/auth-layout.component';
+import { MainLayout } from './layout/main-layout/main-layout.component';
 
-import { LoginPage } from './features/auth/login/login.page';
 import { UnauthorizedPage } from './features/error/unauthorized/unauthorized.page';
 
 export const routes: Routes = [
@@ -148,6 +147,36 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/admin/interest-list/view-interest-list/view-interest-list.page').then((module) => module.ViewInterestListPage),
                 canActivate: [roleGuard([UserRole.Admin])],
             },
+            {
+                path: 'admin/recurrence-plans',
+                pathMatch: 'full',
+                loadComponent: () => import('./features/admin/recurrence-plan/list-recurrence-plan/list-recurrence-plan.page').then((module) => module.ListRecurrencePlanPage),
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/recurrence-plans/create',
+                pathMatch: 'full',
+                loadComponent: () => import('./features/admin/recurrence-plan/edit-recurrence-plan/edit-recurrence-plan.page').then((module) => module.EditRecurrencePlanPage),
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/recurrence-plans/:id/edit',
+                pathMatch: 'full',
+                loadComponent: () => import('./features/admin/recurrence-plan/edit-recurrence-plan/edit-recurrence-plan.page').then((module) => module.EditRecurrencePlanPage),
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/audit-log',
+                pathMatch: 'full',
+                loadComponent: () => import('./features/admin/audit/audit-log.page').then((module) => module.AuditLogPage),
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
+            {
+                path: 'admin/analytics',
+                pathMatch: 'full',
+                loadComponent: () => import('./features/admin/analytics/analytics.page').then((module) => module.AnalyticsPage),
+                canActivate: [roleGuard([UserRole.Admin])],
+            },
 
             // STUDENT PAGES
 
@@ -192,6 +221,12 @@ export const routes: Routes = [
             // COMMON PAGES
 
             {
+                path: 'notifications',
+                pathMatch: 'full',
+                loadComponent: () => import('./features/notifications/notifications.page').then((module) => module.NotificationsPage),
+            },
+
+            {
                 path: 'user',
                 pathMatch: 'full',
                 loadComponent: () => import('./features/user/user.page').then((module) => module.UserPage),
@@ -205,7 +240,12 @@ export const routes: Routes = [
             {
                 path: 'login',
                 pathMatch: 'full',
-                component: LoginPage
+                loadComponent: () => import('./features/auth/login/login.page').then((module) => module.LoginPage),
+            },
+            {
+                path: 'register',
+                pathMatch: 'full',
+                loadComponent: () => import('./features/auth/register/register.page').then((module) => module.RegisterPage),
             }
         ]
     }

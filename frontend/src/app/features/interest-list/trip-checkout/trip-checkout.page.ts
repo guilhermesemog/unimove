@@ -1,9 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { forkJoin, switchMap } from 'rxjs';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { UI_COPY } from '../../../core/content/ui-copy';
+import { TelemetryService } from '../../../core/telemetry/telemetry.service';
 import { BoardingStopService } from '../../admin/boarding-stop/boarding-stop.service';
 import { BookingService } from '../../admin/booking/booking.service';
 import { InterestListService } from '../../admin/interest-list/interest-list.service';
@@ -29,13 +30,15 @@ const PAGE_REQUEST = { page: 0, size: 100, sortBy: 'id', sortDirection: 'desc' a
   imports: [DateLabelPipe, HeaderComponent, Icon, RouteTimelineComponent, RouterLink, StatusChipComponent, TimeLabelPipe, UiStateComponent],
   templateUrl: './trip-checkout.page.html',
 })
-export class TripCheckoutPage {
+export class TripCheckoutPage implements OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly authService = inject(AuthService);
   private readonly boardingStopService = inject(BoardingStopService);
   private readonly bookingService = inject(BookingService);
   private readonly interestListService = inject(InterestListService);
   private readonly studentService = inject(StudentService);
+  private readonly telemetry = inject(TelemetryService);
+  private bookingStarted = false;
 
   protected readonly copy = UI_COPY.student.checkout;
   protected readonly TripType = TripType;
@@ -48,7 +51,7 @@ export class TripCheckoutPage {
   protected readonly stops = signal<BoardingStop[]>([]);
   protected readonly bookings = signal<Booking[]>([]);
   protected readonly selectedTripType = signal(TripType.ROUND_TRIP);
-  protected readonly selectedBoardingStopId = signal<number | null>(null);
+  protected readonly selectedBoardingStopId = signal<string | null>(null);
 
   protected readonly alreadyBooked = computed(() => this.bookings().some((booking) => booking.interestList.id === this.trip()?.id));
   protected readonly selectedStop = computed(() => this.stops().find((stop) => stop.id === this.selectedBoardingStopId()) ?? null);
@@ -62,8 +65,8 @@ export class TripCheckoutPage {
   }
 
   protected fetch(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (!Number.isFinite(id)) {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
       this.error.set('This trip could not be found.');
       this.loading.set(false);
       return;
@@ -83,6 +86,15 @@ export class TripCheckoutPage {
         this.stops.set(stops);
         this.bookings.set(bookings.content);
         this.selectedBoardingStopId.set(student.preferredBoardingStop?.id ?? stops[0]?.id ?? null);
+        if (!this.alreadyBooked()) {
+          this.bookingStarted = true;
+          this.telemetry.startFlow('booking');
+          this.telemetry.track('booking_started', { screen: 'booking_checkout' });
+          this.telemetry.track('booking_step_completed', { screen: 'booking_checkout', step: 'trip' });
+          this.telemetry.track('booking_step_completed', { screen: 'booking_checkout', step: 'trip_type' });
+          if (this.selectedBoardingStopId())
+            this.telemetry.track('booking_step_completed', { screen: 'booking_checkout', step: 'boarding_stop' });
+        }
       },
       error: () => {
         this.error.set('We could not load this trip. Please try again.');
@@ -93,7 +105,13 @@ export class TripCheckoutPage {
   }
 
   protected selectBoardingStop(event: Event): void {
-    this.selectedBoardingStopId.set(Number((event.target as HTMLSelectElement).value));
+    this.selectedBoardingStopId.set((event.target as HTMLSelectElement).value || null);
+    this.telemetry.track('booking_step_completed', { screen: 'booking_checkout', step: 'boarding_stop' });
+  }
+
+  protected selectTripType(tripType: TripType): void {
+    this.selectedTripType.set(tripType);
+    this.telemetry.track('booking_step_completed', { screen: 'booking_checkout', step: 'trip_type' });
   }
 
   protected createBooking(): void {
@@ -110,13 +128,31 @@ export class TripCheckoutPage {
 
     this.submitting.set(true);
     this.error.set(null);
+    this.telemetry.track('booking_step_completed', { screen: 'booking_checkout', step: 'review',
+      durationMs: this.telemetry.elapsed('booking') });
     this.bookingService.createBooking(request).subscribe({
-      next: () => this.success.set(true),
+      next: () => {
+        this.success.set(true);
+        this.bookingStarted = false;
+        this.telemetry.track('booking_completed', { screen: 'booking_checkout', result: 'success',
+          durationMs: this.telemetry.elapsed('booking', true) });
+        this.telemetry.flush();
+      },
       error: () => {
         this.error.set('We could not confirm your booking. Please review the details and try again.');
         this.submitting.set(false);
+        this.telemetry.track('booking_validation_failed', {
+          screen: 'booking_checkout', step: 'review', errorCategory: 'server',
+        });
       },
       complete: () => this.submitting.set(false),
     });
+  }
+
+  ngOnDestroy(): void {
+    if (!this.bookingStarted || this.success()) return;
+    this.telemetry.track('booking_abandoned', { screen: 'booking_checkout', step: 'review', result: 'abandoned',
+      durationMs: this.telemetry.elapsed('booking', true) });
+    this.telemetry.flush();
   }
 }

@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.model;
 
+import java.util.UUID;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Student {
 
     @Id
-    private Long id;
+    private UUID id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId

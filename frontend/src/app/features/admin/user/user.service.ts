@@ -23,7 +23,7 @@ export class UserService {
         });
     }
 
-    getUserById(userId: number): Observable<User> {
+    getUserById(userId: string): Observable<User> {
         return this.http.get<User>(`${API_BASE_URL}/users/${userId}`);
     }
 
@@ -39,7 +39,7 @@ export class UserService {
         });
     }
 
-    updateUser(userId: number, user: User): Observable<void> {
+    updateUser(userId: string, user: User): Observable<void> {
         const updatableUser: UserUpdateRequest = {
             cpf: user.cpf,
             firstName: user.firstName,
@@ -54,11 +54,11 @@ export class UserService {
         return this.http.post<User>(`${API_BASE_URL}/users`, user);
     }
 
-    deleteUser(userId: number): Observable<void> {
+    deleteUser(userId: string): Observable<void> {
         return this.http.delete<void>(`${API_BASE_URL}/users/${userId}`);
     }
 
-    toggleUserActiveStatus(userId: number): Observable<void> {
+    toggleUserActiveStatus(userId: string): Observable<void> {
         return this.http.patch<void>(`${API_BASE_URL}/users/${userId}/status`, {});
     }
 

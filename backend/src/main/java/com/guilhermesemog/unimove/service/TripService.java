@@ -1,6 +1,10 @@
 package com.guilhermesemog.unimove.service;
 
+import java.util.UUID;
+import java.time.Clock;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
@@ -31,7 +35,9 @@ import com.guilhermesemog.unimove.model.Trip;
 import com.guilhermesemog.unimove.model.TripStudent;
 import com.guilhermesemog.unimove.model.Vehicle;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
+import com.guilhermesemog.unimove.model.enums.AuditAction;
 import com.guilhermesemog.unimove.model.enums.BookingStatus;
+import com.guilhermesemog.unimove.model.enums.BusinessEventType;
 import com.guilhermesemog.unimove.repository.BookingRepository;
 import com.guilhermesemog.unimove.repository.ConductorRepository;
 import com.guilhermesemog.unimove.repository.InterestListRepository;
@@ -53,13 +59,17 @@ public class TripService {
     private final StudentRepository studentRepository;
     private final ConductorRepository conductorRepository;
     private final VehicleRepository vehicleRepository;
+    private final BusinessEventPublisher eventPublisher;
+    private final AuditService auditService;
+    private final Clock businessClock;
 
     public TripService(
             TripMapper tripMapper, StudentMapper studentMapper,
             TripRepository tripRepository, TripStudentRepository tripStudentRepository,
             InterestListRepository interestListRepository, BookingRepository bookingRepository,
             StudentRepository studentRepository, ConductorRepository conductorRepository,
-            VehicleRepository vehicleRepository) {
+            VehicleRepository vehicleRepository, BusinessEventPublisher eventPublisher,
+            AuditService auditService, Clock businessClock) {
         this.tripMapper = tripMapper;
         this.studentMapper = studentMapper;
         this.tripRepository = tripRepository;
@@ -69,6 +79,9 @@ public class TripService {
         this.studentRepository = studentRepository;
         this.conductorRepository = conductorRepository;
         this.vehicleRepository = vehicleRepository;
+        this.eventPublisher = eventPublisher;
+        this.auditService = auditService;
+        this.businessClock = businessClock;
     }
 
     @Transactional
@@ -78,7 +91,8 @@ public class TripService {
         }
 
         InterestList interestList = getInterestList(requestBody.interestListId());
-        List<Booking> bookings = bookingRepository.findAllByInterestList_Id(requestBody.interestListId());
+        List<Booking> bookings = bookingRepository.findAllByInterestList_IdAndBookingStatusNot(
+                requestBody.interestListId(), BookingStatus.CANCELLED);
         Trip trip = tripRepository.save(tripMapper.toEntity(requestBody, interestList));
 
         for (Booking booking : bookings) {
@@ -86,11 +100,31 @@ public class TripService {
         }
 
         interestList.setListStatus(ListStatus.CLOSED);
+        interestList.setStatusChangedAt(businessClock.instant());
         interestListRepository.save(interestList);
+        eventPublisher.publish(
+                BusinessEventType.TRIP_CREATED,
+                "Trip",
+                trip.getId(),
+                Map.of(
+                        "tripId", trip.getId(),
+                        "interestListId", interestList.getId(),
+                        "passengerCount", bookings.size()
+                ),
+                BusinessEventType.TRIP_CREATED.name() + ":" + trip.getId()
+        );
+        auditService.record(
+                AuditAction.TRIP_CREATED,
+                "Trip",
+                trip.getId(),
+                Map.of(),
+                tripAuditState(trip),
+                Map.of("passengerCount", bookings.size())
+        );
         return tripMapper.toResponse(trip);
     }
 
-    public TripResponse getById(Long id) {
+    public TripResponse getById(UUID id) {
         return tripMapper.toResponse(getTrip(id));
     }
 
@@ -125,7 +159,7 @@ public class TripService {
     }
 
     @Transactional(readOnly = true)
-    public DriverOperationResponse getDriverOperation(Authentication authentication, Long tripId) {
+    public DriverOperationResponse getDriverOperation(Authentication authentication, UUID tripId) {
         Conductor conductor = getConductorByAuthentication(authentication);
         Trip trip = tripRepository.findByIdAndConductor_Id(tripId, conductor.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Trip not found"));
@@ -163,7 +197,7 @@ public class TripService {
         return tripRepository.findAll(pageable).map(tripMapper::toResponse);
     }
 
-    public Page<StudentResponse> getAllStudentsByTrip(Long id, int page, int size, String sortBy,
+    public Page<StudentResponse> getAllStudentsByTrip(UUID id, int page, int size, String sortBy,
             String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
@@ -179,30 +213,45 @@ public class TripService {
         });
     }
 
-    public void updateConductor(Long id, TripPatch requestBody) {
+    @Transactional
+    public void updateConductor(UUID id, TripPatch requestBody) {
         Trip trip = getTrip(id);
+        Map<String, Object> previousState = assignmentAuditState(trip);
         Conductor conductor = getConductor(requestBody.conductorId());
         trip.setConductor(conductor);
-        tripRepository.save(trip);
-    }
-
-    public void updateVehicle(Long id, TripPatch requestBody) {
-        Trip trip = getTrip(id);
-        Vehicle vehicle = getVehicle(requestBody.vehicleId());
-        trip.setVehicle(vehicle);
-        tripRepository.save(trip);
+        updateAssignmentTimestamp(trip);
+        Trip savedTrip = tripRepository.save(trip);
+        publishAssignmentChange(savedTrip, previousState);
+        auditAssignmentChange(savedTrip, previousState);
     }
 
     @Transactional
-    public TripResponse updateAssignment(Long id, TripAssignmentUpdate requestBody) {
+    public void updateVehicle(UUID id, TripPatch requestBody) {
         Trip trip = getTrip(id);
+        Map<String, Object> previousState = assignmentAuditState(trip);
+        Vehicle vehicle = getVehicle(requestBody.vehicleId());
+        trip.setVehicle(vehicle);
+        updateAssignmentTimestamp(trip);
+        Trip savedTrip = tripRepository.save(trip);
+        publishAssignmentChange(savedTrip, previousState);
+        auditAssignmentChange(savedTrip, previousState);
+    }
+
+    @Transactional
+    public TripResponse updateAssignment(UUID id, TripAssignmentUpdate requestBody) {
+        Trip trip = getTrip(id);
+        Map<String, Object> previousState = assignmentAuditState(trip);
         Conductor conductor = getConductor(requestBody.conductorId());
         Vehicle vehicle = getVehicle(requestBody.vehicleId());
 
         trip.setConductor(conductor);
         trip.setVehicle(vehicle);
+        updateAssignmentTimestamp(trip);
 
-        return tripMapper.toResponse(tripRepository.save(trip));
+        Trip savedTrip = tripRepository.save(trip);
+        publishAssignmentChange(savedTrip, previousState);
+        auditAssignmentChange(savedTrip, previousState);
+        return tripMapper.toResponse(savedTrip);
     }
 
     public Page<TripResponse> getAllTripsByConductorOrVehicle(int page, int size, String sortBy, String sortDirection,
@@ -216,24 +265,24 @@ public class TripService {
         return tripRepository.findAllBySearch(searchTerm, pageable).map(tripMapper::toResponse);
     }
 
-    private InterestList getInterestList(Long id) {
+    private InterestList getInterestList(UUID id) {
         return interestListRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Interest list not found"));
     }
 
-    private Trip getTrip(Long id) {
+    private Trip getTrip(UUID id) {
         return tripRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Trip not found"));
     }
 
-    private Vehicle getVehicle(Long id) {
+    private Vehicle getVehicle(UUID id) {
         return vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
     }
 
-    private Student getStudent(Long id) {
+    private Student getStudent(UUID id) {
         return studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found"));
     }
 
-    private Conductor getConductor(Long id) {
+    private Conductor getConductor(UUID id) {
         return conductorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Conductor not found"));
     }
 
@@ -245,5 +294,54 @@ public class TripService {
     private Conductor getConductorByAuthentication(Authentication authentication) {
         return conductorRepository.findByUser_Cpf(authentication.getName())
                 .orElseThrow(() -> new ResourceNotFoundException("Conductor not found"));
+    }
+
+    private void updateAssignmentTimestamp(Trip trip) {
+        if (trip.getConductor() != null && trip.getVehicle() != null && trip.getAssignedAt() == null) {
+            trip.setAssignedAt(businessClock.instant());
+        }
+    }
+
+    private void publishAssignmentChange(Trip trip, Map<String, Object> previousState) {
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("tripId", trip.getId());
+        payload.put("previousConductorId", previousState.get("conductorId"));
+        payload.put("previousVehicleId", previousState.get("vehicleId"));
+        payload.put("conductorId", trip.getConductor() == null ? null : trip.getConductor().getId());
+        payload.put("vehicleId", trip.getVehicle() == null ? null : trip.getVehicle().getId());
+        payload.put("assignedAt", trip.getAssignedAt() == null ? null : trip.getAssignedAt().toString());
+        eventPublisher.publish(
+                BusinessEventType.TRIP_ASSIGNMENT_CHANGED,
+                "Trip",
+                trip.getId(),
+                payload,
+                BusinessEventType.TRIP_ASSIGNMENT_CHANGED.name() + ":" + trip.getId() + ":" + trip.getVersion()
+        );
+    }
+
+    private void auditAssignmentChange(Trip trip, Map<String, Object> previousState) {
+        auditService.record(
+                AuditAction.TRIP_ASSIGNMENT_CHANGED,
+                "Trip",
+                trip.getId(),
+                previousState,
+                assignmentAuditState(trip),
+                Map.of()
+        );
+    }
+
+    private Map<String, Object> tripAuditState(Trip trip) {
+        Map<String, Object> state = assignmentAuditState(trip);
+        state.put("interestListId", trip.getInterestList().getId());
+        state.put("status", trip.getStatus().name());
+        return state;
+    }
+
+    private Map<String, Object> assignmentAuditState(Trip trip) {
+        Map<String, Object> state = new LinkedHashMap<>();
+        state.put("conductorId", trip.getConductor() == null ? null : trip.getConductor().getId());
+        state.put("vehicleId", trip.getVehicle() == null ? null : trip.getVehicle().getId());
+        state.put("assignedAt", trip.getAssignedAt() == null ? null : trip.getAssignedAt().toString());
+        return state;
     }
 }

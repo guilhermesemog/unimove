@@ -1,12 +1,17 @@
 package com.guilhermesemog.unimove.model;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.model.enums.BookingStatus;
 import com.guilhermesemog.unimove.model.enums.TripType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @NoArgsConstructor
 @Table(name = "bookings",
@@ -16,10 +21,10 @@ import lombok.NoArgsConstructor;
                         columnNames = {"student_id", "interest_list_id"}
                 )
         })
-public class Booking {
+public class Booking extends BaseOperationalEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
@@ -44,6 +49,9 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "boarding_location_id", nullable = false)
     private BoardingStop boardingLocation;
+
+    @Column
+    private Instant cancelledAt;
 
     public Booking(Student student, InterestList interestList, BookingStatus bookingStatus, TripType tripType, University destination, BoardingStop boardingLocation) {
         this.student = student;

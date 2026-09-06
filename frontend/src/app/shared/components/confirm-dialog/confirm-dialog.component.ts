@@ -1,5 +1,6 @@
 import { Component, HostListener, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { A11yModule } from '@angular/cdk/a11y';
 
 import { ConfirmDialogVariant } from './confirm-dialog.type';
 import { UI_COPY } from '../../../core/content/ui-copy';
@@ -8,7 +9,7 @@ import { Icon } from '../icon/icon';
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [CommonModule, Icon],
+  imports: [CommonModule, A11yModule, Icon],
   templateUrl: './confirm-dialog.component.html',
 })
 export class ConfirmDialogComponent {

@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.controller;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.user.UserCreate;
 import com.guilhermesemog.unimove.dto.user.UserPatch;
 import com.guilhermesemog.unimove.dto.user.UserResponse;
@@ -37,7 +38,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getById(@PathVariable UUID id) {
         UserResponse responseBody = userService.getById(id);
         return ResponseEntity.ok(responseBody);
     }
@@ -69,28 +70,28 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UserUpdate requestBody) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody UserUpdate requestBody) {
         userService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody UserPatch requestBody) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody UserPatch requestBody) {
         userService.update(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> toggleStatus(@PathVariable Long id) {
+    public ResponseEntity<Void> toggleStatus(@PathVariable UUID id) {
         userService.toggleStatus(id);
         return ResponseEntity.ok().build();
     }

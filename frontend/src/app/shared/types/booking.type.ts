@@ -4,7 +4,7 @@ import { Student } from "./student.type";
 import { University } from "./university.type";
 
 export interface Booking {
-    id: number;
+    id: string;
     tripType: TripType;
     bookingStatus: BookingStatus;
     student: Student;
@@ -14,10 +14,10 @@ export interface Booking {
 }
 
 export interface BookingCreateRequest {
-    interestListId: number;
+    interestListId: string;
     tripType: TripType;
-    universityId?: number;
-    boardingStopId?: number;
+    universityId?: string;
+    boardingStopId?: string;
 }
 
 export enum TripType {
@@ -30,4 +30,5 @@ export enum BookingStatus {
     PENDING = 'PENDING',
     APPROVED = 'APPROVED',
     REJECTED = 'REJECTED',
+    CANCELLED = 'CANCELLED',
 }

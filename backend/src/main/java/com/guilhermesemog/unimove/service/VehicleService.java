@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.service;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.vehicle.VehicleCreate;
 import com.guilhermesemog.unimove.dto.vehicle.VehiclePatch;
 import com.guilhermesemog.unimove.dto.vehicle.VehicleResponse;
@@ -33,7 +34,7 @@ public class VehicleService {
         return vehicleMapper.toResponse(vehicleRepository.save(vehicle));
     }
 
-    public VehicleResponse getById(Long id) {
+    public VehicleResponse getById(UUID id) {
         Vehicle vehicle = getVehicle(id);
         return vehicleMapper.toResponse(vehicle);
     }
@@ -62,24 +63,24 @@ public class VehicleService {
         return vehicleRepository.findAll().stream().map(vehicleMapper::toResponse).collect(toList());
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         Vehicle vehicle = getVehicle(id);
         vehicleRepository.delete(vehicle);
     }
 
-    public void update(Long id, VehiclePatch vehiclePatch) {
+    public void update(UUID id, VehiclePatch vehiclePatch) {
         Vehicle vehicle = getVehicle(id);
         vehicle = vehicleMapper.updateVehicle(vehiclePatch, vehicle);
         vehicleRepository.save(vehicle);
     }
 
-    public void update(Long id, VehicleUpdate vehicleUpdate) {
+    public void update(UUID id, VehicleUpdate vehicleUpdate) {
         Vehicle vehicle = getVehicle(id);
         vehicle = vehicleMapper.updateVehicle(vehicleUpdate, vehicle);
         vehicleRepository.save(vehicle);
     }
 
-    private Vehicle getVehicle(Long id) {
+    private Vehicle getVehicle(UUID id) {
         return vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
     }
 

@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.service;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.conductor.ConductorCreate;
 import com.guilhermesemog.unimove.dto.conductor.ConductorPatch;
 import com.guilhermesemog.unimove.dto.conductor.ConductorResponse;
@@ -44,7 +45,7 @@ public class ConductorService {
         return conductorMapper.toResponse(conductorRepository.save(conductor));
     }
 
-    public ConductorResponse getById(Long id) {
+    public ConductorResponse getById(UUID id) {
         return conductorMapper.toResponse(getConductor(id));
     }
 
@@ -64,25 +65,25 @@ public class ConductorService {
                 .toList();
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         conductorRepository.delete(getConductor(id));
     }
 
-    public void update(Long id, ConductorUpdate requestBody) {
+    public void update(UUID id, ConductorUpdate requestBody) {
         Conductor conductor = getConductor(id);
         this.userValidationService.validateCpf(id, requestBody.user().cpf());
         conductor = conductorMapper.update(requestBody, conductor);
         conductorRepository.save(conductor);
     }
 
-    public void update(Long id, ConductorPatch requestBody) {
+    public void update(UUID id, ConductorPatch requestBody) {
         Conductor conductor = getConductor(id);
         this.userValidationService.validateCpf(id, requestBody.user().cpf());
         conductor = conductorMapper.update(requestBody, conductor);
         conductorRepository.save(conductor);
     }
 
-    private Conductor getConductor(Long id) {
+    private Conductor getConductor(UUID id) {
         return conductorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Conductor not found"));
     }
 }

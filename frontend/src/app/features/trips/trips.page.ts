@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { UI_COPY } from '../../core/content/ui-copy';
+import { TelemetryService } from '../../core/telemetry/telemetry.service';
 import { HeaderComponent } from '../../shared/components/list-header/header.component';
 import { Icon } from '../../shared/components/icon/icon';
 import { RouteTimelineComponent } from '../../shared/components/route-timeline/route-timeline.component';
@@ -22,6 +23,7 @@ const SCHEDULE_REQUEST = { page: 0, size: 100, sortBy: 'interestList.referenceDa
 })
 export class TripsPage {
   private readonly tripService = inject(TripService);
+  private readonly telemetry = inject(TelemetryService);
 
   protected readonly copy = UI_COPY.driver.schedule;
   protected readonly loading = signal(true);
@@ -46,6 +48,7 @@ export class TripsPage {
   });
 
   ngOnInit(): void {
+    this.telemetry.startFlow('driver_operation');
     this.fetch();
   }
 

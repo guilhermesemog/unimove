@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.service;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.university.UniversityCreate;
 import com.guilhermesemog.unimove.dto.university.UniversityPatch;
 import com.guilhermesemog.unimove.dto.university.UniversityResponse;
@@ -32,7 +33,7 @@ public class UniversityService {
         return universityMapper.toResponse(universityRepository.save(university));
     }
 
-    public UniversityResponse getById(Long id) {
+    public UniversityResponse getById(UUID id) {
         University university = getUniversity(id);
         return universityMapper.toResponse(university);
     }
@@ -66,24 +67,24 @@ public class UniversityService {
         return universityRepository.findAll().stream().map(universityMapper::toResponse).toList();
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         University university = getUniversity(id);
         universityRepository.delete(university);
     }
 
-    public void update(Long id, UniversityUpdate requestBody) {
+    public void update(UUID id, UniversityUpdate requestBody) {
         University university = getUniversity(id);
         university = universityMapper.updateUniversity(requestBody, university);
         universityRepository.save(university);
     }
 
-    public void update(Long id, UniversityPatch requestBody) {
+    public void update(UUID id, UniversityPatch requestBody) {
         University university = getUniversity(id);
         university = universityMapper.updateUniversity(requestBody, university);
         universityRepository.save(university);
     }
 
-    private University getUniversity(Long id) {
+    private University getUniversity(UUID id) {
         return universityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("University not found"));
     }
 

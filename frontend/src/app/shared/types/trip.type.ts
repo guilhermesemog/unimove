@@ -3,7 +3,7 @@ import { Conductor } from './conductor.type';
 import { InterestList } from './interest-list.type';
 
 export interface Trip {
-    id: number;
+    id: string;
     status: TripStatus;
     interestList: InterestList;
     conductor: Conductor | null;
@@ -11,12 +11,12 @@ export interface Trip {
 }
 
 export interface TripCreateRequest {
-    interestListId: number;
+    interestListId: string;
 }
 
 export interface TripUpdateRequest {
-    conductorId?: number;
-    vehicleId?: number;
+    conductorId?: string;
+    vehicleId?: string;
 }
 
 export enum TripStatus {

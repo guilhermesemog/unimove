@@ -22,7 +22,7 @@ export class EditUniversityPage {
 
   universityService = inject(UniversityService);
 
-  @Input() id!: number;
+  @Input() id!: string;
 
   university = signal<University | null>(null);
 

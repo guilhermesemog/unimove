@@ -3,7 +3,7 @@ import { TripType } from './booking.type';
 import { Trip } from './trip.type';
 
 export interface DriverManifestPassenger {
-  bookingId: number;
+  bookingId: string;
   firstName: string;
   lastName: string;
   phone: string;

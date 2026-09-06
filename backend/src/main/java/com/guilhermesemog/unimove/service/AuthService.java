@@ -1,13 +1,5 @@
 package com.guilhermesemog.unimove.service;
 
-import com.guilhermesemog.unimove.dto.auth.LoginRequest;
-import com.guilhermesemog.unimove.dto.auth.LoginResponse;
-import com.guilhermesemog.unimove.dto.auth.RegisterRequest;
-import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
-import com.guilhermesemog.unimove.model.User;
-import com.guilhermesemog.unimove.model.enums.Role;
-import com.guilhermesemog.unimove.repository.UserRepository;
-import com.guilhermesemog.unimove.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +8,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.guilhermesemog.unimove.dto.auth.LoginRequest;
+import com.guilhermesemog.unimove.dto.auth.LoginResponse;
+import com.guilhermesemog.unimove.dto.common.CommonUserCreate;
+import com.guilhermesemog.unimove.exception.type.CpfAlreadyExistsException;
+import com.guilhermesemog.unimove.model.User;
+import com.guilhermesemog.unimove.model.enums.Role;
+import com.guilhermesemog.unimove.repository.UserRepository;
+import com.guilhermesemog.unimove.security.JwtService;
 
 @Service
 public class AuthService {
@@ -25,14 +27,17 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final AdminBootstrapGuard adminBootstrapGuard;
 
-
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService,
+            AdminBootstrapGuard adminBootstrapGuard) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.adminBootstrapGuard = adminBootstrapGuard;
     }
 
     public User createAuthenticatableUser(String cpf, String password, Role role) {
@@ -43,7 +48,9 @@ public class AuthService {
         return new User(cpf, passwordEncoder.encode(password), role);
     }
 
-    public LoginResponse register(RegisterRequest registerRequest) {
+    @Transactional
+    public LoginResponse register(CommonUserCreate registerRequest) {
+        adminBootstrapGuard.claim();
         User user = createAuthenticatableUser(registerRequest.cpf(), registerRequest.password(), Role.ADMIN);
 
         user.setFirstName(registerRequest.firstName());
@@ -61,8 +68,7 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.cpf(), request.password())
-        );
+                new UsernamePasswordAuthenticationToken(request.cpf(), request.password()));
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 

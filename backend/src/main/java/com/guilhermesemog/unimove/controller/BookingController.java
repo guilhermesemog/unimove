@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.controller;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.booking.BookingCreate;
 import com.guilhermesemog.unimove.dto.booking.BookingResponse;
 import com.guilhermesemog.unimove.service.BookingService;
@@ -30,7 +31,7 @@ public class BookingController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.isBookingOwner(#id, authentication)")
-    public ResponseEntity<BookingResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<BookingResponse> getById(@PathVariable UUID id) {
         BookingResponse response = bookingService.getById(id);
         return ResponseEntity.ok(response);
     }
@@ -42,7 +43,7 @@ public class BookingController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection,
-            @PathVariable Long interestListId
+            @PathVariable UUID interestListId
     ) {
         Page<BookingResponse> response = bookingService.getAllBookingsByInterestList(interestListId, page, size, sortBy, sortDirection);
         return ResponseEntity.ok(response);
@@ -63,7 +64,7 @@ public class BookingController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.isBookingOwner(#id, authentication)")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         bookingService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

@@ -24,7 +24,7 @@ export class InterestListService {
         });
     }
 
-    getInterestListById(interestListId: number): Observable<InterestList> {
+    getInterestListById(interestListId: string): Observable<InterestList> {
         return this.http.get<InterestList>(`${API_BASE_URL}/interest-lists/${interestListId}`);
     }
 
@@ -32,15 +32,15 @@ export class InterestListService {
         return this.http.post<InterestList>(`${API_BASE_URL}/interest-lists`, interestList);
     }
 
-    updateInterestList(interestListId: number, interestList: InterestListUpdateRequest): Observable<void> {
+    updateInterestList(interestListId: string, interestList: InterestListUpdateRequest): Observable<void> {
         return this.http.put<void>(`${API_BASE_URL}/interest-lists/${interestListId}`, interestList);
     }
 
-    deleteInterestList(interestListId: number): Observable<void> {
+    deleteInterestList(interestListId: string): Observable<void> {
         return this.http.delete<void>(`${API_BASE_URL}/interest-lists/${interestListId}`);
     }
 
-    toggleInterestListStatus(interestListId: number): Observable<void> {
+    toggleInterestListStatus(interestListId: string): Observable<void> {
         return this.http.patch<void>(`${API_BASE_URL}/interest-lists/${interestListId}/toggle-status`, {});
     }
 }

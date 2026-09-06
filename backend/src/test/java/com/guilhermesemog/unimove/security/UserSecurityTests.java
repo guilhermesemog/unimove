@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.security;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.model.Booking;
 import com.guilhermesemog.unimove.model.Student;
 import com.guilhermesemog.unimove.model.User;
@@ -43,26 +44,26 @@ class UserSecurityTests {
     @DisplayName("should allow the student who owns the booking")
     void shouldAllowBookingOwner() {
         given(authentication.getName()).willReturn("12345678900");
-        given(bookingRepository.findById(21L)).willReturn(Optional.of(bookingFor("12345678900")));
+        given(bookingRepository.findById(UUID.fromString("00000000-0000-4000-8000-000000000021"))).willReturn(Optional.of(bookingFor("12345678900")));
 
-        assertThat(userSecurity.isBookingOwner(21L, authentication)).isTrue();
+        assertThat(userSecurity.isBookingOwner(UUID.fromString("00000000-0000-4000-8000-000000000021"), authentication)).isTrue();
     }
 
     @Test
     @DisplayName("should reject a different student")
     void shouldRejectDifferentStudent() {
         given(authentication.getName()).willReturn("99999999999");
-        given(bookingRepository.findById(21L)).willReturn(Optional.of(bookingFor("12345678900")));
+        given(bookingRepository.findById(UUID.fromString("00000000-0000-4000-8000-000000000021"))).willReturn(Optional.of(bookingFor("12345678900")));
 
-        assertThat(userSecurity.isBookingOwner(21L, authentication)).isFalse();
+        assertThat(userSecurity.isBookingOwner(UUID.fromString("00000000-0000-4000-8000-000000000021"), authentication)).isFalse();
     }
 
     @Test
     @DisplayName("should reject when the booking does not exist")
     void shouldRejectMissingBooking() {
-        given(bookingRepository.findById(21L)).willReturn(Optional.empty());
+        given(bookingRepository.findById(UUID.fromString("00000000-0000-4000-8000-000000000021"))).willReturn(Optional.empty());
 
-        assertThat(userSecurity.isBookingOwner(21L, authentication)).isFalse();
+        assertThat(userSecurity.isBookingOwner(UUID.fromString("00000000-0000-4000-8000-000000000021"), authentication)).isFalse();
     }
 
     private Booking bookingFor(String cpf) {

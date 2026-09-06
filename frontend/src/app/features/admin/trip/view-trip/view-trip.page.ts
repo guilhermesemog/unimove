@@ -10,7 +10,7 @@ import { TripService } from '../trip.service';
   templateUrl: './view-trip.page.html',
 })
 export class ViewTripPage {
-  @Input() id!: number;
+  @Input() id!: string;
 
   private readonly tripService = inject(TripService);
   private readonly router = inject(Router);

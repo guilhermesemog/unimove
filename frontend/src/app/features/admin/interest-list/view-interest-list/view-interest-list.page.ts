@@ -1,4 +1,5 @@
 import { Component, computed, inject, Input, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 
@@ -25,20 +26,23 @@ import { ConductorService } from '../../conductor/conductor.service';
 import { AdminOperationService } from '../../operations/admin-operation.service';
 import { TripService } from '../../trip/trip.service';
 import { VehicleService } from '../../vehicle/vehicle.service';
+import { AuditHistoryComponent } from '../../audit/audit-history.component';
+import { TelemetryService } from '../../../../core/telemetry/telemetry.service';
 
 @Component({
   selector: 'app-view-interest-list-page',
-  imports: [ConfirmDialogComponent, DataTableComponent, DateLabelPipe, FormsModule, HeaderComponent, OccupancyMeterComponent, PaginationComponent, RouteTimelineComponent, StatusChipComponent, TimeLabelPipe, UiStateComponent],
+  imports: [AuditHistoryComponent, ConfirmDialogComponent, DataTableComponent, DateLabelPipe, FormsModule, HeaderComponent, OccupancyMeterComponent, PaginationComponent, RouteTimelineComponent, RouterLink, StatusChipComponent, TimeLabelPipe, UiStateComponent],
   templateUrl: './view-interest-list.page.html',
 })
 export class ViewInterestListPage {
-  @Input() id!: number;
+  @Input() id!: string;
 
   private readonly operationService = inject(AdminOperationService);
   private readonly bookingService = inject(BookingService);
   private readonly tripService = inject(TripService);
   private readonly conductorService = inject(ConductorService);
   private readonly vehicleService = inject(VehicleService);
+  private readonly telemetry = inject(TelemetryService);
 
   protected readonly loading = signal(true);
   protected readonly saving = signal(false);
@@ -47,9 +51,9 @@ export class ViewInterestListPage {
   protected readonly operation = signal<AdminOperation | null>(null);
   protected readonly conductors = signal<Conductor[]>([]);
   protected readonly vehicles = signal<Vehicle[]>([]);
-  protected readonly selectedConductorId = signal<number | null>(null);
-  protected readonly selectedVehicleId = signal<number | null>(null);
-  protected readonly activeTab = signal<'overview' | 'passengers' | 'assignment'>('overview');
+  protected readonly selectedConductorId = signal<string | null>(null);
+  protected readonly selectedVehicleId = signal<string | null>(null);
+  protected readonly activeTab = signal<'overview' | 'passengers' | 'assignment' | 'history'>('overview');
   protected readonly confirmDialog = new ConfirmDialogController();
 
   protected readonly attention = computed(() => this.operation() ? operationAttention(this.operation()!) : []);
@@ -105,7 +109,7 @@ export class ViewInterestListPage {
       vehicles: this.vehicleService.getVehiclesAsList(),
     }).subscribe({
       next: ({ operations, conductors, vehicles }) => {
-        const operation = operations.find((item) => item.demand.id === Number(this.id)) ?? null;
+        const operation = operations.find((item) => item.demand.id === this.id) ?? null;
         this.operation.set(operation);
         this.conductors.set(conductors);
         this.vehicles.set(vehicles);
@@ -128,17 +132,18 @@ export class ViewInterestListPage {
       variant: 'default',
       action: () => this.tripService.createTrip({ interestListId: operation.demand.id }).subscribe(() => {
         this.feedback.set('Trip generated. Assign a driver and vehicle to complete planning.');
+        this.telemetry.track('trip_generated', { screen: 'admin_operation', result: 'success' });
         this.activeTab.set('assignment');
         this.fetch();
       }),
     });
   }
 
-  protected selectConductor(value: number | null): void {
+  protected selectConductor(value: string | null): void {
     this.selectedConductorId.set(value);
   }
 
-  protected selectVehicle(value: number | null): void {
+  protected selectVehicle(value: string | null): void {
     this.selectedVehicleId.set(value);
   }
 
@@ -157,8 +162,14 @@ export class ViewInterestListPage {
     if (conductorId === trip.conductor?.user.id && vehicleId === trip.vehicle?.id) return;
 
     this.saving.set(true);
+    this.telemetry.startFlow('assignment');
     this.tripService.updateTripAssignment(trip.id, conductorId, vehicleId).subscribe({
-      next: () => { this.feedback.set('Assignment updated.'); this.fetch(); },
+      next: () => {
+        this.feedback.set('Assignment updated.');
+        this.telemetry.track('assignment_completed', { screen: 'admin_operation', result: 'success',
+          durationMs: this.telemetry.elapsed('assignment', true) });
+        this.fetch();
+      },
       error: () => { this.error.set('We could not update this assignment.'); this.saving.set(false); },
       complete: () => this.saving.set(false),
     });

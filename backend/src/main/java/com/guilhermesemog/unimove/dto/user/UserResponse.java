@@ -1,10 +1,11 @@
 package com.guilhermesemog.unimove.dto.user;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.model.enums.Role;
 
 public record UserResponse(
 
-        Long id,
+        UUID id,
         String cpf,
         String firstName,
         String lastName,

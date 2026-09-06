@@ -32,11 +32,11 @@ export class EditStudentPage {
 
     router = inject(Router);
 
-    @Input() id!: number;
+    @Input() id!: string;
 
     student = signal<Student | null>(null);
     universities = signal<Array<University>>([]);
-    universityOptions = computed<SelectOption<number>[]>(() =>
+    universityOptions = computed<SelectOption<string>[]>(() =>
         this.universities().map((u) => ({ value: u.id, label: u.name }))
     );
 

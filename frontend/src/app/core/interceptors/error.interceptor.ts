@@ -5,6 +5,7 @@ import { catchError, throwError } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
 import { ErrorDialogService } from '../error-dialog/error-dialog.service';
+import { SILENT_HTTP_ERROR } from './http-context';
 
 interface BackendErrorBody {
     message: string;
@@ -18,6 +19,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
+            if (req.context.get(SILENT_HTTP_ERROR)) return throwError(() => error);
             const body = error.error as BackendErrorBody;
             switch (error.status) {
                 case 401:

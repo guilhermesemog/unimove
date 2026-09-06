@@ -19,6 +19,8 @@
   <p class="text-sm text-slate-500">Demand #{{ item.demand.id }} @if (item.trip) { · Trip #{{ item.trip.id }} }</p>
   <div class="flex flex-wrap items-center gap-3">
     <app-status-chip [status]="item.trip?.status ?? item.demand.listStatus" [label]="stage()" />
+    <a class="ui-button ui-button-secondary" routerLink="/admin/recurrence-plans/create"
+      [queryParams]="{ sourceDemandId: item.demand.id }">Create Recurring Plan</a>
     @if (!item.trip) {
       <button type="button" class="ui-button ui-button-primary" (click)="generateTrip()">Generate Trip</button>
     } @else if (!item.trip.conductor || !item.trip.vehicle) {
@@ -43,7 +45,7 @@
 
 <div class="mb-5 flex border-b border-slate-200" role="tablist" aria-label="Operation details">
   @for (tab of [{ id: 'overview', label: 'Overview' }, { id: 'passengers', label: 'Passengers' }, { id: 'assignment',
-  label: 'Assignment' }]; track tab.id) {
+  label: 'Assignment' }, { id: 'history', label: 'History' }]; track tab.id) {
   <button type="button" role="tab" class="min-h-11 border-b-2 px-4 text-sm font-bold transition"
     [attr.aria-selected]="activeTab() === tab.id" [class.border-brand-500]="activeTab() === tab.id"
     [class.border-transparent]="activeTab() !== tab.id" [class.text-navy-900]="activeTab() === tab.id"
@@ -92,7 +94,7 @@
       (pageSizeChange)="passengerList.onPageSizeChange($event)" />
   </div>
 </div>
-} @else {
+} @else if (activeTab() === 'assignment') {
 <section class="ui-card p-5" aria-labelledby="assignment-heading">
   <h2 id="assignment-heading" class="font-display text-lg font-extrabold text-navy-900">Driver & Vehicle</h2>
   <p class="mt-1 text-sm text-slate-500">
@@ -135,6 +137,8 @@
       (click)="saveAssignment()">{{ saving() ? 'Saving...' : 'Save Assignment' }}</button></div>
   }
 </section>
+} @else {
+<app-audit-history [entityIds]="item.trip ? [item.demand.id, item.trip.id] : [item.demand.id]" />
 }
 
 <app-confirm-dialog [open]="confirmDialog.state().open" [title]="confirmDialog.state().title"

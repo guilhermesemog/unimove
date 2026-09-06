@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.controller;
 
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,7 +52,7 @@ public class TripController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TripResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<TripResponse> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(tripService.getById(id));
     }
 
@@ -70,14 +71,14 @@ public class TripController {
     @PreAuthorize("hasRole('CONDUCTOR')")
     public ResponseEntity<DriverOperationResponse> getDriverOperation(
             Authentication authentication,
-            @PathVariable Long id) {
+            @PathVariable UUID id) {
         return ResponseEntity.ok(tripService.getDriverOperation(authentication, id));
     }
 
     @GetMapping("/{id}/students")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<StudentResponse>> getAllTripStudents(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -87,14 +88,14 @@ public class TripController {
 
     @PatchMapping("/{id}/conductor")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TripResponse> updateConductor(@PathVariable Long id, @RequestBody TripPatch requestBody) {
+    public ResponseEntity<TripResponse> updateConductor(@PathVariable UUID id, @RequestBody TripPatch requestBody) {
         tripService.updateConductor(id, requestBody);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/vehicle")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TripResponse> updateVehicle(@PathVariable Long id, @RequestBody TripPatch requestBody) {
+    public ResponseEntity<TripResponse> updateVehicle(@PathVariable UUID id, @RequestBody TripPatch requestBody) {
         tripService.updateVehicle(id, requestBody);
         return ResponseEntity.ok().build();
     }
@@ -102,7 +103,7 @@ public class TripController {
     @PatchMapping("/{id}/assignment")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TripResponse> updateAssignment(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Valid @RequestBody TripAssignmentUpdate requestBody) {
         return ResponseEntity.ok(tripService.updateAssignment(id, requestBody));
     }

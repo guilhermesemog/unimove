@@ -1,0 +1,52 @@
+<app-header title="Recurring Plans" description="Publish weekly demand without duplicate dates." actionLabel="Create Recurring Plan" (action)="create()" />
+
+@if (feedback()) {
+<div class="mb-4 rounded-2xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm font-semibold text-brand-800" role="status">{{ feedback() }}</div>
+}
+@if (error() && plans().length) {
+<div class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700" role="alert">{{ error() }}</div>
+}
+
+@if (loading()) {
+<div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (error() && !plans().length) {
+<div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error()!" (retry)="fetch()" /></div>
+} @else if (!plans().length) {
+<div class="ui-card overflow-hidden"><app-ui-state kind="empty" title="No recurring plans yet" description="Create a weekly plan and review its dates before publishing." /></div>
+} @else {
+<div class="grid gap-4">
+  @for (plan of plans(); track plan.id) {
+  <article class="ui-card p-5">
+    <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
+      <div>
+        <div class="flex flex-wrap items-center gap-2">
+          <h2 class="font-display text-lg font-extrabold text-navy-900">{{ plan.name }}</h2>
+          <span class="rounded-full px-2.5 py-1 text-xs font-bold" [class.bg-brand-100]="plan.status === 'ACTIVE'"
+            [class.text-brand-800]="plan.status === 'ACTIVE'" [class.bg-slate-100]="plan.status !== 'ACTIVE'"
+            [class.text-slate-600]="plan.status !== 'ACTIVE'">{{ plan.status }}</span>
+        </div>
+        <p class="mt-1 text-sm font-semibold text-slate-700">{{ plan.destination.name }} · {{ daySummary(plan) }}</p>
+        <p class="mt-2 text-sm text-slate-500">{{ plan.startDate | dateLabel }} – {{ plan.endDate | dateLabel }} · {{ plan.futureOccurrences }} future occurrences</p>
+        <p class="mt-1 text-xs text-slate-500">Next eligible date: {{ plan.nextEligibleDate ? (plan.nextEligibleDate | dateLabel) : 'None' }} · {{ plan.horizonWeeks }} week horizon</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button type="button" class="ui-button ui-button-secondary" [disabled]="busyId() === plan.id || plan.status === 'ARCHIVED'" (click)="edit(plan)">Edit</button>
+        @if (plan.status === 'ACTIVE') {
+        <button type="button" class="ui-button ui-button-secondary" [disabled]="busyId() === plan.id" (click)="setStatus(plan, 'PAUSED')">Pause</button>
+        <button type="button" class="ui-button ui-button-primary" [disabled]="busyId() === plan.id" (click)="generate(plan)">Generate</button>
+        } @else if (plan.status === 'PAUSED') {
+        <button type="button" class="ui-button ui-button-secondary" [disabled]="busyId() === plan.id" (click)="setStatus(plan, 'ACTIVE')">Resume</button>
+        }
+        @if (plan.status !== 'ARCHIVED') {
+        <button type="button" class="ui-button ui-button-secondary text-red-700" [disabled]="busyId() === plan.id" (click)="archive(plan)">Archive</button>
+        }
+      </div>
+    </div>
+  </article>
+  }
+</div>
+<div class="mt-4">
+  <app-pagination [page]="page()" [totalPages]="totalPages()" [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)" (pageSizeChange)="onPageSizeChange($event)" />
+</div>
+}

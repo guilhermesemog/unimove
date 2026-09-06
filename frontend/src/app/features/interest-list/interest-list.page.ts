@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { forkJoin, switchMap } from 'rxjs';
 
 import { AuthService } from '../../core/auth/auth.service';
+import { TelemetryService } from '../../core/telemetry/telemetry.service';
 import { UI_COPY } from '../../core/content/ui-copy';
 import { BookingService } from '../admin/booking/booking.service';
 import { InterestListService } from '../admin/interest-list/interest-list.service';
@@ -29,6 +30,7 @@ export class InterestListPage {
   private readonly interestListService = inject(InterestListService);
   private readonly studentService = inject(StudentService);
   private readonly router = inject(Router);
+  private readonly telemetry = inject(TelemetryService);
 
   protected readonly copy = UI_COPY.student.availability;
   protected readonly loading = signal(true);
@@ -37,7 +39,7 @@ export class InterestListPage {
   protected readonly trips = signal<InterestList[]>([]);
   protected readonly bookings = signal<Booking[]>([]);
   protected readonly selectedDate = signal<string>('all');
-  protected readonly selectedUniversityId = signal<number | 'all'>('all');
+  protected readonly selectedUniversityId = signal<string | 'all'>('all');
 
   protected readonly bookedIds = computed(() => new Set(this.bookings().map((booking) => booking.interestList.id)));
   protected readonly universityOptions = computed(() => [...new Map(this.trips()
@@ -71,6 +73,7 @@ export class InterestListPage {
         this.trips.set(trips.content);
         this.bookings.set(bookings.content);
         this.student.set(student);
+        this.telemetry.track('availability_viewed', { screen: 'availability' });
       },
       error: () => {
         this.error.set('We could not load the available trips. Please try again.');
@@ -86,7 +89,7 @@ export class InterestListPage {
 
   protected selectUniversity(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
-    this.selectedUniversityId.set(value === 'all' ? 'all' : Number(value));
+    this.selectedUniversityId.set(value);
     this.selectedDate.set('all');
   }
 

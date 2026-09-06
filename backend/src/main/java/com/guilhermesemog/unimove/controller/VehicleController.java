@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.controller;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.vehicle.VehicleCreate;
 import com.guilhermesemog.unimove.dto.vehicle.VehiclePatch;
 import com.guilhermesemog.unimove.dto.vehicle.VehicleResponse;
@@ -32,7 +33,7 @@ public class VehicleController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<VehicleResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<VehicleResponse> getById(@PathVariable UUID id) {
         VehicleResponse responseBody = vehicleService.getById(id);
         return ResponseEntity.ok(responseBody);
     }
@@ -71,21 +72,21 @@ public class VehicleController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         vehicleService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody VehicleUpdate requestBody) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody VehicleUpdate requestBody) {
         vehicleService.update(id, requestBody);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody VehiclePatch requestBody) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody VehiclePatch requestBody) {
         vehicleService.update(id, requestBody);
         return ResponseEntity.noContent().build();
     }

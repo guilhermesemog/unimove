@@ -1,0 +1,25 @@
+@if (loading()) {
+<div class="ui-card overflow-hidden"><app-ui-state kind="loading" /></div>
+} @else if (error()) {
+<div class="ui-card overflow-hidden"><app-ui-state kind="error" [description]="error()!" (retry)="fetch()" /></div>
+} @else if (!events().length) {
+<div class="ui-card overflow-hidden"><app-ui-state kind="empty" title="No history yet"
+  description="Relevant operation changes will appear here." /></div>
+} @else {
+<section class="ui-card overflow-hidden" aria-label="Operation history">
+  <ol class="divide-y divide-slate-100">
+    @for (event of events(); track event.id) {
+    <li class="grid gap-2 px-5 py-4 sm:grid-cols-[10rem_1fr]">
+      <time class="text-xs font-semibold text-slate-500">{{ event.occurredAt | date:'medium' }}</time>
+      <div>
+        <p class="font-bold text-navy-900">{{ event.actionLabel }}</p>
+        <p class="mt-1 text-sm text-slate-600">{{ event.description }}</p>
+        <p class="mt-2 text-xs text-slate-400">{{ event.actorName }} · {{ event.actorRole }}</p>
+      </div>
+    </li>
+    }
+  </ol>
+  <div class="px-5 pb-4"><app-pagination [page]="page()" [totalPages]="totalPages()" [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)" (pageSizeChange)="onPageSizeChange($event)" /></div>
+</section>
+}

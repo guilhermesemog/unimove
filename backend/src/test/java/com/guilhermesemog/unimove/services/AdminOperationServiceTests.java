@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.services;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.dto.interestlist.InterestListResponse;
 import com.guilhermesemog.unimove.dto.trip.TripResponse;
 import com.guilhermesemog.unimove.mapper.InterestListMapper;
@@ -55,13 +56,13 @@ class AdminOperationServiceTests {
     @DisplayName("should aggregate demand, booking count and trip without changing existing contracts")
     void shouldAggregateOperationData() {
         InterestList demand = new InterestList();
-        demand.setId(10L);
+        demand.setId(UUID.fromString("00000000-0000-4000-8000-000000000010"));
         demand.setReferenceDate(LocalDate.of(2026, 8, 28));
         Trip trip = new Trip();
-        trip.setId(20L);
+        trip.setId(UUID.fromString("00000000-0000-4000-8000-000000000020"));
         trip.setInterestList(demand);
 
-        given(bookingCount.getInterestListId()).willReturn(10L);
+        given(bookingCount.getInterestListId()).willReturn(UUID.fromString("00000000-0000-4000-8000-000000000010"));
         given(bookingCount.getBookingCount()).willReturn(14L);
         given(bookingRepository.countBookingsByInterestList()).willReturn(List.of(bookingCount));
         given(tripRepository.findAll()).willReturn(List.of(trip));
@@ -81,7 +82,7 @@ class AdminOperationServiceTests {
     @DisplayName("should return zero bookings and no trip when planning has not started")
     void shouldHandleUnplannedDemand() {
         InterestList demand = new InterestList();
-        demand.setId(11L);
+        demand.setId(UUID.fromString("00000000-0000-4000-8000-000000000011"));
         given(bookingRepository.countBookingsByInterestList()).willReturn(List.of());
         given(tripRepository.findAll()).willReturn(List.of());
         given(interestListRepository.findAll(Sort.by("referenceDate").ascending())).willReturn(List.of(demand));

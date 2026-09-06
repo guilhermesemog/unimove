@@ -16,8 +16,8 @@ export interface StudentUpdateRequest {
     period: number;
     course: string;
     address: string;
-    universityId: number;
-    preferredBoardingStopId: number | null;
+    universityId: string;
+    preferredBoardingStopId: string | null;
 }
 
 export interface StudentCreateRequest {
@@ -25,6 +25,6 @@ export interface StudentCreateRequest {
     period: number;
     course: string;
     address: string;
-    universityId: number;
-    preferredBoardingStopId: number | null;
+    universityId: string;
+    preferredBoardingStopId: string | null;
 }

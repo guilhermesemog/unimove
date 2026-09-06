@@ -1,22 +1,25 @@
 package com.guilhermesemog.unimove.model;
 
+import java.util.UUID;
 import com.guilhermesemog.unimove.model.enums.ListStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.LocalTime;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @NoArgsConstructor
 @Table(name = "interest_lists")
-public class InterestList {
+public class InterestList extends BaseOperationalEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false)
     private LocalDate referenceDate = LocalDate.now();
@@ -43,6 +46,15 @@ public class InterestList {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ListStatus listStatus = ListStatus.OPEN;
+
+    @Column(nullable = false)
+    private Instant statusChangedAt = Instant.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recurrence_plan_id")
+    private RecurrencePlan recurrencePlan;
+
+    private LocalDate occurrenceDate;
 
     public InterestList(LocalDate referenceDate, LocalTime closingTime, LocalTime departureTime, LocalTime arrivalTime, LocalTime returnDepartureTime, LocalTime returnArrivalTime, University destination) {
         this.referenceDate = referenceDate;

@@ -1,5 +1,6 @@
 package com.guilhermesemog.unimove.model;
 
+import java.util.UUID;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 public class Conductor {
 
     @Id
-    private Long id;
+    private UUID id;
 
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)
